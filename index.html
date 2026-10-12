@@ -202,6 +202,7 @@ details.tts-prefs[open] summary::before{content:"▾ "}
 .method-soon{font-size:10px;color:var(--amber);letter-spacing:.06em;text-transform:uppercase;margin-top:4px;font-weight:700}
 .paywall-coming{margin-top:18px;padding-top:14px;border-top:1px dashed var(--border);text-align:center}
 .paywall-coming-label{font-size:10.5px;color:var(--grey-dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.paywall-coming-icons{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
 .paywall-coming-icon{display:flex;flex-direction:column;align-items:center;gap:6px;opacity:.5}
 .paywall-coming-icon img{width:32px;height:32px;object-fit:contain;filter:grayscale(.4);border-radius:6px}
 .paywall-coming-icon span{font-size:9.5px;color:var(--grey-dim);letter-spacing:.04em}
@@ -487,7 +488,7 @@ function showLoadingScreen(){showAuthGate(`<div class="auth-card"><div class="sp
 function showErrorScreen(msg){showAuthGate(`<div class="auth-card"><div class="auth-title">Something went wrong</div><div class="auth-sub">${esc(msg)}</div><button class="btn btn-ghost auth-btn" id="errSignOut">Sign out</button></div>`);document.getElementById("errSignOut").addEventListener("click",handleSignOut)}
 function showLoginScreen(){
   showAuthGate(`<div class="auth-card">
-    <div class="auth-brand">D4N's Study Assistant</div>
+    <div class="auth-brand">K.I.T.E</div>
     <div class="auth-title">Sign in</div>
     <div class="auth-sub">Welcome back — enter your details below.</div>
     <div class="auth-field"><label>Email</label><input type="email" id="loginEmail" autocomplete="email" placeholder="you@example.com"></div>
@@ -516,7 +517,7 @@ function showLoginScreen(){
 }
 function showSignupScreen(){
   showAuthGate(`<div class="auth-card">
-    <div class="auth-brand">D4N's Study Assistant</div>
+    <div class="auth-brand">K.I.T.E</div>
     <div class="auth-title">Create account</div>
     <div class="auth-sub">You'll get a User ID after signing up. Show it to D4N at school to activate.</div>
     <div class="auth-field"><label>Email</label><input type="email" id="suEmail" autocomplete="email" placeholder="you@example.com"></div>
@@ -565,7 +566,7 @@ function paywallPlanPicker(){
     </button>`;
   }).join("");
   showAuthGate(`<div class="auth-card" style="max-width:480px;">
-    <div class="auth-brand">D4N's Study Assistant</div>
+    <div class="auth-brand">K.I.T.E</div>
     <div class="auth-title">Choose your plan</div>
     <div class="auth-sub">Pick a plan to unlock the full app. You'll pick how to pay next.</div>
     <div class="plan-grid">${cards}</div>
@@ -606,7 +607,7 @@ function paywallMethodPicker(planId){
     `<div class="paywall-coming-icon"><img src="${esc(m.logo)}" alt="${esc(m.name)}" loading="lazy"><span>${esc(m.name)}</span></div>`
   ).join("");
   showAuthGate(`<div class="auth-card" style="max-width:480px;">
-    <div class="auth-brand">D4N's Study Assistant</div>
+    <div class="auth-brand">K.I.T.E</div>
     <div class="auth-title">How will you pay?</div>
     <div class="auth-sub">${esc(p.name)} plan — $${price.amt} ${price.cur}</div>
     ${cashBtn}
@@ -725,7 +726,7 @@ function paywallWaiting(planId, method){
   const id = currentUserDoc?.displayId || "—";
   const methodLabel = method === "lynk" ? "📱 Lynk" : "🏫 In person";
   showAuthGate(`<div class="auth-card" style="max-width:480px;">
-    <div class="auth-brand">D4N's Study Assistant</div>
+    <div class="auth-brand">K.I.T.E</div>
     <div class="auth-title">Waiting for approval</div>
     <div class="auth-sub">Your payment is being verified. You'll be unlocked as soon as D4N confirms it.</div>
     <div class="auth-badge pending">⏳ Awaiting activation</div>
@@ -759,7 +760,7 @@ function showPendingScreen(){ showPaywallScreen(); }
 function showExpiredScreen(){
   const id=currentUserDoc?.displayId||"—";
   showAuthGate(`<div class="auth-card">
-    <div class="auth-brand">D4N's Study Assistant</div>
+    <div class="auth-brand">K.I.T.E</div>
     <div class="auth-title">Access expired</div>
     <div class="auth-sub">Your access ended. Pay <strong style="color:var(--amber);">200 JMD</strong> to D4N at school to renew for another month.</div>
     <div class="auth-badge expired">⏰ Expired</div>
@@ -2541,8 +2542,6 @@ function userStatus(u){
 }
 function userPlan(u){return u.plan==="term"?"term":(u.plan==="monthly"?"monthly":null)}
 function planLabel(u){const p=userPlan(u);if(p==="term")return "Term";if(p==="monthly")return "Monthly";return "—"}
-function isUserAdmin(u){return u && (u.role==="admin" || u.uid===ADMIN_UID)}
-
 async function fetchAnalytics(){
   const snap = await getDocs(collection(db,"analytics"));
   const out = [];
@@ -3873,12 +3872,6 @@ function attachHandlers(){
   app.querySelectorAll("[data-admin-action]").forEach(el=>{
     el.addEventListener("click",()=>{
       adminAction(el.dataset.adminAction,el.dataset.uid,el.dataset.plan||null);
-    });
-  });
-    app.querySelectorAll("[data-sug-action]").forEach(el=>{
-    el.addEventListener("click",()=>{
-      trackFeature("nav_" + el.dataset.go);
-      handleSuggestionAction(el.dataset.sugAction,el.dataset.sugId);
     });
   });
 
