@@ -226,16 +226,8 @@ details.tts-prefs[open] summary::before{content:"▾ "}
 .analytics-bar.top .ab-fill{background:var(--green)}
 .analytics-bar.bottom .ab-fill{background:var(--red)}
 
-/* === Idle dot animation === */
-.dot.breathe{animation:dot-breathe 2.5s ease-in-out infinite}
-@keyframes dot-breathe{
-  0%,100%{transform:scale(1);box-shadow:none}
-  50%{transform:scale(1.4);box-shadow:0 0 12px currentColor}
-}
-.dot.r.breathe{color:#ff5f56;box-shadow:0 0 12px rgba(255,95,86,.7)}
-.dot.y.breathe{color:#ffbd2e;box-shadow:0 0 12px rgba(255,189,46,.7)}
-.dot.g.breathe{color:#27c93f;box-shadow:0 0 12px rgba(39,201,63,.7)}
-.dot.r.breathe,.dot.y.breathe,.dot.g.breathe{animation:dot-breathe 2.5s ease-in-out infinite}
+/* === Idle dot hint === */
+.dot.hint{background:#4d9fff!important;box-shadow:0 0 8px rgba(77,159,255,.85);transition:background .18s,box-shadow .18s}
 
 /* === Admin make-admin button === */
 .make-admin-btn{background:transparent;border:1px solid var(--border-bright);color:var(--cyan);border-radius:6px;font-family:inherit;font-size:11.5px;padding:5px 9px;cursor:pointer;flex-shrink:0}
@@ -929,6 +921,15 @@ onAuthStateChanged(auth,async(user)=>{
     if(expiryCheckInterval){clearInterval(expiryCheckInterval);expiryCheckInterval=null}
     showLoginScreen();return;
   }
+    setTimeout(()=>{
+    if(!APP_READY){
+      const cached = getCachedUserDoc();
+      if(cached && cached.uid === user.uid){
+        currentUserDoc = cached;
+        routeBasedOnStatus();
+      }
+    }
+  }, 3500);
   currentUser=user;
   showLoadingScreen();
   try{
@@ -977,8 +978,11 @@ function loadWM(){
       if(p.focusedId)WM.focusedId=p.focusedId;
     }
   }catch(e){}
-  if(!WM.windows.find(w=>w.isHome)){
-    const hw={id:genId('win'),page:'home',params:{},parentId:null,x:30,y:30,z:++WM.zCounter,isHome:true};
+    if(!WM.windows.find(w=>w.isHome)){
+    const estW = 560, estH = 520;
+    const hx = Math.max(20, Math.round((window.innerWidth - estW) / 2));
+    const hy = Math.max(20, Math.round((window.innerHeight - estH) / 2));
+    const hw={id:genId('win'),page:'home',params:{},parentId:null,x:hx,y:hy,z:++WM.zCounter,isHome:true};
     WM.windows=WM.windows.filter(w=>!w.isHome);
     WM.windows.unshift(hw);
     WM.focusedId=hw.id;
@@ -1129,8 +1133,14 @@ function ensureSubject(n){
   if(!DATA.topics[n])DATA.topics[n]=[];
 }
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function isAdmin(){return currentUser&&currentUser.uid===ADMIN_UID}
-
+function isAdmin(){
+  if(!currentUser) return false;
+  if(currentUser.uid === ADMIN_UID) return true;
+  return !!(currentUserDoc && currentUserDoc.role === "admin");
+}
+function isSuperAdmin(){
+  return !!(currentUser && currentUser.uid === ADMIN_UID);
+}
 /* --- TOPIC HELPERS --- */
 function topicsFor(subject){
   const stored=DATA.topics[subject]||[];
@@ -2634,8 +2644,15 @@ function pageAdminPanel(){
           const expStr=exp?exp.toLocaleDateString():"—";
           const created=u.createdAt?(u.createdAt.toDate?u.createdAt.toDate():new Date(u.createdAt)):null;
           const createdStr=created?created.toLocaleDateString():"—";
-          const adminBtn = isAdm ? "" : `<button class="make-admin-btn" data-make-admin="${u.uid}" data-make-admin-name="${esc(u.username||"user")}">Make Admin</button>`;
-          const deleteBtn = `<button class="mini-btn danger" data-admin-action="delete" data-uid="${u.uid}">Delete</button>`;
+                    let adminBtn = "";
+          if(isSuperAdmin()){
+            if(isAdm && u.uid !== ADMIN_UID){
+              adminBtn = `<button class="make-admin-btn" data-demote-admin="${u.uid}" data-demote-admin-name="${esc(u.username||"user")}">Remove Admin</button>`;
+            }else if(!isAdm){
+              adminBtn = `<button class="make-admin-btn" data-make-admin="${u.uid}" data-make-admin-name="${esc(u.username||"user")}">Make Admin</button>`;
+            }
+          }
+          const deleteBtn = isSuperAdmin() ? `<button class="mini-btn danger" data-admin-action="delete" data-uid="${u.uid}">Delete</button>` : "";
           body += `<div class="admin-user-row">
             <div class="au-top"><span class="au-name">${esc(u.username||"user")}</span><span class="au-id">${esc(u.displayId||"—")}</span></div>
             <div class="au-email">${esc(u.email||"—")}</div>
@@ -3875,39 +3892,71 @@ function attachHandlers(){
     });
   });
 
-  /* ---- MAKE ADMIN ---- */
-  app.querySelectorAll("[data-make-admin]").forEach(el=>{
-    el.addEventListener("click",()=>{
-      const uid = el.dataset.makeAdmin;
-      const name = el.dataset.makeAdminName || "this user";
-      if(!confirm(`Grant admin privileges to ${name}?`))return;
-      makeAdmin(uid);
-    });
-  });
-
-  /* ---- IDLE DOT ANIMATION ---- */
-  clearTimeout(window._idleDotTimer);
-  document.querySelectorAll(".dot").forEach(d=>d.classList.remove("breathe"));
-  const startDotBreathe = ()=>{
-    document.querySelectorAll(".dot").forEach(d=>d.classList.add("breathe"));
-    setTimeout(()=>{
-      document.querySelectorAll(".dot").forEach(d=>d.classList.remove("breathe"));
-    }, 2600);
-  };
-  startDotBreathe();
-  const resetIdle = ()=>{
-    clearTimeout(window._idleDotTimer);
-    window._idleDotTimer = setTimeout(startDotBreathe, 5 * 60 * 1000);
-  };
-  resetIdle();
-  ["click","keydown","mousemove","touchstart","scroll"].forEach(ev=>{
-    document.removeEventListener(ev, window._idleResetHandler || (()=>{}));
-  });
-  window._idleResetHandler = resetIdle;
-  ["click","keydown","mousemove","touchstart","scroll"].forEach(ev=>{
-    document.addEventListener(ev, resetIdle, {passive:true});
-  });
+ /* ========== MAKE / REMOVE ADMIN ========== */
+async function makeAdmin(uid){
+  if(!isSuperAdmin()){ toast("Only the owner can promote admins"); return; }
+  try{
+    await updateDoc(doc(db,"users",uid), { role: "admin" });
+    toast("Promoted to admin");
+    adminUsersCache = await fetchAdminUsers();
+    render();
+  }catch(e){
+    console.error(e);
+    toast("Failed: " + ((e && e.message) || "unknown"));
+  }
 }
+async function demoteAdmin(uid){
+  if(!isSuperAdmin()){ toast("Only the owner can remove admins"); return; }
+  try{
+    await updateDoc(doc(db,"users",uid), { role: "user" });
+    toast("Admin removed");
+    adminUsersCache = await fetchAdminUsers();
+    render();
+  }catch(e){
+    console.error(e);
+    toast("Failed: " + ((e && e.message) || "unknown"));
+  }
+}
+function isUserAdmin(u){
+  return u && (u.role === "admin" || u.uid === ADMIN_UID);
+}
+   /* ---- IDLE DOT HINT  ---- */
+  clearTimeout(window._dotSeqTimers);
+  window._dotSeqTimers = [];
+  const clearDotHint = ()=>{
+    window._dotSeqTimers.forEach(t=>clearTimeout(t));
+    window._dotSeqTimers = [];
+    document.querySelectorAll(".dot").forEach(d=>d.classList.remove("hint"));
+  };
+  const runDotSequence = ()=>{
+    clearDotHint();
+    const dots = [...document.querySelectorAll(".dot")];
+    dots.forEach((d, i)=>{
+      window._dotSeqTimers.push(setTimeout(()=>d.classList.add("hint"), i * 220));
+    });
+    window._dotSeqTimers.push(setTimeout(clearDotHint, dots.length * 220 + 1200));
+  };
+  const scheduleDotHint = ()=>{
+    clearTimeout(window._idleDotTimer);
+    window._idleDotTimer = setTimeout(()=>{
+      runDotSequence();
+      scheduleDotHint();
+    }, 5 * 60 * 1000);
+  };
+  if(!window._dotHintShownOnce){
+    window._dotHintShownOnce = true;
+    setTimeout(runDotSequence, 500);
+  }
+  scheduleDotHint();
+  if(window._dotActivityHandler){
+    ["click","keydown","mousemove","touchstart","scroll"].forEach(ev=>{
+      document.removeEventListener(ev, window._dotActivityHandler);
+    });
+  }
+  window._dotActivityHandler = ()=>{ clearDotHint(); scheduleDotHint(); };
+  ["click","keydown","mousemove","touchstart","scroll"].forEach(ev=>{
+    document.addEventListener(ev, window._dotActivityHandler, {passive:true});
+  });
 
 /* ========== MAKE ADMIN ========== */
 async function makeAdmin(uid){
