@@ -3032,9 +3032,14 @@ function attachHandlers(){
 
         app.querySelectorAll("[data-sug-action]").forEach(el=>{
     el.addEventListener("click",()=>{
-      handleSuggestionAction(el.dataset.sugAction,el.dataset.sugId);
+       handleSuggestionAction(el.dataset.sugAction,el.dataset.sugId);
     });
   });
+
+  app.querySelectorAll("[data-go]").forEach(el=>{
+    el.addEventListener("click",()=>{
+      trackFeature("nav_" + el.dataset.go);
+      let params={};
       if(el.dataset.subject)params.subject=el.dataset.subject;
       if(el.dataset.topic)params.topic=el.dataset.topic;
       if(el.dataset.noteId)params.noteId=el.dataset.noteId;
