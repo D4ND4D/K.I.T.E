@@ -801,22 +801,10 @@ async function bootApp(){
 }
 function startExpiryCheck(){
   if(expiryCheckInterval)clearInterval(expiryCheckInterval);
-  expiryCheckInterval=setInterval(()=>{
-    if(!currentUser||currentUser.uid===ADMIN_UID)return;
-    if(!currentUserDoc||!currentUserDoc.expiresAt)return;
-    const exp=currentUserDoc.expiresAt.toDate?currentUserDoc.expiresAt.toDate():new Date(currentUserDoc.expiresAt);
-    if(exp<new Date()){APP_READY=false;showExpiredScreen()}
-  },60000);
+  expiryCheckInterval=null;
 }
 function scheduleSyncPush(){
   if(!currentUser) return;
-  if(currentUser.uid !== ADMIN_UID){
-    if(!currentUserDoc || !currentUserDoc.approved) return;
-    const exp = currentUserDoc.expiresAt
-      ? (currentUserDoc.expiresAt.toDate ? currentUserDoc.expiresAt.toDate() : new Date(currentUserDoc.expiresAt))
-      : null;
-    if(!exp || exp < new Date()) return;
-  }
   clearTimeout(syncDebounceTimer);
   syncDebounceTimer = setTimeout(pushDataToCloud, 1500);
 }
@@ -3042,9 +3030,11 @@ function attachHandlers(){
     setupSecretDots(app,'single',nav.page==='home');
   }
 
-  app.querySelectorAll("[data-go]").forEach(el=>{
+        app.querySelectorAll("[data-sug-action]").forEach(el=>{
     el.addEventListener("click",()=>{
-      let params={};
+      handleSuggestionAction(el.dataset.sugAction,el.dataset.sugId);
+    });
+  });
       if(el.dataset.subject)params.subject=el.dataset.subject;
       if(el.dataset.topic)params.topic=el.dataset.topic;
       if(el.dataset.noteId)params.noteId=el.dataset.noteId;
