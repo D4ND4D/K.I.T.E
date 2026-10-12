@@ -3886,41 +3886,31 @@ function attachHandlers(){
   if(sugRefreshBtn)sugRefreshBtn.addEventListener("click",()=>{adminSuggestionsCache=null;render()});
   const anaRefreshBtn=document.getElementById("anaRefreshBtn");
   if(anaRefreshBtn)anaRefreshBtn.addEventListener("click",()=>{adminAnalyticsCache=null;render()});
-  app.querySelectorAll("[data-admin-action]").forEach(el=>{
+   app.querySelectorAll("[data-admin-action]").forEach(el=>{
     el.addEventListener("click",()=>{
       adminAction(el.dataset.adminAction,el.dataset.uid,el.dataset.plan||null);
     });
   });
 
- /* ========== MAKE / REMOVE ADMIN ========== */
-async function makeAdmin(uid){
-  if(!isSuperAdmin()){ toast("Only the owner can promote admins"); return; }
-  try{
-    await updateDoc(doc(db,"users",uid), { role: "admin" });
-    toast("Promoted to admin");
-    adminUsersCache = await fetchAdminUsers();
-    render();
-  }catch(e){
-    console.error(e);
-    toast("Failed: " + ((e && e.message) || "unknown"));
-  }
-}
-async function demoteAdmin(uid){
-  if(!isSuperAdmin()){ toast("Only the owner can remove admins"); return; }
-  try{
-    await updateDoc(doc(db,"users",uid), { role: "user" });
-    toast("Admin removed");
-    adminUsersCache = await fetchAdminUsers();
-    render();
-  }catch(e){
-    console.error(e);
-    toast("Failed: " + ((e && e.message) || "unknown"));
-  }
-}
-function isUserAdmin(u){
-  return u && (u.role === "admin" || u.uid === ADMIN_UID);
-}
-   /* ---- IDLE DOT HINT  ---- */
+  /* ---- MAKE / REMOVE ADMIN ---- */
+  app.querySelectorAll("[data-make-admin]").forEach(el=>{
+    el.addEventListener("click",()=>{
+      const uid = el.dataset.makeAdmin;
+      const name = el.dataset.makeAdminName || "this user";
+      if(!confirm(`Grant admin privileges to ${name}?`))return;
+      makeAdmin(uid);
+    });
+  });
+  app.querySelectorAll("[data-demote-admin]").forEach(el=>{
+    el.addEventListener("click",()=>{
+      const uid = el.dataset.demoteAdmin;
+      const name = el.dataset.demoteAdminName || "this user";
+      if(!confirm(`Remove admin privileges from ${name}?`))return;
+      demoteAdmin(uid);
+    });
+  });
+
+    /* ---- IDLE DOT HINT ---- */
   clearTimeout(window._dotSeqTimers);
   window._dotSeqTimers = [];
   const clearDotHint = ()=>{
@@ -3957,10 +3947,10 @@ function isUserAdmin(u){
   ["click","keydown","mousemove","touchstart","scroll"].forEach(ev=>{
     document.addEventListener(ev, window._dotActivityHandler, {passive:true});
   });
-
-/* ========== MAKE ADMIN ========== */
+}
+/* ========== MAKE / REMOVE ADMIN ========== */
 async function makeAdmin(uid){
-  if(!isAdmin()) return;
+  if(!isSuperAdmin()){ toast("Only the owner can promote admins"); return; }
   try{
     await updateDoc(doc(db,"users",uid), { role: "admin" });
     toast("Promoted to admin");
@@ -3971,10 +3961,21 @@ async function makeAdmin(uid){
     toast("Failed: " + ((e && e.message) || "unknown"));
   }
 }
+async function demoteAdmin(uid){
+  if(!isSuperAdmin()){ toast("Only the owner can remove admins"); return; }
+  try{
+    await updateDoc(doc(db,"users",uid), { role: "user" });
+    toast("Admin removed");
+    adminUsersCache = await fetchAdminUsers();
+    render();
+  }catch(e){
+    console.error(e);
+    toast("Failed: " + ((e && e.message) || "unknown"));
+  }
+}
 function isUserAdmin(u){
   return u && (u.role === "admin" || u.uid === ADMIN_UID);
 }
-
 /* ========== QUIZ SUBMIT / ADVANCE ========== */
 function buildMcqChoices(correctAnswer,wrongPool){
   const choices=[correctAnswer];
