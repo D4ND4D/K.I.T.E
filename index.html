@@ -322,6 +322,28 @@ details.tts-prefs[open] summary::before{content:"▾ "}
 .theme-swatch{display:flex;gap:3px;flex-shrink:0}
 .theme-swatch span{width:12px;height:12px;border-radius:3px;display:block;border:1px solid rgba(0,0,0,.15)}
 
+/* === Terms & Conditions === */
+.terms-row{display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--grey);margin:6px 0 14px;line-height:1.5;cursor:pointer;text-align:left}
+.terms-row input{margin-top:2px;accent-color:var(--cyan);flex-shrink:0;width:16px;height:16px}
+.terms-row a{color:var(--cyan);cursor:pointer;text-decoration:underline}
+.terms-overlay{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:14px}
+.terms-box{background:var(--panel);border:1px solid var(--border);border-radius:10px;max-width:560px;width:100%;max-height:88vh;display:flex;flex-direction:column;overflow:hidden}
+.terms-head{padding:14px 16px 10px;border-bottom:1px solid var(--border)}
+.terms-title{font-size:15px;font-weight:700;color:var(--cyan);letter-spacing:.04em}
+.terms-ver{font-size:10.5px;color:var(--grey-dim);margin-top:8px}
+.terms-body{overflow-y:auto;padding:12px 16px;font-size:12.5px;line-height:1.65;color:var(--grey)}
+.terms-body h4{margin:16px 0 6px;font-size:12.5px;color:var(--amber);letter-spacing:.03em}
+.terms-body h4:first-child{margin-top:0}
+.terms-body p{margin:0 0 8px;white-space:pre-line}
+.terms-body ul{margin:0 0 10px;padding-left:18px}
+.terms-body li{margin:0 0 4px}
+.terms-body strong{color:var(--white)}
+.terms-tabs{display:flex;gap:6px}
+.terms-tab{flex:1;background:transparent;border:1px solid var(--border);color:var(--grey);font-family:inherit;font-size:12px;padding:8px 6px;border-radius:6px;cursor:pointer}
+.terms-tab.active{border-color:var(--border-bright);color:var(--cyan);background:var(--panel-2)}
+.terms-foot{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--border)}
+.terms-foot .btn{margin:0}
+
 /* === Idle dot hint === */
 .dot.hint{background:#4d9fff!important;box-shadow:0 0 8px rgba(77,159,255,.85);transition:background .18s,box-shadow .18s}
 
@@ -340,8 +362,8 @@ details.tts-prefs[open] summary::before{content:"▾ "}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, getDocs, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, updateProfile, deleteUser, reauthenticateWithCredential, EmailAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, getDocs, serverTimestamp, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCe10S1IL7yd7vaT64siUZIDLDE2Yol1g0",
@@ -389,11 +411,13 @@ const db    = getFirestore(fbApp);
 let currentUser = null;
 let currentUserDoc = null;
 let pendingUsername = null;
+let pendingTermsVersion = null;
 let expiryCheckInterval = null;
 let APP_READY = false;
 let syncDebounceTimer = null;
 let lastSyncedAt = null;
 let suppressPush = false;
+let accountDeleting = false;
 let localDirty = false;
 let dataUnsubscribe = null;
 let planConfig = { monthlyDays: 30, termDays: 120 };
@@ -610,7 +634,7 @@ function getSessionSeconds(){
   }catch(e){ return 0; }
 }
 async function pushAnalyticsToCloud(){
-  if(!currentUser) return;
+  if(!currentUser || accountDeleting) return;
   const queue = getAnalyticsQueue();
   const seconds = getSessionSeconds();
   if(Object.keys(queue).length === 0 && seconds === 0) return;
@@ -680,6 +704,56 @@ function showLoginScreen(){
     try{await sendPasswordResetEmail(auth,email);errEl.style.color="var(--green)";errEl.textContent="Reset link sent — check your inbox."}catch(e){errEl.style.color="var(--red)";errEl.textContent=friendlyAuthError(e)}
   });
 }
+/* ========== TERMS & CONDITIONS + PRIVACY POLICY ========== */
+// Fill these in. Until LEGAL_EMAIL is set, the contact lines point to "Send a Suggestion" in Settings.
+const LEGAL_EMAIL="";
+const LEGAL_DATE="October 13, 2026";   // used for "Last updated" and "Effective date"
+const TERMS_VERSION="1.0";             // bump when you change the text
+const TERMS_KEY="d4n_terms_accepted_v1";
+const LEGAL={"terms": {"title": "Terms & Conditions", "sections": [["1. Who we are", ["K.I.T.E is a product and property of Lumin. K.I.T.E operates as a study assistant application used to make studying better and easier for students. By continuing to use K.I.T.E you are agreeing to these Terms & Conditions below. If you do not agree, your account will not be created."]], ["2. Who can use K.I.T.E", ["You may use K.I.T.E if you are using the app for personal, non-commercial study purposes.", "If you are under 18, you confirm that you have permission from a parent or guardian to use K.I.T.E and to create an account.", "You are responsible for anything that happens on your account. DO NOT share your password. DO NOT let someone else use your account."]], ["3. Your account", ["To use K.I.T.E, you must create an account with an email, username, and password. You agree to:", ["Provide truthful information when you register.", "Keep your password private. If you think someone else has your password, change it immediately.", "Use one account per person. Do not create multiple accounts to abuse free features or bypass any restriction.", "Not impersonate another person."], "You can delete your account at any time from Settings. We may also suspend or delete your account if you break these Terms."]], ["4. What you own vs. what we own", ["**You own your content.** Everything you write into K.I.T.E — flashcards, answers, notes, topics, and study history — belongs to you. We do not claim ownership over it.", "**We own the App.** The design, code, name, logo, and everything else that makes K.I.T.E work belong to us. You may not copy, resell, or redistribute the App itself.", "**You grant us a limited licence.** To operate the App, we need permission to store and sync your content on your behalf (for example, on Firebase servers). By using K.I.T.E, you give us that permission — nothing more. We do not use your content for advertising or sell it to anyone."]], ["5. Acceptable use", ["Do not use K.I.T.E to:", ["Upload illegal content, hate speech, or anything that harasses or harms another person.", "Attempt to access another user's account or data.", "Reverse-engineer, modify, or attempt to break the App.", "Spam other users, or use the App to send unsolicited messages."], "We reserve the right to remove any account that violates these rules without warning."]], ["6. Study data and privacy", ["Your study content is stored on secure Firebase servers, connected to your account, so you can access it from any device.", "We also collect anonymous usage statistics to improve the App. A separate Privacy Policy explains exactly what is stored, where, why, and how you can delete it. Please read it alongside these Terms.", "By using K.I.T.E, you agree to the practices described in the Privacy Policy."]], ["7. Not a substitute for teachers or real study", ["K.I.T.E is a tool to help you study. It is not a replacement for teachers, textbooks, schools, or your own effort.", "Any quiz scores, progress charts, or “streaks” you see are for motivation only — they are not official academic records. Do not rely on them for anything important."]], ["8. Availability and changes", ["K.I.T.E is offered as is. We try to keep it running, but we cannot promise it will always be available, error-free, or uninterrupted. We may:", ["Change, add, or remove features at any time.", "Temporarily pause the App for maintenance.", "Discontinue the App entirely, with reasonable notice where possible."], "Your study content remains yours even if the App changes."]], ["9. Limitation of liability", ["To the fullest extent allowed by law:", ["K.I.T.E is provided without warranties of any kind.", "We are not liable for any loss of data, lost study time, exam outcomes, or indirect damages arising from your use of the App.", "If you lose your study content — whether through account deletion, technical failure, or any other reason — our responsibility is limited to helping you recover it from our backups if possible."], "**Always keep your own backup.** K.I.T.E includes an Export feature in the Import / Export section. Use it periodically to download a copy of your flashcards, notes, and history to your device. This is your best protection against data loss."]], ["10. Ending your use of K.I.T.E", ["You may stop using K.I.T.E at any time. You can delete your account from Settings.", "We may suspend or end your access if you break these Terms, abuse the App, or if we discontinue the service.", "When your account is deleted, we delete your study content and analytics from our servers within a reasonable period, except where we are required by law to keep records."]], ["11. Changes to these Terms", ["We may update these Terms from time to time. When we do, we will change the “Last updated” date at the top. If a change is significant, we will notify you in the App. Continuing to use K.I.T.E after a change means you accept the updated Terms."]], ["12. Contact", ["Questions about these Terms? Contact:", "D4N\nLumin\n{{EMAIL}}"]]]}, "privacy": {"title": "Privacy Policy", "sections": [["", ["This Privacy Policy explains what information K.I.T.E collects, where it is stored, how it is used, and how you can control or delete it. It should be read together with the Terms & Conditions.", "By creating an account and using K.I.T.E, you agree to this Privacy Policy."]], ["1. Who is responsible for your data", ["K.I.T.E is a product of Lumin (“we”, “us”, “our”). We are responsible for the personal information collected through the App.", "Contact for privacy questions: {{EMAIL}}"]], ["2. What information we collect", ["**Information you give us:**", ["Email address", "Username", "Password (stored encrypted — we never see the actual password)", "Your study content — flashcards, answers, notes, topics, and study session history"], "**Information created automatically:**", ["Your User ID (a short code like D4N-A2K-9QX that identifies your account)", "Account creation date and last login time", "Anonymous usage statistics — which features you use, how long your sessions last, and which screens you visit. These statistics are grouped before being reviewed and are not linked to your name or email in any report we look at."], "**Information we do NOT collect:**", ["No phone number", "No physical address", "No payment details (payments, when applicable, are handled outside the App)", "No location data", "No contacts, camera, microphone, or files from your device"]]], ["3. Where your information is stored", ["Your data is stored on Google Firebase servers (Firebase Authentication and Cloud Firestore). Firebase is operated by Google LLC and is protected by Google's security infrastructure.", "Your password is stored by Firebase in encrypted (hashed) form. Neither we nor anyone at Lumin can read your password.", "Your study content (flashcards, notes, sessions) is stored under your account and can only be accessed by you (when logged in) or by an admin of Lumin for support and moderation purposes."]], ["4. Why we collect it", ["We use your information to:", ["Let you log in and access your account", "Save and sync your study content across your devices", "Track your progress, streaks, and session history", "Understand which features are used and which are not, so we can improve K.I.T.E", "Respond to support requests or issues you report"], "We do not use your information to:", ["Show you advertisements", "Sell your data to anyone", "Build a profile of you for marketing", "Share with any third party except as described in Section 5"]]], ["5. Who can see your information", ["**You.** When signed in, you can see and edit all of your own study content.", "**Lumin admins.** The operator of K.I.T.E can see the list of registered users (username, email, User ID) for account management, approval, and support. Admins do not routinely browse individual study content. We only look at a specific user's data if that user asks us for help or if we need to investigate abuse.", "**Google Firebase.** As our hosting provider, Google processes your data on our behalf to keep the App running. Google does not use your K.I.T.E data for its own purposes.", "**Other users.** Other K.I.T.E users cannot see your content. The App has no public profiles, no social feed, and no shared content features.", "We do not sell, rent, or trade your personal information."]], ["6. Cookies and local storage", ["K.I.T.E uses your browser's local storage to:", ["Keep you logged in between visits", "Save your preferences (like timer settings and text-to-speech voice settings)", "Cache your study content locally so the App can work offline"], "K.I.T.E does not use advertising cookies or third-party tracking cookies.", "You can clear this local storage at any time from your browser settings, or by using the “Delete All Saved Data” option in the App's Settings. Note: clearing local storage while logged out will remove the offline copy of your content — your data will still be on our servers and will be restored on next login."]], ["7. Analytics", ["To improve K.I.T.E, we collect anonymous usage data:", ["Which features are used most and least", "How long sessions last", "How many users are active per month", "Aggregate counts of accounts created or removed"], "This data is stored separately from your personal content and is grouped before it is looked at. When we review it, we see numbers and feature names — not names or study content. Everything you do in K.I.T.E is recorded under your account so the App can count it correctly, but the analytics we look at are fully anonymous: we only see totals, feature names and numbers \u2014 never names, emails, usernames or study content \u2014 and we do not look at individual users' activity. We do not share this data."]], ["8. Children's privacy", ["K.I.T.E is designed for students, including students under 18. If you are under 18, you should have permission from a parent or guardian before creating an account.", "We do not knowingly collect personal information beyond what is needed to run the App. We do not target advertising at minors. Parents or guardians who believe their child has provided information without permission may contact us at {{EMAIL}} to request review or deletion."]], ["9. Data retention and deletion", ["Your account and study content are kept as long as your account is active.", "You can delete your account at any time from the App's Settings. When you do:", ["Your account, study content, and analytics are removed from our servers within a reasonable period (usually within 30 days).", "Firebase backups may retain copies for a short period before they are permanently overwritten.", "We may retain limited records if required by law, or to prevent abuse of the App."], "You can also export your data at any time from the Import/Export section of the App. This gives you a .json file containing all of your flashcards, notes, and session history. We recommend doing this periodically as a personal backup."]], ["10. Security", ["We take reasonable steps to protect your information:", ["Passwords are hashed by Firebase — we never see them.", "Data is transmitted over HTTPS.", "Access to Firestore is protected by security rules that only allow users to read and write their own data.", "Admin access to the user list is limited to a small number of accounts."], "No system is perfectly secure. If you believe your account has been compromised, change your password immediately and contact us."]], ["11. Changes to this Privacy Policy", ["We may update this Privacy Policy from time to time. When we do, we will update the “Last updated” date at the top of this document. If a change is significant, we will notify you inside the App. Continuing to use K.I.T.E after a change means you accept the updated Privacy Policy."]], ["12. Contact", ["For questions about this Privacy Policy, or to request deletion of your account or data:", "D4N\nLumin\n{{EMAIL}}"]]]}};
+function legalText(t){
+  return esc(t.replace(/\{\{EMAIL\}\}/g,LEGAL_EMAIL||"Send a Suggestion in Settings"))
+    .replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>");
+}
+function legalDocHTML(doc){
+  return doc.sections.map(([h,items])=>
+    (h?`<h4>${esc(h)}</h4>`:"")+items.map(it=>Array.isArray(it)
+      ?`<ul>${it.map(li=>`<li>${legalText(li)}</li>`).join("")}</ul>`
+      :`<p>${legalText(it)}</p>`).join("")
+  ).join("");
+}
+// which = "terms" | "privacy". Pass onAgree to show an "I agree" button (used on the sign-up screen).
+function showLegal(which,onAgree){
+  const old=document.getElementById("termsOverlay");if(old)old.remove();
+  const ov=document.createElement("div");
+  ov.className="terms-overlay";ov.id="termsOverlay";
+  ov.innerHTML=`<div class="terms-box" role="dialog" aria-modal="true" aria-label="Terms and Privacy">
+    <div class="terms-head">
+      <div class="terms-tabs">
+        <button class="terms-tab" data-legal="terms">Terms &amp; Conditions</button>
+        <button class="terms-tab" data-legal="privacy">Privacy Policy</button>
+      </div>
+      <div class="terms-ver" id="termsVer"></div>
+    </div>
+    <div class="terms-body" id="termsBody"></div>
+    <div class="terms-foot">${onAgree?'<button class="btn btn-primary" id="termsAgreeBtn">I agree</button>':''}<button class="btn btn-ghost" id="termsCloseBtn">${onAgree?'Close':'Done'}</button></div>
+  </div>`;
+  document.body.appendChild(ov);
+  const show=(w)=>{
+    const doc=LEGAL[w]||LEGAL.terms;
+    ov.querySelectorAll(".terms-tab").forEach(b=>b.classList.toggle("active",b.dataset.legal===w));
+    document.getElementById("termsVer").textContent=`K.I.T.E \u2014 ${doc.title} \u00b7 Last updated: ${LEGAL_DATE} \u00b7 Effective: ${LEGAL_DATE}`;
+    const body=document.getElementById("termsBody");
+    body.innerHTML=legalDocHTML(doc);body.scrollTop=0;
+  };
+  ov.querySelectorAll(".terms-tab").forEach(b=>b.addEventListener("click",()=>show(b.dataset.legal)));
+  const close=()=>ov.remove();
+  ov.addEventListener("click",e=>{if(e.target===ov)close()});
+  document.getElementById("termsCloseBtn").addEventListener("click",close);
+  const ag=document.getElementById("termsAgreeBtn");
+  if(ag)ag.addEventListener("click",()=>{close();onAgree()});
+  show(which);
+}
 function showSignupScreen(){
   showAuthGate(`<div class="auth-card">
     <div class="auth-brand">K.I.T.E</div>
@@ -688,6 +762,7 @@ function showSignupScreen(){
     <div class="auth-field"><label>Email</label><input type="email" id="suEmail" autocomplete="email" placeholder="you@example.com"></div>
     <div class="auth-field"><label>Username</label><input type="text" id="suUsername" autocomplete="username" placeholder="e.g. jane.doe" maxlength="24"></div>
     <div class="auth-field"><label>Password (min 6 chars)</label><input type="password" id="suPassword" autocomplete="new-password" placeholder="••••••••"></div>
+    <label class="terms-row"><input type="checkbox" id="suTerms"><span>I have read and agree to the <a id="suTermsLink">Terms &amp; Conditions</a> and <a id="suPrivacyLink">Privacy Policy</a>.</span></label>
     <button class="btn btn-primary auth-btn" id="signupBtn">Create account</button>
     <div class="auth-err" id="suErr"></div>
     <div class="auth-link">Already have an account? <a id="goLogin">Sign in</a></div>
@@ -700,10 +775,18 @@ function showSignupScreen(){
     errEl.textContent="";
     if(!email||!uname||!pass){errEl.textContent="Fill in all fields.";return}
     if(pass.length<6){errEl.textContent="Password must be at least 6 characters.";return}
+    if(!document.getElementById("suTerms").checked){errEl.textContent="You need to agree to the Terms & Conditions and Privacy Policy to create an account.";return}
     pendingUsername=uname;
-    try{await createUserWithEmailAndPassword(auth,email,pass)}catch(e){pendingUsername=null;errEl.textContent=friendlyAuthError(e)}
+    pendingTermsVersion=TERMS_VERSION;
+    try{await createUserWithEmailAndPassword(auth,email,pass)}catch(e){pendingUsername=null;pendingTermsVersion=null;errEl.textContent=friendlyAuthError(e)}
   };
   document.getElementById("signupBtn").addEventListener("click",doSignup);
+  [["suTermsLink","terms"],["suPrivacyLink","privacy"]].forEach(([id,which])=>{
+    document.getElementById(id).addEventListener("click",e=>{
+      e.preventDefault();e.stopPropagation();
+      showLegal(which,()=>{document.getElementById("suTerms").checked=true});
+    });
+  });
   document.getElementById("suPassword").addEventListener("keydown",e=>{if(e.key==="Enter")doSignup()});
   document.getElementById("goLogin").addEventListener("click",showLoginScreen);
 }
@@ -968,12 +1051,12 @@ function startExpiryCheck(){
   expiryCheckInterval=null;
 }
 function scheduleSyncPush(){
-  if(!currentUser) return;
+  if(!currentUser || accountDeleting) return;
   clearTimeout(syncDebounceTimer);
   syncDebounceTimer = setTimeout(pushDataToCloud, 1500);
 }
 async function pushDataToCloud(){
-  if(!currentUser || !APP_READY) return;
+  if(!currentUser || !APP_READY || accountDeleting) return;
   try{
     const ref = doc(db, "study_data", currentUser.uid);
     await setDoc(ref, {
@@ -1088,7 +1171,7 @@ async function handleSignOut(){
 }
 onAuthStateChanged(auth,async(user)=>{
   if(!user){
-    currentUser=null;currentUserDoc=null;APP_READY=false;
+    currentUser=null;currentUserDoc=null;APP_READY=false;accountDeleting=false;
     if(expiryCheckInterval){clearInterval(expiryCheckInterval);expiryCheckInterval=null}
     showLoginScreen();return;
   }
@@ -1136,6 +1219,11 @@ onAuthStateChanged(auth,async(user)=>{
       try{await setDoc(userRef,userData)}catch(e){showErrorScreen("Could not create your account. Try again.");return}
       currentUserDoc=userData;
       cacheUserDoc(userData);
+      if(pendingTermsVersion){
+        try{localStorage.setItem(TERMS_KEY,JSON.stringify({version:pendingTermsVersion,at:new Date().toISOString()}))}catch(e){}
+        updateDoc(userRef,{termsVersion:pendingTermsVersion,termsAcceptedAt:serverTimestamp()}).catch(()=>{});
+        pendingTermsVersion=null;
+      }
       try{await updateProfile(user,{displayName:uname})}catch(e){}
     }else{
       currentUserDoc=snap.data();
@@ -2727,10 +2815,13 @@ function pageSettings(){
       </div>
     </div>
     <div class="menu" style="margin-top:8px;">
+      <button class="menu-item" id="viewTermsBtn"><span class="label">Terms &amp; Conditions</span></button>
+      <button class="menu-item" id="viewPrivacyBtn"><span class="label">Privacy Policy</span></button>
       <button class="menu-item danger" id="wipeDataBtn"><span class="label">Delete All Saved Data</span></button>
+      <button class="menu-item danger" id="deleteAccountBtn"><span class="label">Delete My Account</span></button>
       <button class="menu-item" data-go="home" data-clearstack="1"><span class="label">Back to Main Menu</span></button>
     </div>
-    <div class="page-sub" style="margin-top:16px;">(LEAVE BLANK)</div>
+    <div class="page-sub" style="margin-top:16px;">Property of Lumin</div>
     <div class="page-sub" style="margin-top:2px;color:var(--grey-dim);font-size:10.5px;">V6.0.0</div>
   `;
   return shell("SETTINGS","",body,{path:"~/study/settings"});
@@ -4023,6 +4114,13 @@ function attachHandlers(){
     }
   });
 
+  /* ---- DELETE ACCOUNT ---- */
+  { const da=document.getElementById("deleteAccountBtn"); if(da)da.addEventListener("click",showDeleteAccount); }
+
+  /* ---- TERMS ---- */
+  { const tb=document.getElementById("viewTermsBtn"); if(tb)tb.addEventListener("click",()=>showLegal("terms")); }
+  { const pb=document.getElementById("viewPrivacyBtn"); if(pb)pb.addEventListener("click",()=>showLegal("privacy")); }
+
   /* ---- INSTALL CHECK ---- */
   { const pwaBox=document.getElementById("pwaStatus"); if(pwaBox)runPwaCheck(pwaBox); }
 
@@ -4143,26 +4241,122 @@ function attachHandlers(){
       d.classList.toggle("hint", blues.includes(parseInt(d.dataset.dot,10)));
     });
     const stop=()=>{ playing=false; seqTimers.forEach(clearTimeout); seqTimers=[]; paint([]); };
-    const playOnce=()=>{
+    let intro=false;
+    const playOnce=(repeat=true)=>{
       let t=0, lastAt=0;
       FRAMES.forEach(([blues,ms])=>{
         const at=t; lastAt=at;
         seqTimers.push(setTimeout(()=>paint(blues), at));
         t+=ms;
       });
-      seqTimers.push(setTimeout(()=>{ if(playing){ seqTimers=[]; playOnce(); } }, lastAt + REPEAT_MS));
+      if(repeat) seqTimers.push(setTimeout(()=>{ if(playing){ seqTimers=[]; playOnce(); } }, lastAt + REPEAT_MS));
+      return lastAt;
+    };
+    // One-time pulse when the app is opened, so people notice the dots. Touching the screen doesn't cancel it.
+    const playIntro=()=>{
+      if(playing) return;
+      intro=true; playing=true;
+      const end=playOnce(false);
+      seqTimers.push(setTimeout(()=>{ intro=false; playing=false; seqTimers=[]; paint([]); }, end+50));
     };
     const onActivity=()=>{
-      if(playing) stop();
+      if(playing && !intro) stop();
       clearTimeout(idleTimer);
       idleTimer=setTimeout(()=>{ playing=true; playOnce(); }, IDLE_MS);
     };
     ["pointerdown","pointermove","mousemove","keydown","touchstart","wheel","scroll","click"].forEach(ev=>{
       document.addEventListener(ev, onActivity, {passive:true, capture:true});
     });
-    window._idleDots = { stop, onActivity };
+    window._idleDots = { stop, onActivity, playIntro };
     onActivity();
   }
+  // Pulse once, the first time the dots are on screen after the app opens
+  if(window._idleDots && !window._introPlayed && document.querySelector(".dot[data-dot]")){
+    window._introPlayed=true;
+    setTimeout(()=>window._idleDots.playIntro(), 700);
+  }
+}
+/* ========== DELETE ACCOUNT ========== */
+async function deleteMyAccount(password){
+  const user=auth.currentUser;
+  if(!user||!user.email) throw {code:"app/no-user"};
+  const uid=user.uid;
+  // 1. Firebase requires a fresh sign-in before deleting an account
+  await reauthenticateWithCredential(user,EmailAuthProvider.credential(user.email,password));
+  // 2. stop anything that could re-create data while we delete it
+  accountDeleting=true;
+  stopDataListener();
+  clearTimeout(syncDebounceTimer);
+  try{
+    // 3. cloud data: study content, then usage stats + suggestions tied to this account, then the account record
+    await deleteDoc(doc(db,"study_data",uid));
+    for(const col of ["analytics","suggestions"]){
+      try{
+        const snap=await getDocs(query(collection(db,col),where("uid","==",uid)));
+        await Promise.all(snap.docs.map(d=>deleteDoc(d.ref)));
+      }catch(e){console.warn("Could not clear "+col+":",e)}
+    }
+    await deleteDoc(doc(db,"users",uid));
+    // 4. the login itself
+    await deleteUser(user);
+  }catch(e){
+    accountDeleting=false;
+    startDataListener();
+    throw e;
+  }
+  // 5. this device
+  try{if(ttsState==="playing"||ttsState==="paused")ttsStop();if(TIMER.active)stopTimer()}catch(e){}
+  try{pauseSessionTimer()}catch(e){}
+  [STORAGE_KEY,TIMER_KEY,WM_STATE_KEY,USER_CACHE_KEY,ANALYTICS_QUEUE_KEY,ANALYTICS_SESSION_KEY,TERMS_KEY].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});
+  DATA={flashcards:{},study_sessions:[],notes:{},topics:{}};
+  TIMER=blankTimer();
+  navStack=[];nav={page:"home",params:{}};
+}
+function deleteAccountError(e){
+  const c=e&&e.code?e.code:"";
+  if(c==="auth/wrong-password"||c==="auth/invalid-credential"||c==="auth/invalid-login-credentials")return "Wrong password.";
+  if(c==="auth/too-many-requests")return "Too many attempts. Wait a bit and try again.";
+  if(c==="auth/network-request-failed")return "No connection. Connect to the internet and try again.";
+  if(c==="permission-denied"||c==="firestore/permission-denied")return "Couldn't delete your data (permission denied). Please contact D4N.";
+  return "Something went wrong, so your account was not fully deleted. Please try again.";
+}
+function showDeleteAccount(){
+  if(isSuperAdmin()){toast("The owner account can't be deleted here");return}
+  const old=document.getElementById("termsOverlay");if(old)old.remove();
+  const ov=document.createElement("div");
+  ov.className="terms-overlay";ov.id="termsOverlay";
+  ov.innerHTML=`<div class="terms-box" role="dialog" aria-modal="true" aria-label="Delete account">
+    <div class="terms-head"><div class="terms-title" style="color:var(--red);">Delete account</div></div>
+    <div class="terms-body">
+      <p>This permanently deletes your account, your study content and your usage data from our servers, and clears the data saved on this device. It can't be undone.</p>
+      <p>Want a copy first? Cancel and use <strong>Import / Export</strong> to download a backup.</p>
+      <div class="auth-field"><label>Your password</label><input type="password" id="delPass" autocomplete="current-password" placeholder="••••••••"></div>
+      <div class="auth-field"><label>Type DELETE to confirm</label><input type="text" id="delConfirm" autocomplete="off" autocapitalize="characters" placeholder="DELETE"></div>
+      <div class="auth-err" id="delErr"></div>
+    </div>
+    <div class="terms-foot"><button class="btn btn-danger" id="delGoBtn">Delete my account</button><button class="btn btn-ghost" id="delCancelBtn">Cancel</button></div>
+  </div>`;
+  document.body.appendChild(ov);
+  const close=()=>ov.remove();
+  const err=document.getElementById("delErr"),go=document.getElementById("delGoBtn"),cancel=document.getElementById("delCancelBtn");
+  cancel.addEventListener("click",close);
+  ov.addEventListener("click",e=>{if(e.target===ov&&!go.disabled)close()});
+  go.addEventListener("click",async()=>{
+    err.textContent="";
+    const pw=document.getElementById("delPass").value;
+    if(!pw){err.textContent="Enter your password.";return}
+    if(document.getElementById("delConfirm").value.trim().toUpperCase()!=="DELETE"){err.textContent="Type DELETE to confirm.";return}
+    go.disabled=true;cancel.disabled=true;go.textContent="Deleting…";
+    try{
+      await deleteMyAccount(pw);
+      close();
+      toast("Account deleted");
+    }catch(e){
+      console.error(e);
+      err.textContent=deleteAccountError(e);
+      go.disabled=false;cancel.disabled=false;go.textContent="Delete my account";
+    }
+  });
 }
 /* ========== MAKE / REMOVE ADMIN ========== */
 async function makeAdmin(uid){
