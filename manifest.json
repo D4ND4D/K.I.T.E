@@ -1,25 +1,39 @@
+
 {
-  "name": "D4N's Study Assistant",
-  "short_name": "Study",
-  "description": "Flashcards, quizzes, notes, and study timers — works offline.",
+  "id": "./",
+  "name": "K.I.T.E",
+  "short_name": "K.I.T.E",
+  "description": "Flashcards, notes, quizzes and a study timer.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "orientation": "portrait",
+  "orientation": "any",
   "background_color": "#0c0e0f",
   "theme_color": "#0c0e0f",
   "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
     {
       "src": "icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
-    },
-    {
-      "src": "icon-maskable.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "maskable"
     }
   ]
 }
