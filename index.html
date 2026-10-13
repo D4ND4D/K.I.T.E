@@ -987,6 +987,12 @@ function loadWM(){
     WM.windows.unshift(hw);
     WM.focusedId=hw.id;
   }
+  // Recenter the home window on every page load
+  const homeWin = WM.windows.find(w => w.isHome);
+  if(homeWin){
+    homeWin.x = Math.max(20, Math.round((window.innerWidth - 560) / 2));
+    homeWin.y = Math.max(20, Math.round((window.innerHeight - 520) / 2));
+  }
 }
 function saveWM(){
   try{
@@ -3931,13 +3937,16 @@ function attachHandlers(){
     window._idleDotTimer = setTimeout(()=>{
       runDotSequence();
       scheduleDotHint();
-    }, 5 * 60 * 1000);
+    }, 9 * 1000);
   };
   if(!window._dotHintShownOnce){
     window._dotHintShownOnce = true;
     setTimeout(runDotSequence, 500);
   }
-  scheduleDotHint();
+    if(!window._dotActivityBound){
+    window._dotActivityBound = true;
+    scheduleDotHint();
+  }
   if(window._dotActivityHandler){
     ["click","keydown","mousemove","touchstart","scroll"].forEach(ev=>{
       document.removeEventListener(ev, window._dotActivityHandler);
