@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'd4n-study-v15';
+const CACHE_VERSION = 'd4n-study-v16';
 const APP_SHELL = [
   './',
   './index.html',
@@ -15,9 +15,12 @@ const CDN_URLS = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_VERSION).then((cache) => {
-      return cache.addAll([...APP_SHELL, ...CDN_URLS]).catch(err => {
-        console.warn('Some assets failed to cache:', err);
-      });
+      const urls = [...APP_SHELL, ...CDN_URLS];
+      return Promise.all(
+        urls.map(url =>
+          cache.add(url).catch(err => console.warn('Cache skipped:', url, err))
+        )
+      );
     }).then(() => self.skipWaiting())
   );
 });
