@@ -332,6 +332,7 @@ let ttsNoteId = null;
 let ttsNoteTitle = null;
 let WM_ENABLED = false;
 let WM = { windows: [], zCounter: 10, focusedId: null };
+let WM_RECENTER_HOME = true;
 let seqState = {};
 let dragState = null;
 let chirpInterval = null;
@@ -589,11 +590,9 @@ function paywallMethodPicker(planId){
   const cashEnabled = currency === "JMD";
   const cashBtn = cashEnabled
     ? `<button class="method-btn" data-method="cash">
-        <div class="method-icon">🏫</div>
         <div><div class="method-name">Pay in person</div><div class="method-sub">Cash at school — find D4N</div></div>
       </button>`
     : `<button class="method-btn disabled" disabled>
-        <div class="method-icon">🏫</div>
         <div><div class="method-name">Pay in person</div><div class="method-sub">Cash at school — find D4N</div><div class="method-soon">Only available in Jamaica</div></div>
       </button>`;
     const comingIcons = DIGITAL_METHODS_COMING.map(m=>
@@ -605,7 +604,7 @@ function paywallMethodPicker(planId){
     <div class="auth-sub">${esc(p.name)} plan — $${price.amt} ${price.cur}</div>
     ${cashBtn}
     <div class="paywall-coming">
-      <div class="paywall-coming-label">⏳ Coming soon</div>
+      <div class="paywall-coming-label">Coming soon</div>
       <div class="paywall-coming-icons">${comingIcons}</div>
     </div>
     <div class="auth-link" style="margin-top:20px;"><a id="pwBack">← Back to plans</a></div>
@@ -653,7 +652,7 @@ function paywallInstructions(planId, method){
         <div class="paywall-copy-hint">tap to copy</div>
         <div style="margin-top:14px;"><strong>3.</strong> Once sent, tap the button below. D4N will verify the payment and unlock your account.</div>
       </div>
-      <button class="btn btn-primary" id="pwClaimedBtn">✅ I've sent the payment</button>
+      <button class="btn btn-primary" id="pwClaimedBtn">I've sent the payment</button>
     `;
   } else {
     body = `
@@ -661,9 +660,9 @@ function paywallInstructions(planId, method){
         <div style="margin-bottom:12px;">Show this ID to <strong>D4N</strong> at school and hand over <strong>$${price.amt} ${price.cur}</strong> in cash.</div>
         <div class="paywall-ref" id="cashRef">${esc(id)}</div>
         <div class="paywall-copy-hint">tap to copy</div>
-        <div style="margin-top:16px;color:var(--amber);">⏳ After you pay, D4N will approve your account. Just check back in a moment.</div>
+        <div style="margin-top:16px;color:var(--amber);">After you pay, D4N will approve your account. Just check back in a moment.</div>
       </div>
-      <button class="btn btn-primary" id="pwCheckBtn2">🔄 Check status</button>
+      <button class="btn btn-primary" id="pwCheckBtn2">Check status</button>
     `;
   }
   showAuthGate(`<div class="auth-card" style="max-width:480px;">
@@ -679,7 +678,7 @@ function paywallInstructions(planId, method){
   copyEls.forEach(cid=>{
     const el = document.getElementById(cid);
     if(el) el.addEventListener("click", async()=>{
-      try{ await navigator.clipboard.writeText(el.textContent.trim()); toast("📋 Copied!"); }
+      try{ await navigator.clipboard.writeText(el.textContent.trim()); toast("Copied!"); }
       catch(e){ toast("Long-press to copy"); }
     });
   });
@@ -717,17 +716,17 @@ function paywallWaiting(planId, method){
   const currency = currentUserDoc.currency || "JMD";
   const price = priceFor(p, currency);
   const id = currentUserDoc?.displayId || "—";
-  const methodLabel = method === "lynk" ? "📱 Lynk" : "🏫 In person";
+  const methodLabel = method === "lynk" ? "Lynk" : "In person";
   showAuthGate(`<div class="auth-card" style="max-width:480px;">
     <div class="auth-brand">K.I.T.E</div>
     <div class="auth-title">Waiting for approval</div>
     <div class="auth-sub">Your payment is being verified. You'll be unlocked as soon as D4N confirms it.</div>
-    <div class="auth-badge pending">⏳ Awaiting activation</div>
+    <div class="auth-badge pending">Awaiting activation</div>
     <div class="auth-info-row"><span>Plan</span><span class="val">${esc(p.name)}</span></div>
     <div class="auth-info-row"><span>Amount</span><span class="val">$${price.amt} ${price.cur}</span></div>
     <div class="auth-info-row"><span>Method</span><span class="val">${methodLabel}</span></div>
     <div class="auth-info-row"><span>Reference</span><span class="val" style="color:var(--cyan);letter-spacing:.05em;">${esc(id)}</span></div>
-    <button class="btn btn-primary" id="pwCheckBtn" style="margin-top:14px;">🔄 Check status</button>
+    <button class="btn btn-primary" id="pwCheckBtn" style="margin-top:14px;">Check status</button>
     <button class="btn btn-ghost" id="pwCancelBtn" style="margin-top:8px;">Cancel payment request</button>
     <div class="auth-link"><a id="pwSignOut3">Sign out</a></div>
   </div>`);
@@ -756,14 +755,14 @@ function showExpiredScreen(){
     <div class="auth-brand">K.I.T.E</div>
     <div class="auth-title">Access expired</div>
     <div class="auth-sub">Your access ended. Pay <strong style="color:var(--amber);">200 JMD</strong> to D4N at school to renew for another month.</div>
-    <div class="auth-badge expired">⏰ Expired</div>
+    <div class="auth-badge expired">Expired</div>
     <div class="display-id" id="expId">${esc(id)}</div>
     <div class="display-id-hint">tap to copy</div>
-    <button class="btn btn-ghost" id="copyExpIdBtn">📋 Copy User ID</button>
-    <button class="btn btn-primary" id="recheckBtn" style="margin-top:10px;">🔄 Check status</button>
+    <button class="btn btn-ghost" id="copyExpIdBtn">Copy User ID</button>
+    <button class="btn btn-primary" id="recheckBtn" style="margin-top:10px;">Check status</button>
     <div class="auth-link"><a id="eSignOut">Sign out</a></div>
   </div>`);
-  const copy=async()=>{try{await navigator.clipboard.writeText(id);toast("📋 Copied!")}catch(e){toast("Long-press to copy")}};
+  const copy=async()=>{try{await navigator.clipboard.writeText(id);toast("Copied!")}catch(e){toast("Long-press to copy")}};
   document.getElementById("expId").addEventListener("click",copy);
   document.getElementById("copyExpIdBtn").addEventListener("click",copy);
   document.getElementById("recheckBtn").addEventListener("click",checkStatusAgain);
@@ -863,7 +862,7 @@ function startDataListener(){
     lastSyncedAt = cloudTime;
     suppressPush = false;
     render();
-    toast("🔄 Synced from another device");
+    toast("Synced from another device");
   }, (err) => {
     console.warn("Snapshot error:", err);
   });
@@ -900,7 +899,7 @@ async function loadPlanConfig(){
 async function savePlanConfig(){
   try{
     await setDoc(doc(db, "config", "plans"), planConfig);
-    toast("✅ Plan defaults saved");
+    toast("Plan defaults saved");
   }catch(e){
     toast("Could not save plan config");
   }
@@ -932,6 +931,15 @@ onAuthStateChanged(auth,async(user)=>{
     }
   }, 3500);
   currentUser=user;
+  // Offline and signed in before
+  if(!navigator.onLine){
+    const cachedOffline=getCachedUserDoc();
+    if(cachedOffline&&cachedOffline.uid===user.uid){
+      currentUserDoc=cachedOffline;
+      routeBasedOnStatus();
+      return;
+    }
+  }
   showLoadingScreen();
   try{
        const userRef=doc(db,"users",user.uid);
@@ -939,7 +947,7 @@ onAuthStateChanged(auth,async(user)=>{
     try{
       snap=await getDoc(userRef);
     }catch(e){
-      // OFFLINE — try cached user doc
+      // OFFLINE 
       const cached = getCachedUserDoc();
       if(cached && cached.uid === user.uid){
         currentUserDoc = cached;
@@ -988,12 +996,23 @@ function loadWM(){
     WM.windows.unshift(hw);
     WM.focusedId=hw.id;
   }
-  // Recenter the home window on every page load
-  const homeWin = WM.windows.find(w => w.isHome);
-  if(homeWin){
-    homeWin.x = Math.max(20, Math.round((window.innerWidth - 560) / 2));
-    homeWin.y = Math.max(20, Math.round((window.innerHeight - 520) / 2));
-  }
+
+  WM_RECENTER_HOME = true;
+}
+function wmCenterHome(){
+  if(!WM_RECENTER_HOME)return;
+  const home=WM.windows.find(w=>w.isHome);
+  if(!home)return;
+  const el=document.getElementById('win-'+home.id);
+  if(!el)return;
+  const w=el.offsetWidth,h=el.offsetHeight;
+  if(!w||!h)return;
+  home.x=Math.max(0,Math.round((window.innerWidth-w)/2));
+  home.y=Math.max(0,Math.round((window.innerHeight-h)/2));
+  el.style.left=home.x+'px';
+  el.style.top=home.y+'px';
+  WM_RECENTER_HOME=false;
+  saveWM();
 }
 function saveWM(){
   try{
@@ -1385,7 +1404,7 @@ function tickQuizTimer(){
   if(params.checked)return;
   const el=document.getElementById('quizTimer');
   const rem=quizRemaining(params);
-  if(el){el.textContent=`⏱ ${fmtMMSS(rem)}`;el.className='quiz-timer'+(rem<=5?' danger':(rem<=10?' warn':''))}
+  if(el){el.textContent=`${fmtMMSS(rem)}`;el.className='quiz-timer'+(rem<=5?' danger':(rem<=10?' warn':''))}
   if(rem<=0){if(params.timerMode==='perq')quizTimeExpired();else endQuizTimeUp()}
 }
 function quizTimeExpired(){
@@ -1658,16 +1677,16 @@ function wmHandleGo(page,params,btn){
   render();
 }
 
-/* ========== PAGES (part 2 of 3) ========== */
+/* ========== PAGES ========== */
 function pageHome(){
-  const adminBtn=isAdmin()?`<button class="menu-item accent" data-go="admin_panel"><span class="num">6.</span><span class="icon">🛡️</span><span class="label">Admin Panel</span><span class="meta">manage users</span></button>`:"";
+  const adminBtn=isAdmin()?`<button class="menu-item accent" data-go="admin_panel"><span class="num">6.</span><span class="label">Admin Panel</span><span class="meta">manage users</span></button>`:"";
   const body=`
     <div class="menu">
-      <button class="menu-item" data-go="select_subject"><span class="num">1.</span><span class="icon">📚</span><span class="label">Select Subject</span><span class="meta">${subjects().length} subjects</span></button>
-      <button class="menu-item" data-go="timer"><span class="num">2.</span><span class="icon">⏰</span><span class="label">Set Study Timer</span></button>
-      <button class="menu-item" data-go="progress"><span class="num">3.</span><span class="icon">📊</span><span class="label">View Progress</span><span class="meta">${DATA.study_sessions.length} sessions</span></button>
-      <button class="menu-item" data-go="sync_data"><span class="num">4.</span><span class="icon">🔄</span><span class="label">Import / Export</span></button>
-      <button class="menu-item" data-go="search"><span class="num">5.</span><span class="icon">🔍</span><span class="label">Search</span><span class="meta">all subjects</span></button>
+      <button class="menu-item" data-go="select_subject"><span class="num">1.</span><span class="label">Select Subject</span><span class="meta">${subjects().length} subjects</span></button>
+      <button class="menu-item" data-go="timer"><span class="num">2.</span><span class="label">Set Study Timer</span></button>
+      <button class="menu-item" data-go="progress"><span class="num">3.</span><span class="label">View Progress</span><span class="meta">${DATA.study_sessions.length} sessions</span></button>
+      <button class="menu-item" data-go="sync_data"><span class="num">4.</span><span class="label">Import / Export</span></button>
+      <button class="menu-item" data-go="search"><span class="num">5.</span><span class="label">Search</span><span class="meta">all subjects</span></button>
       ${adminBtn}
     </div>
   `;
@@ -1675,7 +1694,7 @@ function pageHome(){
 }
 function pageSelectSubject(){
   const subs=subjects();
-  let body=`<div class="menu"><button class="menu-item accent" data-go="new_subject_form"><span class="icon">➕</span><span class="label">Add New Subject</span></button>`;
+  let body=`<div class="menu"><button class="menu-item accent" data-go="new_subject_form"><span class="label">Add New Subject</span></button>`;
   if(subs.length===0){
     body+=`</div>`+emptyState("📭","No subjects yet.","Add one above to get started.");
   }else{
@@ -1699,7 +1718,7 @@ function pageTopicPicker(){
   const subject=nav.params.subject;
   if(hasUntaggedItems(subject)&&!nav.params.assigned){
     return shell("SET UP TOPICS",subject,
-      `<div class="card"><div class="qa-label" style="color:var(--amber);">⚠️ First time here</div>
+      `<div class="card"><div class="qa-label" style="color:var(--amber);">First time here</div>
        <div class="qa-text" style="font-size:13.5px;">You have <strong>${untaggedCount(subject)}</strong> item${untaggedCount(subject)===1?'':'s'} (flashcards / notes) with no topic yet. Give them a topic so you can study them in one place.</div></div>
        <label class="field-label">Topic name for existing items</label>
        <input type="text" id="initialTopicName" placeholder="e.g. General" value="General" autofocus>
@@ -1716,14 +1735,14 @@ function pageTopicPicker(){
     topics.forEach((t,i)=>{
       const cc=topicCardCount(subject,t), nc=topicNoteCount(subject,t);
       body+=`<button class="menu-item" data-go="topic_menu" data-subject="${esc(subject)}" data-topic="${esc(t)}">
-        <span class="num">${i+1}.</span><span class="icon">📚</span><span class="label">${esc(t)}</span>
+        <span class="num">${i+1}.</span><span class="label">${esc(t)}</span>
         <span class="meta">${cc} cards${nc?' · '+nc+' notes':''}</span></button>`;
     });
     body+=`</div>`;
   }
   body+=`<div class="menu" style="margin-top:14px;">
-    <button class="menu-item accent" data-go="manage_topics"><span class="icon">🏷️</span><span class="label">Manage Topics</span><span class="meta">add / rename / delete</span></button>
-    <button class="menu-item" data-go="select_subject" data-clearstack="1"><span class="icon">↩️</span><span class="label">Back to Subjects</span></button>
+    <button class="menu-item accent" data-go="manage_topics"><span class="label">Manage Topics</span><span class="meta">add / rename / delete</span></button>
+    <button class="menu-item" data-go="select_subject" data-clearstack="1"><span class="label">Back to Subjects</span></button>
   </div>`;
   return shell(esc(subject).toUpperCase(),"Pick a topic",body,{path:`~/study/${slug(subject)}`});
 }
@@ -1732,16 +1751,16 @@ function pageTopicMenu(){
   const topic=nav.params.topic;
   const cc=topicCardCount(subject,topic);
   const nc=topicNoteCount(subject,topic);
-  const studyBtn=cc>0?`<button class="menu-item" data-study-topic="${esc(topic)}"><span class="num">2.</span><span class="icon">📖</span><span class="label">Study Flashcards</span></button>`:`<button class="menu-item" style="opacity:.55;" data-go="flashcard_menu"><span class="num">2.</span><span class="icon">📖</span><span class="label">Study Flashcards</span><span class="meta">Add cards first</span></button>`;
-  const quizBtn=cc>=2?`<button class="menu-item" data-go="quiz_settings"><span class="num">4.</span><span class="icon">🎯</span><span class="label">Take Quiz</span></button>`:`<button class="menu-item" style="opacity:.55;" data-go="flashcard_menu"><span class="num">4.</span><span class="icon">🎯</span><span class="label">Take Quiz</span><span class="meta">Need 2+ cards</span></button>`;
+  const studyBtn=cc>0?`<button class="menu-item" data-study-topic="${esc(topic)}"><span class="num">2.</span><span class="label">Study Flashcards</span></button>`:`<button class="menu-item" style="opacity:.55;" data-go="flashcard_menu"><span class="num">2.</span><span class="label">Study Flashcards</span><span class="meta">Add cards first</span></button>`;
+  const quizBtn=cc>=2?`<button class="menu-item" data-go="quiz_settings"><span class="num">4.</span><span class="label">Take Quiz</span></button>`:`<button class="menu-item" style="opacity:.55;" data-go="flashcard_menu"><span class="num">4.</span><span class="label">Take Quiz</span><span class="meta">Need 2+ cards</span></button>`;
   const body=`
     <div class="menu">
-      <button class="menu-item" data-go="flashcard_menu"><span class="num">1.</span><span class="icon">📝</span><span class="label">Flashcard Manager</span><span class="meta">${cc} cards</span></button>
+      <button class="menu-item" data-go="flashcard_menu"><span class="num">1.</span><span class="label">Flashcard Manager</span><span class="meta">${cc} cards</span></button>
       ${studyBtn}
-      <button class="menu-item" data-go="read_menu"><span class="num">3.</span><span class="icon">🔊</span><span class="label">Read Mode</span><span class="meta">${nc} notes</span></button>
+      <button class="menu-item" data-go="read_menu"><span class="num">3.</span><span class="label">Read Mode</span><span class="meta">${nc} notes</span></button>
       ${quizBtn}
-      <button class="menu-item" data-go="topic_progress"><span class="num">5.</span><span class="icon">📊</span><span class="label">View Progress</span></button>
-      <button class="menu-item" data-go="topic_picker" data-clearstack="1" data-subject="${esc(subject)}" data-clearTopic="1"><span class="num">6.</span><span class="icon">↩️</span><span class="label">Back to Topics</span></button>
+      <button class="menu-item" data-go="topic_progress"><span class="num">5.</span><span class="label">View Progress</span></button>
+      <button class="menu-item" data-go="topic_picker" data-clearstack="1" data-subject="${esc(subject)}" data-clearTopic="1"><span class="num">6.</span><span class="label">Back to Topics</span></button>
     </div>
   `;
   return shell(esc(topic).toUpperCase(),esc(subject),body,{path:`~/study/${slug(subject)}/${slug(topic)}`});
@@ -1749,7 +1768,7 @@ function pageTopicMenu(){
 function pageManageTopics(){
   const subject=nav.params.subject;
   const topics=topicsFor(subject);
-  let body=`<div class="menu"><button class="menu-item accent" data-go="add_topic_form"><span class="icon">➕</span><span class="label">Add New Topic</span></button></div>`;
+  let body=`<div class="menu"><button class="menu-item accent" data-go="add_topic_form"><span class="label">Add New Topic</span></button></div>`;
   if(topics.length===0){
     body+=emptyState("📭","No topics yet.","Add one above.");
   }else{
@@ -1757,15 +1776,15 @@ function pageManageTopics(){
     topics.forEach(t=>{
       body+=`<div class="note-row">
         <span class="nr-title">${esc(t)}</span>
-        <button class="mini-btn" data-rename-topic="${esc(t)}">✏️</button>
-        <button class="mini-btn danger" data-delete-topic="${esc(t)}">🗑️</button>
+        <button class="mini-btn" data-rename-topic="${esc(t)}">Rename</button>
+        <button class="mini-btn danger" data-delete-topic="${esc(t)}">Delete</button>
       </div>`;
     });
     body+=`</div>`;
   }
     body+=`<div class="menu" style="margin-top:14px;">
-    <button class="menu-item" data-go="rename_subject_form"><span class="icon">✏️</span><span class="label">Rename Subject</span><span class="meta">${esc(subject)}</span></button>
-    <button class="menu-item" data-go="topic_picker" data-clearstack="1" data-clearTopic="1"><span class="icon">↩️</span><span class="label">Back to Topics</span></button>
+    <button class="menu-item" data-go="rename_subject_form"><span class="label">Rename Subject</span><span class="meta">${esc(subject)}</span></button>
+    <button class="menu-item" data-go="topic_picker" data-clearstack="1" data-clearTopic="1"><span class="label">Back to Topics</span></button>
   </div>`;
   return shell("MANAGE TOPICS",subject,body,{path:`~/study/${slug(subject)}/topics`});
 }
@@ -1822,7 +1841,7 @@ function pageSearch(){
     } else {
       body += `<div class="page-sub" style="margin-top:-8px;">${total} result${total===1?'':'s'}</div>`;
       if(results.subjects.length){
-        body += `<div class="qa-label" style="color:var(--amber);margin:14px 0 8px;">📚 Subjects (${results.subjects.length})</div>`;
+        body += `<div class="qa-label" style="color:var(--amber);margin:14px 0 8px;">Subjects (${results.subjects.length})</div>`;
         results.subjects.slice(0,20).forEach(s=>{
           body += `<div class="list-row" data-goto-subject data-subject="${esc(s)}">
             <div style="flex:1;overflow:hidden;">
@@ -1833,7 +1852,7 @@ function pageSearch(){
         });
       }
       if(results.cards.length){
-        body += `<div class="qa-label" style="color:var(--amber);margin:14px 0 8px;">📝 Flashcards (${results.cards.length})</div>`;
+        body += `<div class="qa-label" style="color:var(--amber);margin:14px 0 8px;">Flashcards (${results.cards.length})</div>`;
         results.cards.slice(0,60).forEach(r=>{
           body += `<div class="list-row" data-goto-card data-subject="${esc(r.subject)}" data-idx="${r.idx}">
             <div style="flex:1;overflow:hidden;">
@@ -1844,7 +1863,7 @@ function pageSearch(){
         });
       }
       if(results.notes.length){
-        body += `<div class="qa-label" style="color:var(--amber);margin:14px 0 8px;">📖 Notes (${results.notes.length})</div>`;
+        body += `<div class="qa-label" style="color:var(--amber);margin:14px 0 8px;">Notes (${results.notes.length})</div>`;
         results.notes.slice(0,60).forEach(r=>{
           body += `<div class="list-row" data-goto-note data-subject="${esc(r.subject)}" data-note-id="${esc(r.note.id)}">
             <div style="flex:1;overflow:hidden;">
@@ -1879,11 +1898,11 @@ function pageFlashcardMenu(){
   const body=`
     <div class="page-sub" style="margin-top:-6px;">Topic: <strong style="color:var(--amber);">${esc(topic)}</strong></div>
     <div class="menu">
-      <button class="menu-item accent" data-go="add_card_form"><span class="num">1.</span><span class="icon">➕</span><span class="label">Add New Flashcard</span></button>
-      <button class="menu-item" data-go="card_list_view"><span class="num">2.</span><span class="icon">👀</span><span class="label">View All Cards</span><span class="meta">${cc} cards</span></button>
-      <button class="menu-item" data-go="manage_card_list"><span class="num">3.</span><span class="icon">✏️</span><span class="label">Edit</span></button>
-      <button class="menu-item danger" data-go="delete_choice"><span class="num">4.</span><span class="icon">🗑️</span><span class="label">Delete Card(s)</span></button>
-      <button class="menu-item" data-go="topic_menu" data-clearstack="1"><span class="num">5.</span><span class="icon">↩️</span><span class="label">Back to Topic</span></button>
+      <button class="menu-item accent" data-go="add_card_form"><span class="num">1.</span><span class="label">Add New Flashcard</span></button>
+      <button class="menu-item" data-go="card_list_view"><span class="num">2.</span><span class="label">View All Cards</span><span class="meta">${cc} cards</span></button>
+      <button class="menu-item" data-go="manage_card_list"><span class="num">3.</span><span class="label">Edit</span></button>
+      <button class="menu-item danger" data-go="delete_choice"><span class="num">4.</span><span class="label">Delete Card(s)</span></button>
+      <button class="menu-item" data-go="topic_menu" data-clearstack="1"><span class="num">5.</span><span class="label">Back to Topic</span></button>
     </div>
   `;
   return shell("FLASHCARD MANAGER",topic,body,{path:`~/study/${slug(subject)}/${slug(topic)}/flashcards`});
@@ -1927,7 +1946,7 @@ function pageManageCardList(){
     const realIdx=(DATA.flashcards[subject]||[]).indexOf(card);
     body+=`<button class="menu-item" data-pick-edit-card="${realIdx}"><span class="label">${esc(card.question)}</span></button>`;
   });
-  body+=`</div><div class="btn-row" style="margin-top:14px;"><button class="btn btn-ghost" data-go="bulk_edit_cards">🧰 Bulk edit</button></div>`;
+  body+=`</div><div class="btn-row" style="margin-top:14px;"><button class="btn btn-ghost" data-go="bulk_edit_cards">Bulk edit</button></div>`;
   body+=backBtn("flashcard_menu","Back");
   return shell("EDIT CARDS",topic,body,{path:`~/study/${slug(subject)}/${slug(topic)}/edit`});
 }
@@ -1952,8 +1971,8 @@ function pageBulkEditCards(){
     <div class="page-sub" style="margin-top:14px;margin-bottom:6px;">Move selected to another topic:</div>
     <input type="text" id="bulkMoveTopic" placeholder="Topic name (new or existing)">
     <div class="btn-row">
-      <button class="btn btn-ghost" id="bulkMoveBtn">↪ Move</button>
-      <button class="btn btn-danger" id="bulkDeleteBtn">🗑 Delete</button>
+      <button class="btn btn-ghost" id="bulkMoveBtn">Move</button>
+      <button class="btn btn-danger" id="bulkDeleteBtn">Delete</button>
     </div>
     ${backBtn("manage_card_list","Back")}
   `;
@@ -1979,9 +1998,9 @@ function pageDeleteChoice(){
   const body=`
     <div class="page-sub" style="margin-top:-6px;">Topic: <strong style="color:var(--amber);">${esc(topic)}</strong></div>
     <div class="menu">
-      <button class="menu-item" data-go="delete_card_list"><span class="num">1.</span><span class="icon">🃏</span><span class="label">Delete specific cards</span><span class="meta">${n} in this topic</span></button>
-      <button class="menu-item danger" id="delTopicAndCardsBtn"><span class="num">2.</span><span class="icon">🗑️</span><span class="label">Delete entire topic (${n} cards + notes)</span></button>
-      <button class="menu-item" data-go="flashcard_menu" data-clearstack="1"><span class="num">3.</span><span class="icon">↩️</span><span class="label">Cancel</span></button>
+      <button class="menu-item" data-go="delete_card_list"><span class="num">1.</span><span class="label">Delete specific cards</span><span class="meta">${n} in this topic</span></button>
+      <button class="menu-item danger" id="delTopicAndCardsBtn"><span class="num">2.</span><span class="label">Delete entire topic (${n} cards + notes)</span></button>
+      <button class="menu-item" data-go="flashcard_menu" data-clearstack="1"><span class="num">3.</span><span class="label">Cancel</span></button>
     </div>
   `;
   return shell("DELETE",topic,body,{path:`~/study/${slug(subject)}/${slug(topic)}/delete`});
@@ -1998,7 +2017,7 @@ function pageDeleteCardList(){
     const realIdx=(DATA.flashcards[subject]||[]).indexOf(card);
     body+=`<button class="menu-item" data-del-card-idx="${realIdx}"><span class="label">${esc(card.question)}</span></button>`;
   });
-  body+=`<button class="menu-item" data-back="1"><span class="icon">↩️</span><span class="label">Cancel</span></button></div>`;
+  body+=`<button class="menu-item" data-back="1"><span class="label">Cancel</span></button></div>`;
   return shell("DELETE CARD",topic,body,{path:`~/study/${slug(subject)}/${slug(topic)}/delete/card`});
 }
 function pageReadImportCards(){
@@ -2019,7 +2038,7 @@ function pageReadMenu(){
   const subject=nav.params.subject;
   const topic=nav.params.topic;
   const notes=notesInTopic(subject,topic);
-  let body=`<div class="menu"><button class="menu-item accent" data-go="read_new_choice"><span class="icon">➕</span><span class="label">New Note</span></button>`;
+  let body=`<div class="menu"><button class="menu-item accent" data-go="read_new_choice"><span class="label">New Note</span></button>`;
   if(notes.length===0){
     body+=`</div>`+emptyState("📭","No notes in this topic.","Write or import your first note.");
   }else{
@@ -2029,7 +2048,7 @@ function pageReadMenu(){
     body+=`</div>`;
   }
   if(notes.length>0){
-    body+=`<div class="menu" style="margin-top:8px;"><button class="menu-item" data-go="read_edit_list"><span class="icon">✏️</span><span class="label">Edit Notes</span></button></div>`;
+    body+=`<div class="menu" style="margin-top:8px;"><button class="menu-item" data-go="read_edit_list"><span class="label">Edit Notes</span></button></div>`;
   }
   body+=backBtn("topic_menu","Back to Topic");
   return shell("READ MODE",topic,body,{path:`~/study/${slug(subject)}/${slug(topic)}/read`});
@@ -2043,7 +2062,7 @@ function pageReadEditList(){
   }
   let body=`<div class="page-sub" style="margin-top:-6px;">Edit or delete a note</div>`;
   notes.forEach(n=>{
-    body+=`<div class="note-row"><span class="nr-title">${esc(n.title)}</span><button class="mini-btn" data-edit-note="${esc(n.id)}">✏️</button><button class="mini-btn danger" data-del-note="${esc(n.id)}">🗑️</button></div>`;
+    body+=`<div class="note-row"><span class="nr-title">${esc(n.title)}</span><button class="mini-btn" data-edit-note="${esc(n.id)}">Edit</button><button class="mini-btn danger" data-del-note="${esc(n.id)}">Delete</button></div>`;
   });
   body+=backBtn("read_menu","Back");
   return shell("EDIT NOTES",topic,body,{path:`~/study/${slug(subject)}/${slug(topic)}/read/edit`});
@@ -2053,9 +2072,9 @@ function pageReadNewChoice(){
   const topic=nav.params.topic;
   const body=`
     <div class="menu">
-      <button class="menu-item accent" data-go="read_write_form"><span class="icon">✍️</span><span class="label">Write New Note</span></button>
-      <button class="menu-item" data-go="read_import"><span class="icon">📥</span><span class="label">Import Notes into Topic</span></button>
-      <button class="menu-item" data-back="1"><span class="icon">↩️</span><span class="label">Cancel</span></button>
+      <button class="menu-item accent" data-go="read_write_form"><span class="label">Write New Note</span></button>
+      <button class="menu-item" data-go="read_import"><span class="label">Import Notes into Topic</span></button>
+      <button class="menu-item" data-back="1"><span class="label">Cancel</span></button>
     </div>
   `;
   return shell("NEW NOTE",topic,body,{path:`~/study/${slug(subject)}/${slug(topic)}/read/new`});
@@ -2098,7 +2117,7 @@ function pageReadView(){
   }
   const playing=ttsState==='playing'&&ttsNoteId===noteId;
   const paused=ttsState==='paused'&&ttsNoteId===noteId;
-  const ttsBtns=`<div class="tts-controls"><button class="btn btn-primary" id="ttsPlayBtn">${playing?'⏸ Pause':(paused?'▶ Resume':'▶ Play aloud')}</button><button class="btn btn-ghost" id="ttsStopBtn" ${(!playing&&!paused)?'disabled':''}>⏹ Stop</button></div>`;
+  const ttsBtns=`<div class="tts-controls"><button class="btn btn-primary" id="ttsPlayBtn">${playing?'Pause':(paused?'Resume':'Play aloud')}</button><button class="btn btn-ghost" id="ttsStopBtn" ${(!playing&&!paused)?'disabled':''}>Stop</button></div>`;
   const voices = ('speechSynthesis' in window) ? window.speechSynthesis.getVoices() : [];
   const voiceOpts = voices.map(v => `<option value="${esc(v.name)}" ${ttsPrefs.voice===v.name?"selected":""}>${esc(v.name)} (${esc(v.lang)})</option>`).join("");
   const prefsHTML = `
@@ -2119,7 +2138,7 @@ function pageReadView(){
     <div class="card"><div class="qa-label" style="color:var(--amber);">${esc(note.title)}</div><div class="note-content">${esc(note.content)}</div></div>
     ${ttsBtns}
     ${prefsHTML}
-    <div class="btn-row"><button class="btn btn-ghost" data-go="read_write_form" data-note-id="${esc(note.id)}">✏️ Edit</button><button class="btn btn-danger" id="deleteNoteBtn">🗑️ Delete</button></div>
+    <div class="btn-row"><button class="btn btn-ghost" data-go="read_write_form" data-note-id="${esc(note.id)}">Edit</button><button class="btn btn-danger" id="deleteNoteBtn">Delete</button></div>
     ${backBtn("read_menu","Back")}
   `;
   return shell("READ MODE",topic,body,{path:`~/study/${slug(subject)}/${slug(topic)}/read/${slug(note.title)}`});
@@ -2140,9 +2159,9 @@ function pageStudySession(){
   const pct=((idx+1)/total)*100;
   let qa;
   if(!revealed){
-    qa=`<div class="card"><div class="qa-label q">❓ Question</div><div class="qa-text">${esc(card.question)}</div></div><button class="btn btn-primary" id="revealBtn">Reveal answer</button>`;
+    qa=`<div class="card"><div class="qa-label q">Question</div><div class="qa-text">${esc(card.question)}</div></div><button class="btn btn-primary" id="revealBtn">Reveal answer</button>`;
   }else{
-    qa=`<div class="card"><div class="qa-label q">❓ Question</div><div class="qa-text" style="margin-bottom:14px;">${esc(card.question)}</div><hr class="div" style="margin:10px 0;"><div class="qa-label a">✅ Answer</div><div class="qa-text">${esc(card.answer)}</div></div>
+    qa=`<div class="card"><div class="qa-label q">Question</div><div class="qa-text" style="margin-bottom:14px;">${esc(card.question)}</div><hr class="div" style="margin:10px 0;"><div class="qa-label a">Answer</div><div class="qa-text">${esc(card.answer)}</div></div>
       <div class="page-sub" style="margin-bottom:8px;">Did you get it right?</div>
       <div class="yn-row"><button class="btn btn-danger" data-study-answer="n">✗ No</button><button class="btn btn-primary" data-study-answer="y" style="background:var(--green);border-color:var(--green);">✓ Yes</button></div>`;
   }
@@ -2162,7 +2181,7 @@ function pageStudyComplete(){
   return shell("SESSION COMPLETE!",topic,body,{path:`~/study/${slug(subject)}/${slug(topic)}/study/done`});
 }
 
-/* ---- QUIZ (topic-scoped + MCQ mode) ---- */
+/* ---- QUIZ ---- */
 function quizTimerOptsHTML(mode){
   if(mode==='perq')return `<label class="field-label">Seconds per question</label><input type="number" id="quizPerQSeconds" min="5" max="600" value="30">`;
   if(mode==='whole')return `<label class="field-label">Minutes for the whole quiz</label><input type="number" id="quizWholeMinutes" min="1" max="180" value="5">`;
@@ -2206,17 +2225,17 @@ function pageQuizSession(){
   if(p.timerMode&&p.timerMode!=='none'){
     const rem=p.checked?(typeof p.frozenRemaining==='number'?p.frozenRemaining:0):quizRemaining(p);
     const cls=rem<=5?' danger':(rem<=10?' warn':'');
-    timerHTML=`<div class="quiz-timer${cls}" id="quizTimer">⏱ ${fmtMMSS(rem)}</div>`;
+    timerHTML=`<div class="quiz-timer${cls}" id="quizTimer">${fmtMMSS(rem)}</div>`;
   }
   let inner;
   if(!checked){
     if(p.answerMode==='mcq'){
-      inner=`<div class="card"><div class="qa-label q">❓ Question</div><div class="qa-text">${esc(card.question)}</div></div>`;
+      inner=`<div class="card"><div class="qa-label q">Question</div><div class="qa-text">${esc(card.question)}</div></div>`;
       (p.choices||[]).forEach((c,i)=>{
         inner+=`<button class="btn btn-ghost" data-mcq-choice="${i}" style="text-align:left;justify-content:flex-start;margin-bottom:8px;">${String.fromCharCode(65+i)}. ${esc(c)}</button>`;
       });
     }else{
-      inner=`<div class="card"><div class="qa-label q">❓ Question</div><div class="qa-text">${esc(card.question)}</div></div>
+      inner=`<div class="card"><div class="qa-label q">Question</div><div class="qa-text">${esc(card.question)}</div></div>
         <label class="field-label">Your answer</label>
         <input type="text" id="quizAnswerInput" placeholder="Type your answer..." autofocus value="${esc(userAnswer||"")}">
         <button class="btn btn-primary" id="submitAnswerBtn">Submit</button>`;
@@ -2224,14 +2243,14 @@ function pageQuizSession(){
   }else{
     let rb;
     if(result==="correct"){
-      rb=`<div class="card" style="border-color:#1f4d3a;"><div class="qa-label" style="color:var(--green);">✅ Correct!</div></div>`;
+      rb=`<div class="card" style="border-color:#1f4d3a;"><div class="qa-label" style="color:var(--green);">Correct!</div></div>`;
       if(p.answerMode==='mcq')rb+=`<button class="btn btn-primary" id="nextQuestionBtn">Next</button>`;
     }else if(result==="close"){
-      rb=`<div class="card" style="border-color:#5a4a1f;"><div class="qa-label" style="color:var(--amber);">🟡 Close! Expected:</div><div class="qa-text">${esc(card.answer)}</div>${userAnswer?`<hr class="div" style="margin:10px 0;"><div class="qa-label" style="color:var(--grey);">You wrote:</div><div class="qa-text" style="font-size:13.5px;color:var(--grey);">${esc(userAnswer)}</div>`:''}</div>
+      rb=`<div class="card" style="border-color:#5a4a1f;"><div class="qa-label" style="color:var(--amber);">Close! Expected:</div><div class="qa-text">${esc(card.answer)}</div>${userAnswer?`<hr class="div" style="margin:10px 0;"><div class="qa-label" style="color:var(--grey);">You wrote:</div><div class="qa-text" style="font-size:13.5px;color:var(--grey);">${esc(userAnswer)}</div>`:''}</div>
         <div class="page-sub" style="margin-bottom:8px;">Count as correct?</div>
         <div class="yn-row"><button class="btn btn-danger" data-quiz-override="n">✗ No</button><button class="btn btn-primary" data-quiz-override="y" style="background:var(--green);border-color:var(--green);">✓ Yes</button></div>`;
     }else{
-      rb=`<div class="card" style="border-color:#5a2424;"><div class="qa-label" style="color:var(--red);">❌ ${p.timedOut?"Time's up!":"Wrong."} Correct answer:</div><div class="qa-text">${esc(card.answer)}</div>${userAnswer?`<hr class="div" style="margin:10px 0;"><div class="qa-label" style="color:var(--grey);">You chose:</div><div class="qa-text" style="font-size:13.5px;color:var(--grey);">${esc(userAnswer)}</div>`:''}</div>
+      rb=`<div class="card" style="border-color:#5a2424;"><div class="qa-label" style="color:var(--red);">${p.timedOut?"Time's up!":"Wrong."} Correct answer:</div><div class="qa-text">${esc(card.answer)}</div>${userAnswer?`<hr class="div" style="margin:10px 0;"><div class="qa-label" style="color:var(--grey);">You chose:</div><div class="qa-text" style="font-size:13.5px;color:var(--grey);">${esc(userAnswer)}</div>`:''}</div>
         <button class="btn btn-primary" id="nextQuestionBtn">Next</button>`;
     }
     inner=rb;
@@ -2247,7 +2266,7 @@ function pageQuizSession(){
 function pageQuizComplete(){
   const{subject,topic,score,total,timeUp}=nav.params;
   const pct=total>0?(score/total)*100:0;
-  const timeUpCard=timeUp?`<div class="card" style="border-color:#5a4a1f;text-align:center;"><div class="qa-label" style="color:var(--amber);justify-content:center;">⏰ Time's up!</div><div class="qa-text" style="font-size:13.5px;">The quiz ended early — unanswered questions counted as wrong.</div></div>`:'';
+  const timeUpCard=timeUp?`<div class="card" style="border-color:#5a4a1f;text-align:center;"><div class="qa-label" style="color:var(--amber);justify-content:center;">Time's up!</div><div class="qa-text" style="font-size:13.5px;">The quiz ended early — unanswered questions counted as wrong.</div></div>`:'';
   const body=timeUpCard+scoreBlock(score,total,pct)+`
     <div class="btn-row"><button class="btn btn-ghost" data-go="topic_menu" data-clearstack="1">Topic menu</button><button class="btn btn-primary" data-quiz-topic="${esc(topic)}" data-clearstack="1">Quiz again</button></div>
   `;
@@ -2281,10 +2300,10 @@ function pageTimerActive(){
   let controls;
   if(done){controls=`<button class="btn btn-primary" id="stopTimerBtn">Stop chime</button>`}
   else{
-    controls=`<button class="btn ${paused?'btn-primary':'btn-ghost'}" id="pauseTimerBtn">${paused?'▶ Resume':'⏸ Pause'}</button>
-      <div class="btn-row"><button class="btn btn-ghost" id="hideTimerBtn">👁 Hide timer</button><button class="btn btn-danger" id="stopTimerBtn">Stop timer</button></div>`;
+    controls=`<button class="btn ${paused?'btn-primary':'btn-ghost'}" id="pauseTimerBtn">${paused?'Resume':'Pause'}</button>
+      <div class="btn-row"><button class="btn btn-ghost" id="hideTimerBtn">Hide timer</button><button class="btn btn-danger" id="stopTimerBtn">Stop timer</button></div>`;
   }
-  const statusMsg=done?"🎉 Time's up! Tap stop to silence the chime.":(paused?"⏸ Paused — the countdown is frozen.":"This timer keeps running even if you leave this screen.");
+  const statusMsg=done?"Time's up! Tap stop to silence the chime.":(paused?"Paused — the countdown is frozen.":"This timer keeps running even if you leave this screen.");
   const body=`
     <div class="timer-display" style="${paused?'color:var(--amber);':''}">${fmtMMSS(remaining)}</div>
     <div class="bar-track" style="height:10px;"><div class="bar-fill ${done?'green':(paused?'amber':'cyan')}" style="width:${pct}%;"></div></div>
@@ -2319,7 +2338,7 @@ function pageProgress(){
   const last5=sessions.slice(-5).reverse();
   const rows=last5.map(s=>{
     const col=s.score>=80?"var(--green)":s.score>=60?"var(--amber)":"var(--red)";
-    return `<div class="session-row"><span class="sr-date">${fmtDate(s.date)}</span><span class="sr-subj">${esc(s.subject)}${s.topic?' › '+esc(s.topic):''}${s.type==='quiz'?' 🎯':''}</span><span class="sr-score" style="color:${col};">${s.score.toFixed(0)}%</span><span class="sr-cards">${s.cards_studied} cards</span></div>`;
+    return `<div class="session-row"><span class="sr-date">${fmtDate(s.date)}</span><span class="sr-subj">${esc(s.subject)}${s.topic?' › '+esc(s.topic):''}${s.type==='quiz'?' (quiz)':''}</span><span class="sr-score" style="color:${col};">${s.score.toFixed(0)}%</span><span class="sr-cards">${s.cards_studied} cards</span></div>`;
   }).join("");
   const goal=getDailyGoal();
   const today=todayCardsStudied();
@@ -2329,22 +2348,22 @@ function pageProgress(){
   const chart=barChartHTML(last14Days(),goal);
   const body=`
     <div class="stat-grid">
-      <div class="stat-box"><div class="stat-val">${streak}🔥</div><div class="stat-label">Current streak (days)</div></div>
+      <div class="stat-box"><div class="stat-val">${streak}</div><div class="stat-label">Current streak (days)</div></div>
       <div class="stat-box"><div class="stat-val">${best}</div><div class="stat-label">Best streak</div></div>
       <div class="stat-box"><div class="stat-val">${today}/${goal}</div><div class="stat-label">Cards today</div></div>
       <div class="stat-box"><div class="stat-val">${avg.toFixed(1)}%</div><div class="stat-label">Average score</div></div>
     </div>
     <div class="progress-line"><span>Today's goal</span><span>${goalPct}%</span></div>
     <div class="bar-track"><div class="bar-fill ${goalPct>=100?'green':'cyan'}" style="width:${goalPct}%;"></div></div>
-    <div class="qa-label" style="color:var(--amber);margin:14px 0 6px;">📅 Last 14 days</div>
+    <div class="qa-label" style="color:var(--amber);margin:14px 0 6px;">Last 14 days</div>
     ${chart}
     <hr class="div">
-    <div class="qa-label" style="color:var(--amber);margin-bottom:10px;">📚 By subject</div>
+    <div class="qa-label" style="color:var(--amber);margin-bottom:10px;">By subject</div>
     ${subjRows}
     <hr class="div">
-    <div class="qa-label" style="color:var(--amber);margin-bottom:10px;">🕐 Last 5 sessions</div>
+    <div class="qa-label" style="color:var(--amber);margin-bottom:10px;">Last 5 sessions</div>
     ${rows}
-    <div class="btn-row"><button class="btn btn-ghost" data-go="progress_history">📜 Full history</button><button class="btn btn-ghost" data-go="goals_settings">🎯 Edit goal</button></div>
+    <div class="btn-row"><button class="btn btn-ghost" data-go="progress_history">Full history</button><button class="btn btn-ghost" data-go="goals_settings">Edit goal</button></div>
     ${backBtn("home","Back to menu")}
   `;
   return shell("STUDY PROGRESS (ALL)","",body,{path:"~/study/progress"});
@@ -2383,7 +2402,7 @@ function pageTopicProgress(){
       <div class="stat-box"><div class="stat-val">${avg.toFixed(1)}%</div><div class="stat-label">Average</div></div>
     </div>
     <hr class="div">
-    <div class="qa-label" style="color:var(--amber);margin-bottom:10px;">🕐 Recent sessions</div>
+    <div class="qa-label" style="color:var(--amber);margin-bottom:10px;">Recent sessions</div>
     ${rows}
     ${backBtn("topic_menu","Back to Topic")}
   `;
@@ -2407,17 +2426,17 @@ function pageFullHistory(){
   }else{
     const rows=[...filtered].reverse().map(s=>{
       const col=s.score>=80?"var(--green)":s.score>=60?"var(--amber)":"var(--red)";
-      const typeIcon=s.type==='quiz'?'🎯':'📖';
+      const typeIcon=s.type==='quiz'?'Quiz':'Study';
       const topicStr=s.topic?' › '+esc(s.topic):'';
-      return `<div class="session-row"><span class="sr-date">${fmtDate(s.date)}</span><span class="sr-subj">${typeIcon} ${esc(s.subject)}${topicStr}</span><span class="sr-score" style="color:${col};">${s.score.toFixed(0)}%</span><span class="sr-cards">${s.cards_studied} cards</span></div>`;
+      return `<div class="session-row"><span class="sr-date">${fmtDate(s.date)}</span><span class="sr-subj">${typeIcon} · ${esc(s.subject)}${topicStr}</span><span class="sr-score" style="color:${col};">${s.score.toFixed(0)}%</span><span class="sr-cards">${s.cards_studied} cards</span></div>`;
     }).join("");
     body+=`<div class="card" style="max-height:none;">${rows}</div>`;
   }
   body+=`
     <hr class="div">
     <div class="btn-row">
-      <button class="btn btn-ghost" id="exportHistoryBtn">📤 Export</button>
-      <button class="btn btn-danger" id="clearHistoryBtn">🗑 Clear all</button>
+      <button class="btn btn-ghost" id="exportHistoryBtn">Export</button>
+      <button class="btn btn-danger" id="clearHistoryBtn">Clear all</button>
     </div>
     ${backBtn("progress","Back to Progress")}
   `;
@@ -2430,17 +2449,17 @@ function pageSyncData(){
   const opts=subs.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join("");
   const body=`
     <div class="card">
-      <div class="qa-label" style="color:var(--cyan);">📤 Full Export</div>
+      <div class="qa-label" style="color:var(--cyan);">Full Export</div>
       <div class="qa-text" style="font-size:13.5px;margin-bottom:12px;">Everything — subjects, topics, flashcards, notes, and session history.</div>
       <button class="btn btn-primary" id="exportFullBtn">Download full backup</button>
     </div>
     <div class="card">
-      <div class="qa-label" style="color:var(--cyan);">📤 Export (No Data)</div>
+      <div class="qa-label" style="color:var(--cyan);">Export (No Data)</div>
       <div class="qa-text" style="font-size:13.5px;margin-bottom:12px;">Subjects, topics, cards, and notes — no review history or session stats.</div>
       <button class="btn btn-primary" id="exportNoDataBtn">Download clean export</button>
     </div>
     <div class="card">
-      <div class="qa-label" style="color:var(--cyan);">📤 Export One Subject</div>
+      <div class="qa-label" style="color:var(--cyan);">Export One Subject</div>
       ${subs.length===0?`<div class="qa-text" style="font-size:13.5px;">No subjects yet.</div>`:`
       <label class="field-label">Subject</label>
       <select class="subj-select" id="exportSubjectSelect">${opts}</select>
@@ -2448,14 +2467,14 @@ function pageSyncData(){
       <button class="btn btn-primary" id="exportSubjectBtn">Download subject</button>`}
     </div>
     <div class="card">
-      <div class="qa-label" style="color:var(--green);">📥 Import Backup</div>
+      <div class="qa-label" style="color:var(--green);">Import Backup</div>
       <div class="qa-text" style="font-size:13.5px;margin-bottom:12px;">Load any backup file. Merges non-destructively.</div>
       <input type="file" id="importFileInput" accept="application/json,.json" style="display:none;">
       <button class="btn btn-primary" id="importDataBtn" style="background:var(--green);border-color:var(--green);">Choose backup file</button>
     </div>
        <div id="importPreview"></div>
     <div class="card">
-      <div class="qa-label" style="color:var(--green);">📥 Import Cards into a Topic</div>
+      <div class="qa-label" style="color:var(--green);">Import Cards into a Topic</div>
       ${subs.length===0?`<div class="qa-text" style="font-size:13.5px;">No subjects yet.</div>`:`
       <div class="qa-text" style="font-size:13px;margin-bottom:12px;">Pick a subject and type a topic name, then choose a .json file of flashcards.</div>
       <label class="field-label">Subject</label>
@@ -2478,7 +2497,7 @@ function pageSettings(){
   const expStr=isAdmin()?"— (admin)":(exp?exp.toLocaleDateString():"—");
   const accountBlock=`
     <div class="card">
-      <div class="qa-label" style="color:var(--cyan);">👤 Account</div>
+      <div class="qa-label" style="color:var(--cyan);">Account</div>
       <div class="auth-info-row"><span>Username</span><span class="val">${esc(u.username||"—")}</span></div>
       <div class="auth-info-row"><span>Email</span><span class="val" style="font-size:11.5px;">${esc(u.email||currentUser?.email||"—")}</span></div>
       <div class="auth-info-row"><span>User ID</span><span class="val" style="color:var(--cyan);letter-spacing:.05em;">${esc(u.displayId||"—")}</span></div>
@@ -2489,19 +2508,19 @@ function pageSettings(){
   `;
   const adminBlock=isAdmin()?`
     <div class="menu" style="margin-bottom:14px;">
-      <button class="menu-item accent" data-go="admin_panel"><span class="icon">🛡️</span><span class="label">Open Admin Panel</span></button>
+      <button class="menu-item accent" data-go="admin_panel"><span class="label">Open Admin Panel</span></button>
     </div>
   `:"";
   const body=`
     ${accountBlock}
     <div class="card">
-      <div class="qa-label" style="color:var(--cyan);">☁️ Cloud Sync</div>
+      <div class="qa-label" style="color:var(--cyan);">Cloud Sync</div>
       <div class="auth-info-row"><span>Status</span><span class="val" id="syncStatus">—</span></div>
       <div class="auth-info-row"><span>Pending</span><span class="val" id="syncPending">—</span></div>
-      <button class="btn btn-primary" id="syncNowBtn" style="margin-top:12px;">🔄 Sync now</button>
+      <button class="btn btn-primary" id="syncNowBtn" style="margin-top:12px;">Sync now</button>
     </div>
     <div class="card">
-      <div class="qa-label" style="color:var(--amber);">💡 Send a Suggestion</div>
+      <div class="qa-label" style="color:var(--amber);">Send a Suggestion</div>
       <div class="qa-text" style="font-size:12.5px;margin-bottom:10px;">Ideas, bugs, features? D4N will see it in the admin panel.</div>
       <textarea id="suggestionText" placeholder="Your suggestion..." style="min-height:80px;"></textarea>
       <button class="btn btn-primary" id="submitSuggestionBtn">Send suggestion</button>
@@ -2517,16 +2536,16 @@ function pageSettings(){
     </div>
     ${mobileNote}
     <div class="card" style="margin-top:16px;">
-      <div class="qa-label" style="color:var(--amber);">📄 Example Files</div>
+      <div class="qa-label" style="color:var(--amber);">Example Files</div>
       <div class="qa-text" style="font-size:13.5px;margin-bottom:12px;">Download examples to use with AI.</div>
       <div class="btn-row" style="margin-top:0;">
-        <button class="btn btn-ghost" id="exampleNotesBtn">📝 Notes</button>
-        <button class="btn btn-ghost" id="exampleBackupBtn">🗂 Backup</button>
+        <button class="btn btn-ghost" id="exampleNotesBtn">Notes</button>
+        <button class="btn btn-ghost" id="exampleBackupBtn">Backup</button>
       </div>
     </div>
     <div class="menu" style="margin-top:8px;">
-      <button class="menu-item danger" id="wipeDataBtn"><span class="icon">🗑️</span><span class="label">Delete All Saved Data</span></button>
-      <button class="menu-item" data-go="home" data-clearstack="1"><span class="icon">↩️</span><span class="label">Back to Main Menu</span></button>
+      <button class="menu-item danger" id="wipeDataBtn"><span class="label">Delete All Saved Data</span></button>
+      <button class="menu-item" data-go="home" data-clearstack="1"><span class="label">Back to Main Menu</span></button>
     </div>
     <div class="page-sub" style="margin-top:16px;">(LEAVE BLANK)</div>
     <div class="page-sub" style="margin-top:2px;color:var(--grey-dim);font-size:10.5px;">V6.0.0</div>
@@ -2813,9 +2832,9 @@ function emptyState(icon,title,sub){return `<div class="empty-state"><div class=
 function backBtn(target,label){return `<div class="btn-row"><button class="btn btn-ghost" data-go="${target}" data-clearstack="1">${esc(label)}</button></div>`}
 function scoreBlock(correct,total,pct){
   let color,msg;
-  if(pct>=80){color="green";msg="🌟 Excellent work!"}
-  else if(pct>=60){color="amber";msg="👍 Good job!"}
-  else{color="red";msg="💪 Keep practicing!"}
+  if(pct>=80){color="green";msg="Excellent work!"}
+  else if(pct>=60){color="amber";msg="Good job!"}
+  else{color="red";msg="Keep practicing!"}
   const cv=`var(--${color})`;
   return `<div class="card" style="text-align:center;"><div style="font-size:24px;font-weight:700;color:${cv};">${correct}/${total} (${pct.toFixed(1)}%)</div><div class="bar-track" style="margin-top:12px;margin-bottom:0;"><div class="bar-fill ${color}" style="width:${pct}%;"></div></div><div style="margin-top:14px;font-weight:700;color:${cv};">${msg}</div></div>`;
 }
@@ -2875,7 +2894,7 @@ function renderDesktop(){
   CURRENT_WIN_ID=WM.focusedId;
   attachHandlers();
   attachWindowHandlers();
-  requestAnimationFrame(drawLines);
+  requestAnimationFrame(()=>{wmCenterHome();drawLines()});
 }
 function drawLines(){
   const svg=document.getElementById('wmLines');
@@ -2913,16 +2932,16 @@ function renderFloatBar(){
   let count=0;
   if(TIMER.active&&!TIMER.hidden){
     count++;
-    if(TIMER.alarming){pills+=`<div class="float-pill alarm" id="fpTimer"><span>⏰ Time's up!</span><button class="fp-stop" id="fpTimerStop">Stop</button></div>`}
-    else if(TIMER.paused){pills+=`<div class="float-pill" id="fpTimer"><span>⏸ ${fmtMMSS(timerRemaining())} — paused</span><button class="fp-mini" id="fpTimerHide">Hide</button></div>`}
-    else{pills+=`<div class="float-pill" id="fpTimer"><span>⏰ ${fmtMMSS(timerRemaining())} left</span><button class="fp-mini" id="fpTimerHide">Hide</button></div>`}
+    if(TIMER.alarming){pills+=`<div class="float-pill alarm" id="fpTimer"><span>Time's up!</span><button class="fp-stop" id="fpTimerStop">Stop</button></div>`}
+    else if(TIMER.paused){pills+=`<div class="float-pill" id="fpTimer"><span>${fmtMMSS(timerRemaining())} — paused</span><button class="fp-mini" id="fpTimerHide">Hide</button></div>`}
+    else{pills+=`<div class="float-pill" id="fpTimer"><span>${fmtMMSS(timerRemaining())} left</span><button class="fp-mini" id="fpTimerHide">Hide</button></div>`}
   }
   if(ttsState==='playing'||ttsState==='paused'){
     count++;
-    pills+=`<div class="float-pill" id="fpTts"><span>🔊 ${ttsState==='paused'?'Paused':'Reading'}: ${esc(ttsNoteTitle||'')}</span><button class="fp-stop" id="fpTtsStop">Stop</button></div>`;
+    pills+=`<div class="float-pill" id="fpTts"><span>${ttsState==='paused'?'Paused':'Reading'}: ${esc(ttsNoteTitle||'')}</span><button class="fp-stop" id="fpTtsStop">Stop</button></div>`;
   }
   if(TIMER.active&&TIMER.hidden){
-    pills+=`<button class="restore-badge${TIMER.alarming?' alarm':''}" id="fpTimerRestore">⏰ ${TIMER.alarming?"Time's up!":fmtMMSS(timerRemaining())}</button>`;
+    pills+=`<button class="restore-badge${TIMER.alarming?' alarm':''}" id="fpTimerRestore">${TIMER.alarming?"Time's up!":fmtMMSS(timerRemaining())}</button>`;
   }
   bar.innerHTML=pills;
   if(app&&!windowedActive())app.style.marginTop=count>0?`${count*46}px`:"0px";
@@ -3097,7 +3116,7 @@ function attachHandlers(){
     (DATA.flashcards[subject]||[]).forEach(c=>{if(!c.topic)c.topic=name});
     (DATA.notes[subject]||[]).forEach(n=>{if(!n.topic)n.topic=name});
     saveData(DATA);
-    toast(`✅ Tagged ${untaggedCount(subject)} item(s) as "${name}"`);
+    toast(`Tagged ${untaggedCount(subject)} item(s) as "${name}"`);
     if(windowedActive()){wmReplace('topic_picker',{subject,assigned:true});return}
     navStack=[];
     goto("topic_picker",{subject,assigned:true},false);
@@ -3112,7 +3131,7 @@ function attachHandlers(){
     if(topicsFor(subject).includes(name)){toast("That topic already exists");return}
     ensureTopic(subject,name);
     saveData(DATA);
-    toast(`✅ Topic "${name}" created`);
+    toast(`Topic "${name}" created`);
     if(windowedActive()){wmGoBackTo('manage_topics',{subject});return}
     navStack=[];
     goto("manage_topics",{subject},false);
@@ -3144,7 +3163,7 @@ function attachHandlers(){
     }
     ensureTopic(subject,newName);
     saveData(DATA);
-    toast(`✅ Renamed to "${newName}"`);
+    toast(`Renamed to "${newName}"`);
     if(windowedActive()){
       WM.windows.forEach(w=>{if(w.params&&w.params.subject===subject&&w.params.topic===oldName)w.params.topic=newName});
       saveWM();
@@ -3168,7 +3187,7 @@ function attachHandlers(){
       DATA.notes[subject]=(DATA.notes[subject]||[]).filter(n=>n.topic!==topic);
       if(DATA.topics[subject])DATA.topics[subject]=DATA.topics[subject].filter(t=>t!==topic);
       saveData(DATA);
-      toast(`🗑 Topic "${topic}" deleted`);
+      toast(`Topic "${topic}" deleted`);
       render();
     });
   });
@@ -3186,7 +3205,7 @@ function attachHandlers(){
     DATA.notes[subject]=(DATA.notes[subject]||[]).filter(n=>n.topic!==topic);
     if(DATA.topics[subject])DATA.topics[subject]=DATA.topics[subject].filter(t=>t!==topic);
     saveData(DATA);
-    toast(`🗑 Topic "${topic}" deleted`);
+    toast(`Topic "${topic}" deleted`);
     if(windowedActive()){wmGoBackTo('topic_picker',{subject});return}
     navStack=[];
     goto("topic_picker",{subject},false);
@@ -3206,7 +3225,7 @@ function attachHandlers(){
     DATA.flashcards[subject].push({question:q,answer:a,topic,review_count:0,last_reviewed:null,created:new Date().toISOString()});
     ensureTopic(subject,topic);
     saveData(DATA);
-    toast("✅ Flashcard added");
+    toast("Flashcard added");
     document.getElementById("cardQuestion").value="";
     document.getElementById("cardAnswer").value="";
     document.getElementById("cardQuestion").focus();
@@ -3249,7 +3268,7 @@ function attachHandlers(){
     const card=DATA.flashcards[subject][cardIdx];
     if(card){card.question=q;card.answer=a}
     saveData(DATA);
-    toast("✅ Changes saved");
+    toast("Changes saved");
     if(windowedActive()){wmGoBackTo('manage_card_list',{subject,topic});return}
     navStack=[];
     goto("manage_card_list",{subject,topic},false);
@@ -3273,7 +3292,7 @@ function attachHandlers(){
     selected.forEach(i=>{if(DATA.flashcards[subject][i])DATA.flashcards[subject][i].topic=target});
     ensureTopic(subject,target);
     saveData(DATA);
-    toast(`✅ Moved ${selected.length} card(s) to "${target}"`);
+    toast(`Moved ${selected.length} card(s) to "${target}"`);
     if(windowedActive()){wmGoBackTo('manage_card_list',{subject,topic:currentTopic});return}
     navStack=[];
     goto("manage_card_list",{subject,topic:currentTopic},false);
@@ -3288,7 +3307,7 @@ function attachHandlers(){
     const sorted=selected.sort((a,b)=>b-a);
     sorted.forEach(i=>{DATA.flashcards[subject].splice(i,1)});
     saveData(DATA);
-    toast(`🗑 ${selected.length} card(s) deleted`);
+    toast(`${selected.length} card(s) deleted`);
     if(windowedActive()){wmGoBackTo('manage_card_list',{subject,topic});return}
     navStack=[];
     goto("manage_card_list",{subject,topic},false);
@@ -3372,7 +3391,7 @@ function attachHandlers(){
       DATA.notes[subject].push({id:genId('note'),title,content,topic,created:new Date().toISOString()});
     }
     saveData(DATA);
-    toast(noteId?"✅ Changes saved":"✅ Note saved");
+    toast(noteId?"Changes saved":"Note saved");
     if(windowedActive()){wmGoBackTo('read_menu',{subject,topic});return}
     navStack=[];
     goto("read_menu",{subject,topic},false);
@@ -3440,7 +3459,7 @@ function attachHandlers(){
       if(!file)return;
       parseImportedNotesFile(file,(notesToAdd,err)=>{
         const preview=document.getElementById("noteImportPreview");
-        if(err){preview.innerHTML=`<div class="card" style="border-color:#5a2424;"><div class="qa-label" style="color:var(--red);">⚠️ ${esc(err)}</div></div>`;return}
+        if(err){preview.innerHTML=`<div class="card" style="border-color:#5a2424;"><div class="qa-label" style="color:var(--red);">${esc(err)}</div></div>`;return}
         const subject=nav.params.subject;
         const topic=nav.params.topic;
         ensureSubject(subject);
@@ -3452,8 +3471,8 @@ function attachHandlers(){
           added++;
         });
         saveData(DATA);
-        preview.innerHTML=`<div class="card" style="border-color:#1f4d3a;"><div class="qa-label" style="color:var(--green);">✅ Imported</div><div class="qa-text" style="font-size:13.5px;">${added} note${added===1?'':'s'} added to "${esc(topic)}".</div></div>`;
-        toast("✅ Notes imported");
+        preview.innerHTML=`<div class="card" style="border-color:#1f4d3a;"><div class="qa-label" style="color:var(--green);">Imported</div><div class="qa-text" style="font-size:13.5px;">${added} note${added===1?'':'s'} added to "${esc(topic)}".</div></div>`;
+        toast("Notes imported");
         noteImportInput.value="";
       });
     });
@@ -3469,7 +3488,7 @@ function attachHandlers(){
       if(!file)return;
       parseCardsFile(file,(cardsToAdd,err)=>{
         const preview=document.getElementById("cardImportPreview");
-        if(err){preview.innerHTML=`<div class="card" style="border-color:#5a2424;"><div class="qa-label" style="color:var(--red);">⚠️ ${esc(err)}</div></div>`;return}
+        if(err){preview.innerHTML=`<div class="card" style="border-color:#5a2424;"><div class="qa-label" style="color:var(--red);">${esc(err)}</div></div>`;return}
         const subject=nav.params.subject;
         const topic=nav.params.topic;
         ensureSubject(subject);
@@ -3481,8 +3500,8 @@ function attachHandlers(){
           added++;
         });
         saveData(DATA);
-        preview.innerHTML=`<div class="card" style="border-color:#1f4d3a;"><div class="qa-label" style="color:var(--green);">✅ Imported</div><div class="qa-text" style="font-size:13.5px;">${added} card${added===1?'':'s'} added to "${esc(topic)}".</div></div>`;
-        toast("✅ Cards imported");
+        preview.innerHTML=`<div class="card" style="border-color:#1f4d3a;"><div class="qa-label" style="color:var(--green);">Imported</div><div class="qa-text" style="font-size:13.5px;">${added} card${added===1?'':'s'} added to "${esc(topic)}".</div></div>`;
+        toast("Cards imported");
         cardImportInput.value="";
       });
     });
@@ -3606,7 +3625,7 @@ function attachHandlers(){
     const v=parseInt(document.getElementById("dailyGoalInput").value,10);
     if(isNaN(v)||v<1){toast("Enter a valid number");return}
     setDailyGoal(v);
-    toast("🎯 Goal updated");
+    toast("Goal updated");
     if(windowedActive()){wmGoBackTo('progress',{});return}
     navStack=[];
     goto("progress",{},false);
@@ -3628,7 +3647,7 @@ function attachHandlers(){
     a.href=url;a.download=`d4n-sessions-${stamp}.json`;
     document.body.appendChild(a);a.click();document.body.removeChild(a);
     setTimeout(()=>URL.revokeObjectURL(url),1000);
-    toast("⬇️ Sessions exported");
+    toast("Sessions exported");
   });
   const clearHistoryBtn=document.getElementById("clearHistoryBtn");
   if(clearHistoryBtn)clearHistoryBtn.addEventListener("click",()=>{
@@ -3636,7 +3655,7 @@ function attachHandlers(){
     if(!confirm("This can't be undone."))return;
     DATA.study_sessions=[];
     saveData(DATA);
-    toast("🗑 History cleared");
+    toast("History cleared");
     render();
   });
 
@@ -3707,7 +3726,7 @@ function attachHandlers(){
     }
     DATA.study_sessions.forEach(s=>{if(s.subject===oldName)s.subject=newName});
     saveData(DATA);
-    toast(`✅ Renamed to "${newName}"`);
+    toast(`Renamed to "${newName}"`);
     if(windowedActive()){
       WM.windows.forEach(w=>{if(w.params&&w.params.subject===oldName)w.params.subject=newName});
       saveWM();
@@ -3720,15 +3739,15 @@ function attachHandlers(){
 
   /* ---- EXPORT / IMPORT ---- */
   const exportFullBtn=document.getElementById("exportFullBtn");
-  if(exportFullBtn)exportFullBtn.addEventListener("click",()=>{exportFull();toast("⬇️ Full backup downloaded")});
+  if(exportFullBtn)exportFullBtn.addEventListener("click",()=>{exportFull();toast("Full backup downloaded")});
   const exportNoDataBtn=document.getElementById("exportNoDataBtn");
-  if(exportNoDataBtn)exportNoDataBtn.addEventListener("click",()=>{exportNoData();toast("⬇️ Clean export downloaded")});
+  if(exportNoDataBtn)exportNoDataBtn.addEventListener("click",()=>{exportNoData();toast("Clean export downloaded")});
   const exportSubjectBtn=document.getElementById("exportSubjectBtn");
   if(exportSubjectBtn)exportSubjectBtn.addEventListener("click",()=>{
     const subject=document.getElementById("exportSubjectSelect").value;
     const inc=document.getElementById("exportSubjectIncludeData").checked;
     exportSubject(subject,inc);
-    toast("⬇️ Subject export downloaded");
+    toast("Subject export downloaded");
   });
   const importBtn=document.getElementById("importDataBtn");
   const importFileInput=document.getElementById("importFileInput");
@@ -3741,11 +3760,11 @@ function attachHandlers(){
       reader.onload=ev=>{
         let parsed;
         try{parsed=JSON.parse(ev.target.result)}catch(err){
-          document.getElementById("importPreview").innerHTML=`<div class="card" style="border-color:#5a2424;"><div class="qa-label" style="color:var(--red);">⚠️ Couldn't read that file</div></div>`;
+          document.getElementById("importPreview").innerHTML=`<div class="card" style="border-color:#5a2424;"><div class="qa-label" style="color:var(--red);">Couldn't read that file</div></div>`;
           return;
         }
         if(!parsed.flashcards&&!parsed.study_sessions&&!parsed.notes){
-          document.getElementById("importPreview").innerHTML=`<div class="card" style="border-color:#5a2424;"><div class="qa-label" style="color:var(--red);">⚠️ Not a recognized backup</div></div>`;
+          document.getElementById("importPreview").innerHTML=`<div class="card" style="border-color:#5a2424;"><div class="qa-label" style="color:var(--red);">Not a recognized backup</div></div>`;
           return;
         }
         const stats=mergeImportedData(parsed);
@@ -3757,8 +3776,8 @@ function attachHandlers(){
         if(stats.newSessions)parts.push(`${stats.newSessions} new session${stats.newSessions>1?'s':''}`);
         const skipped=stats.skippedCards+stats.skippedSessions+(stats.skippedNotes||0);
         const summary=parts.length?parts.join(", ")+" added.":"Nothing new — everything was already here.";
-        document.getElementById("importPreview").innerHTML=`<div class="card" style="border-color:#1f4d3a;"><div class="qa-label" style="color:var(--green);">✅ Import complete</div><div class="qa-text" style="font-size:13.5px;">${esc(summary)}</div>${skipped?`<div class="qa-text" style="font-size:12px;color:var(--grey);margin-top:8px;">${skipped} already existed.</div>`:""}</div>`;
-        toast("✅ Import complete");
+        document.getElementById("importPreview").innerHTML=`<div class="card" style="border-color:#1f4d3a;"><div class="qa-label" style="color:var(--green);">Import complete</div><div class="qa-text" style="font-size:13.5px;">${esc(summary)}</div>${skipped?`<div class="qa-text" style="font-size:12px;color:var(--grey);margin-top:8px;">${skipped} already existed.</div>`:""}</div>`;
+        toast("Import complete");
         importFileInput.value="";
       };
       reader.readAsText(file);
@@ -3782,7 +3801,7 @@ function attachHandlers(){
       const topic=document.getElementById("importCardTopic").value.trim();
       parseCardsFile(file,(cardsToAdd,err)=>{
         const preview=document.getElementById("importCardPreview");
-        if(err){preview.innerHTML=`<div class="card" style="border-color:#5a2424;"><div class="qa-label" style="color:var(--red);">⚠️ ${esc(err)}</div></div>`;return}
+        if(err){preview.innerHTML=`<div class="card" style="border-color:#5a2424;"><div class="qa-label" style="color:var(--red);">${esc(err)}</div></div>`;return}
         ensureSubject(subj);
         ensureTopic(subj,topic);
         let added=0;
@@ -3792,17 +3811,17 @@ function attachHandlers(){
           added++;
         });
         saveData(DATA);
-        preview.innerHTML=`<div class="card" style="border-color:#1f4d3a;"><div class="qa-label" style="color:var(--green);">✅ Imported</div><div class="qa-text" style="font-size:13.5px;">${added} card${added===1?'':'s'} added to "${esc(subj)}" › "${esc(topic)}".</div></div>`;
-        toast("✅ Cards imported");
+        preview.innerHTML=`<div class="card" style="border-color:#1f4d3a;"><div class="qa-label" style="color:var(--green);">Imported</div><div class="qa-text" style="font-size:13.5px;">${added} card${added===1?'':'s'} added to "${esc(subj)}" › "${esc(topic)}".</div></div>`;
+        toast("Cards imported");
         importCardFile2.value="";
       });
     });
   }
   /* ---- EXAMPLE FILES ---- */
   const exNotes=document.getElementById("exampleNotesBtn");
-  if(exNotes)exNotes.addEventListener("click",()=>{downloadExampleNotes();toast("⬇️ Example notes downloaded")});
+  if(exNotes)exNotes.addEventListener("click",()=>{downloadExampleNotes();toast("Example notes downloaded")});
   const exBackup=document.getElementById("exampleBackupBtn");
-  if(exBackup)exBackup.addEventListener("click",()=>{downloadExampleBackup();toast("⬇️ Example backup downloaded")});
+  if(exBackup)exBackup.addEventListener("click",()=>{downloadExampleBackup();toast("Example backup downloaded")});
 
   /* ---- SUGGESTIONS ---- */
   const submitSuggestionBtn=document.getElementById("submitSuggestionBtn");
@@ -3813,9 +3832,9 @@ function attachHandlers(){
     status.style.color="var(--grey)";status.textContent="Sending…";
     try{
       await submitSuggestion(text);
-      status.style.color="var(--green)";status.textContent="✅ Sent! Thanks.";
+      status.style.color="var(--green)";status.textContent="Sent! Thanks.";
       document.getElementById("suggestionText").value="";
-      toast("💡 Suggestion sent");
+      toast("Suggestion sent");
     }catch(e){
       status.style.color="var(--red)";status.textContent="Failed to send. Check connection.";
     }
@@ -3828,7 +3847,7 @@ function attachHandlers(){
     await pullDataFromCloud();
     await pushDataToCloud();
     render();
-    toast("✅ Synced");
+    toast("Synced");
   });
   const syncPendingEl=document.getElementById("syncPending");
   if(syncPendingEl)syncPendingEl.textContent=localDirty?"Changes waiting to upload":"All up to date";
@@ -3844,6 +3863,7 @@ function attachHandlers(){
         WM.windows.unshift(hw);
         WM.focusedId=hw.id;
       }else{WM.focusedId=WM.windows.find(w=>w.isHome).id}
+      WM_RECENTER_HOME=true;
     }
     saveWM();
     toast(WM_ENABLED?"Windowed mode ON":"Windowed mode OFF");
@@ -3864,8 +3884,9 @@ function attachHandlers(){
     stopChirping();ttsStop();
     WM.windows=[{id:genId('win'),page:'home',params:{},parentId:null,x:30,y:30,z:++WM.zCounter,isHome:true}];
     WM.focusedId=WM.windows[0].id;
+    WM_RECENTER_HOME=true;
     saveWM();
-    toast("🗑️ All data deleted");
+    toast("All data deleted");
     navStack=[];
     goto("home",{},false);
   });
@@ -4083,6 +4104,7 @@ setInterval(()=>{tickTimer();tickQuizTimer()},1000);
 window.addEventListener('resize',()=>{
   const el=document.activeElement;
   if(el && (el.tagName==='INPUT' || el.tagName==='TEXTAREA' || el.isContentEditable)) return;
+  WM_RECENTER_HOME=true;
   render();
 });
 document.addEventListener('visibilitychange',()=>{
@@ -4106,7 +4128,7 @@ if('speechSynthesis' in window){
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js')
-        .then(() => console.log('✅ Service worker registered'))
+        .then(() => console.log('Service worker registered'))
         .catch(err => console.warn('SW registration failed:', err));
     });
   }
