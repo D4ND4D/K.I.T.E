@@ -15,9 +15,10 @@
 <style>
 :root{--bg:#0c0e0f;--panel:#121517;--panel-2:#161a1c;--border:#22282b;--border-bright:#5ee6d0;--cyan:#5ee6d0;--amber:#f0b35e;--green:#7ee787;--red:#ff6b6b;--grey:#7b8389;--grey-dim:#52585c;--white:#e9edee}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--white);font-family:"JetBrains Mono","IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;min-height:100vh;overscroll-behavior-y:none} body{display:flex;flex-direction:column;justify-content:center;align-items:center}
+html{margin:0;padding:0;height:100%;background:var(--bg)}
+body{margin:0;padding:0;background:var(--bg);color:var(--white);font-family:"JetBrains Mono","IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;height:100%;display:flex;align-items:center;justify-content:center;overflow:auto;overscroll-behavior-y:none}
 body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse at 50% -10%,rgba(94,230,208,.05),transparent 60%)}
-#app{position:relative;z-index:1;width:100%;max-width:560px;padding:14px 14px 28px;transition:margin-top .15s ease}
+#app{position:relative;z-index:1;width:100%;max-width:560px;padding:14px}
 #app.windowed{max-width:none;margin:0;padding:0;display:block;justify-content:flex-start;overflow:hidden;min-height:100vh}
 #desktop{position:relative;width:100%;min-height:100vh;overflow:hidden}
 #wmLines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
