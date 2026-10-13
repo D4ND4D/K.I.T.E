@@ -9,6 +9,8 @@
   (function(){
     try{ document.documentElement.setAttribute("data-theme", localStorage.getItem("d4n_theme_v1") || "default"); }catch(e){}
   })();
+  window.addEventListener("beforeinstallprompt", function(e){ e.preventDefault(); window.__deferredInstall = e; });
+  window.addEventListener("appinstalled", function(){ window.__deferredInstall = null; });
 </script>
 <title>K.I.T.E</title>
 <link rel="manifest" href="manifest.json">
@@ -435,6 +437,55 @@ function applyTheme(id){
   document.querySelectorAll(".theme-option").forEach(b=>b.classList.toggle("active",b.dataset.themeValue===t.id));
 }
 applyTheme(currentTheme());
+
+/* ========== INSTALL (PWA) CHECK ========== */
+async function runPwaCheck(box){
+  const rows=[];
+  const add=(ok,label,note)=>rows.push(`<div><span style="color:var(--${ok?'green':'red'});">${ok?'✓':'✗'}</span> ${esc(label)}${note?` <span style="color:var(--grey-dim);">${esc(note)}</span>`:''}</div>`);
+  const standalone=window.matchMedia&&matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+  if(standalone){box.innerHTML='<div><span style="color:var(--green);">✓</span> Running as an installed app</div>';return}
+  add(location.protocol==="https:"||location.hostname==="localhost","Secure connection (HTTPS)");
+  const link=document.querySelector('link[rel="manifest"]');
+  let man=null,manUrl=null;
+  try{
+    manUrl=new URL(link.getAttribute("href"),location.href).href;
+    const r=await fetch(manUrl,{cache:"no-store"});
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    man=await r.json();
+    add(true,"Manifest loads");
+  }catch(e){add(false,"Manifest loads",String(e.message||e))}
+  if(man){
+    add(!!(man.name||man.short_name),"Has a name");
+    add(!!man.start_url,"Has start_url");
+    add(["standalone","fullscreen","minimal-ui"].includes(man.display),"Display mode is app-like",man.display||"missing");
+    const icons=man.icons||[];
+    for(const need of [192,512]){
+      const ic=icons.find(i=>/png/i.test(i.type||i.src)&&(i.sizes||"").split(" ").some(z=>parseInt(z,10)===need));
+      if(!ic){add(false,need+"px PNG icon listed");continue}
+      try{
+        const r=await fetch(new URL(ic.src,manUrl).href,{cache:"no-store"});
+        const ct=r.headers.get("content-type")||"";
+        add(r.ok&&/image\/png/i.test(ct),need+"px PNG icon loads",r.ok?ct:"HTTP "+r.status);
+      }catch(e){add(false,need+"px PNG icon loads","can't fetch")}
+    }
+  }
+  let reg=null;try{reg=await navigator.serviceWorker.getRegistration()}catch(e){}
+  add(!!reg,"Service worker registered");
+  add(!!navigator.serviceWorker?.controller,"Service worker controlling this page","reload once if this is ✗");
+  const ready=!!window.__deferredInstall;
+  add(ready,"Browser says it can install",ready?"":"if the rows above are all ✓, wait a moment or use the browser menu → Install app");
+  box.innerHTML=rows.join("");
+  const btn=document.getElementById("pwaInstallBtn");
+  if(btn&&ready){
+    btn.style.display="";
+    btn.onclick=async()=>{
+      const ev=window.__deferredInstall;if(!ev)return;
+      ev.prompt();
+      try{await ev.userChoice}catch(e){}
+      window.__deferredInstall=null;btn.style.display="none";
+    };
+  }
+}
 
 /* ========== STORAGE ========== */
 const EMPTY_DATA = { flashcards:{}, study_sessions:[], notes:{}, topics:{} };
@@ -2641,6 +2692,11 @@ function pageSettings(){
     ${accountBlock}
     ${themeBlock}
     <div class="card">
+      <div class="qa-label" style="color:var(--cyan);">Install App</div>
+      <div id="pwaStatus" class="qa-text" style="font-size:12px;line-height:1.7;">Checking…</div>
+      <button class="btn btn-primary" id="pwaInstallBtn" style="margin-top:10px;display:none;">Install K.I.T.E</button>
+    </div>
+    <div class="card">
       <div class="qa-label" style="color:var(--cyan);">Cloud Sync</div>
       <div class="auth-info-row"><span>Status</span><span class="val" id="syncStatus">—</span></div>
       <div class="auth-info-row"><span>Pending</span><span class="val" id="syncPending">—</span></div>
@@ -3967,6 +4023,9 @@ function attachHandlers(){
     }
   });
 
+  /* ---- INSTALL CHECK ---- */
+  { const pwaBox=document.getElementById("pwaStatus"); if(pwaBox)runPwaCheck(pwaBox); }
+
   /* ---- THEME ---- */
   document.querySelectorAll("#themeGrid .theme-option").forEach(btn=>{
     btn.addEventListener("click",()=>applyTheme(btn.dataset.themeValue));
@@ -4074,18 +4133,24 @@ function attachHandlers(){
   if(!window._idleDots){
     const IDLE_MS   = 90*1000;  // no interaction for this long -> light show starts
     const STEP_MS   = 260;      // time between colour changes
+    const HOLD_MS   = 1100;     // how long all three stay blue (BBB) before turning back
     const REPEAT_MS = 3000;     // pause after the dots are back to normal, then it plays again
-    // dot 0 = red, 1 = yellow, 2 = green. Each frame lists which dots are blue:
-    // RYG -> BYG -> BBG -> BBB -> RBB -> RYB -> RYG
-    const FRAMES = [[0],[0,1],[0,1,2],[1,2],[2],[]];
+    // dot 0 = red, 1 = yellow, 2 = green. Each frame = [which dots are blue, ms until the next frame]:
+    // RYG -> BYG -> BBG -> BBB (hold) -> RBB -> RYB -> RYG
+    const FRAMES = [[[0],STEP_MS],[[0,1],STEP_MS],[[0,1,2],HOLD_MS],[[1,2],STEP_MS],[[2],STEP_MS],[[],0]];
     let idleTimer=null, seqTimers=[], playing=false;
     const paint=(blues)=>document.querySelectorAll(".dot[data-dot]").forEach(d=>{
       d.classList.toggle("hint", blues.includes(parseInt(d.dataset.dot,10)));
     });
     const stop=()=>{ playing=false; seqTimers.forEach(clearTimeout); seqTimers=[]; paint([]); };
     const playOnce=()=>{
-      FRAMES.forEach((f,i)=>seqTimers.push(setTimeout(()=>paint(f), i*STEP_MS)));
-      seqTimers.push(setTimeout(()=>{ if(playing){ seqTimers=[]; playOnce(); } }, FRAMES.length*STEP_MS + REPEAT_MS));
+      let t=0, lastAt=0;
+      FRAMES.forEach(([blues,ms])=>{
+        const at=t; lastAt=at;
+        seqTimers.push(setTimeout(()=>paint(blues), at));
+        t+=ms;
+      });
+      seqTimers.push(setTimeout(()=>{ if(playing){ seqTimers=[]; playOnce(); } }, lastAt + REPEAT_MS));
     };
     const onActivity=()=>{
       if(playing) stop();
