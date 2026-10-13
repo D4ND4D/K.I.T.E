@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'd4n-study-v20';
+const CACHE_VERSION = 'd4n-study-v21';
 
 
 const APP_SHELL = [
@@ -7,6 +7,10 @@ const APP_SHELL = [
   './manifest.json',
   './icon.svg',
   './icon-maskable.svg',
+  './icon-192.png',
+  './icon-512.png',
+  './icon-maskable-512.png',
+  './icon-180.png',
   './logos/lynk.png',
   './logos/mycash.png',
   './logos/jnpay.png',
