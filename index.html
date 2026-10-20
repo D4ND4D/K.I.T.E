@@ -27,7 +27,7 @@
   --cyan:#5ee6d0; --amber:#f0b35e; --green:#7ee787; --red:#ff6b6b;
   --magenta:#c792ea;
   --grey:#7b8389; --grey-dim:#52585c; --white:#e9edee;
-  --on-primary:var(--on-primary);
+  --on-primary:#06231e;
 }
 [data-theme="light"]{
   --bg:#f4f6f7; --panel:#ffffff; --panel-2:#eef1f3;
@@ -295,7 +295,6 @@ details.tts-prefs[open] summary::before{content:"▾ "}
 .paywall-coming-icon img{width:32px;height:32px;object-fit:contain;filter:grayscale(.4);border-radius:6px}
 .paywall-coming-icon span{font-size:9.5px;color:var(--grey-dim);letter-spacing:.04em}
 .paywall-copy-hint{text-align:center;color:var(--grey-dim);font-size:10.5px;margin-top:-6px;margin-bottom:14px;letter-spacing:.05em}
-.admin-actions .mini-btn{flex:1;min-width:70px;padding:7px 8px}
 
 /* === Analytics === */
 .analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
@@ -352,6 +351,48 @@ details.tts-prefs[open] summary::before{content:"▾ "}
 .make-admin-btn:active{transform:scale(.94)}
 
 @media (max-width:380px){.qa-text{font-size:14.5px}.timer-display{font-size:38px}.display-id{font-size:22px;padding:16px 10px}}
+/* ===== guided tour (same engine in K.I.T.E and the Library) ===== */
+.tour-layer{position:fixed;inset:0;z-index:30000;font-family:inherit;pointer-events:none}
+.tour-block{position:absolute;inset:0;background:transparent;pointer-events:none}
+.tour-layer.dim .tour-block{background:rgba(0,0,0,.76)}
+.tour-hole{position:absolute;border:2px solid var(--cyan);border-radius:10px;box-shadow:0 0 0 9999px rgba(0,0,0,.76);pointer-events:none;transition:left .2s,top .2s,width .2s,height .2s}
+.tour-card{position:absolute;width:min(440px,calc(100vw - 20px));max-height:calc(100vh - 20px);background:var(--panel);border:1px solid var(--border-bright);border-radius:10px;box-shadow:0 18px 50px -12px rgba(0,0,0,.9);display:flex;flex-direction:column;overflow:hidden;pointer-events:auto}
+.tour-titlebar{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--panel-2);border-bottom:1px solid var(--border)}
+.tour-titlebar .td{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.tour-titlebar .td.r{background:#ff5f56}.tour-titlebar .td.y{background:#ffbd2e}.tour-titlebar .td.g{background:#27c93f}
+.tour-path{flex:1;min-width:0;margin-left:6px;font-size:11px;color:var(--grey-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tour-skip{flex-shrink:0;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--grey);font-family:inherit;font-size:11.5px;padding:5px 10px;cursor:pointer}
+.tour-skip:hover{color:var(--white);border-color:var(--border-bright)}
+.tour-body{padding:14px 16px 6px;overflow-y:auto}
+.tour-kicker{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan);font-weight:700;margin-bottom:6px}
+.tour-title{margin:0 0 8px;font-size:16px;color:var(--amber);line-height:1.3;font-weight:700}
+.tour-text{font-size:13px;line-height:1.65;color:var(--grey)}
+.tour-text b{color:var(--white)}
+.tour-mock{margin-top:12px}
+.tour-mock:empty{display:none}
+.tour-hint{font-size:11px;color:var(--cyan);margin-top:10px;padding-top:8px;border-top:1px dashed var(--border);letter-spacing:.02em}
+.tour-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px 14px;flex-wrap:wrap}
+.tour-dots{display:flex;gap:5px;flex-wrap:wrap;max-width:150px}
+.tour-dots i{width:6px;height:6px;border-radius:50%;background:var(--border);display:block;transition:transform .15s}
+.tour-dots i.on{background:var(--cyan);transform:scale(1.5)}
+.tour-btns{display:flex;gap:8px;margin-left:auto}
+.tour-btn{background:var(--panel-2);border:1px solid var(--border);border-radius:8px;color:var(--white);font-family:inherit;font-size:13px;font-weight:600;padding:9px 14px;cursor:pointer;width:auto}
+.tour-btn.primary{background:var(--cyan);color:var(--on-primary);border-color:var(--cyan)}
+.tour-btn:disabled{opacity:.35;cursor:default}
+.tm{border:1px solid var(--border);border-radius:8px;background:var(--bg);padding:8px;font-size:12px;display:flex;flex-direction:column;gap:6px}
+.tm-path{font-size:10.5px;color:var(--grey-dim)}
+.tm-row{display:flex;gap:8px;align-items:center;border:1px solid var(--border);border-radius:6px;padding:7px 9px;background:var(--panel-2);color:var(--white)}
+.tm-row .n{color:var(--cyan);font-weight:700;min-width:18px}
+.tm-row .m{margin-left:auto;color:var(--grey-dim);font-size:10.5px}
+.tm-row.hl{border-color:var(--cyan);background:color-mix(in srgb, var(--cyan) 10%, var(--panel-2))}
+.tm-row.acc .l{color:var(--green)}
+.tm-field{border:1px solid var(--border);border-radius:6px;padding:7px 9px;color:var(--white);background:var(--panel)}
+.tm-field i{color:var(--grey-dim);font-style:normal}
+.tm-arrow{text-align:center;color:var(--cyan);font-size:12px;line-height:1}
+.tm-note{color:var(--grey);font-size:11.5px}
+.tm-light{width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:11px;flex-shrink:0}
+.tm-seq{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
 </style>
 </head>
 <body>
@@ -1034,17 +1075,25 @@ function routeBasedOnStatus(){
   // FREE FOR EVERYONE — for now 
   bootApp();
 }
+let booting = false;
 async function bootApp(){
-  await pullDataFromCloud();
-  if(isAdmin() && !planConfigLoaded) await loadPlanConfig();
-  hideAuthGate();
-  APP_READY=true;
-  render();
-  renderFloatBar();
-  startExpiryCheck();
-  startDataListener();
-  startSessionTimer();
-  pushAnalyticsToCloud();
+  if(APP_READY || booting) return;
+  booting = true;
+  try{
+    await pullDataFromCloud();
+    if(isAdmin() && !planConfigLoaded) await loadPlanConfig();
+    hideAuthGate();
+    APP_READY=true;
+    render();
+    renderFloatBar();
+    startExpiryCheck();
+    startDataListener();
+    startSessionTimer();
+    pushAnalyticsToCloud();
+    maybeStartKiteTour();
+  }finally{
+    booting = false;
+  }
 }
 function startExpiryCheck(){
   if(expiryCheckInterval)clearInterval(expiryCheckInterval);
@@ -1219,6 +1268,7 @@ onAuthStateChanged(auth,async(user)=>{
       try{await setDoc(userRef,userData)}catch(e){showErrorScreen("Could not create your account. Try again.");return}
       currentUserDoc=userData;
       cacheUserDoc(userData);
+      try{localStorage.setItem(TOUR_PENDING(user.uid),"1")}catch(e){}
       if(pendingTermsVersion){
         try{localStorage.setItem(TERMS_KEY,JSON.stringify({version:pendingTermsVersion,at:new Date().toISOString()}))}catch(e){}
         updateDoc(userRef,{termsVersion:pendingTermsVersion,termsAcceptedAt:serverTimestamp()}).catch(()=>{});
@@ -2815,6 +2865,7 @@ function pageSettings(){
       </div>
     </div>
     <div class="menu" style="margin-top:8px;">
+      <button class="menu-item" id="replayTourBtn"><span class="label">Replay tutorial</span></button>
       <button class="menu-item" id="viewTermsBtn"><span class="label">Terms &amp; Conditions</span></button>
       <button class="menu-item" id="viewPrivacyBtn"><span class="label">Privacy Policy</span></button>
       <button class="menu-item danger" id="wipeDataBtn"><span class="label">Delete All Saved Data</span></button>
@@ -2822,7 +2873,7 @@ function pageSettings(){
       <button class="menu-item" data-go="home" data-clearstack="1"><span class="label">Back to Main Menu</span></button>
     </div>
     <div class="page-sub" style="margin-top:16px;">Property of Lumin</div>
-    <div class="page-sub" style="margin-top:2px;color:var(--grey-dim);font-size:10.5px;">V6.4.0</div>
+    <div class="page-sub" style="margin-top:2px;color:var(--grey-dim);font-size:10.5px;">V6.5.0</div>
   `;
   return shell("SETTINGS","",body,{path:"~/study/settings"});
 }
@@ -3166,6 +3217,10 @@ function renderDesktop(){
   html+=`</div><button class="home-pill" id="wmHomePill">⌂ Home</button>`;
   app.innerHTML=html;
   CURRENT_WIN_ID=WM.focusedId;
+  // Keep nav in sync with the focused window — handlers like addCardGo / saveNoteBtn
+  // / startQuizBtn read nav.params at click time.
+  const focusedWin=wmWindowById(WM.focusedId);
+  if(focusedWin)nav={page:focusedWin.page,params:focusedWin.params};
   attachHandlers();
   attachWindowHandlers();
   requestAnimationFrame(()=>{wmCenterHome();drawLines()});
@@ -3247,8 +3302,9 @@ function attachWindowHandlers(){
       const id=el.dataset.windowId;
       if(WM.focusedId!==id){
         WM.focusedId=id;
+        CURRENT_WIN_ID=id;
         const w=wmWindowById(id);
-        if(w)w.z=++WM.zCounter;
+        if(w){w.z=++WM.zCounter;nav={page:w.page,params:w.params};}
         saveWM();
         document.querySelectorAll('.wm-window').forEach(x=>x.classList.toggle('focused',x.dataset.windowId===id));
         el.style.zIndex=w?w.z:10;
@@ -3289,6 +3345,180 @@ document.addEventListener('mousemove',e=>{
   drawLines();
 });
 document.addEventListener('mouseup',()=>{if(dragState){saveWM();dragState=null}});
+
+/* ---------- guided tour (same engine in K.I.T.E and the Library) ---------- */
+const Tour = (() => {
+  let layer = null, steps = [], idx = 0, opts = {}, tick = null, keyFn = null, resizeFn = null;
+  const find = sel => { try{ return typeof sel === "function" ? sel() : (sel ? document.querySelector(sel) : null); }catch(e){ return null; } };
+  const visible = el => { if(!el) return false; const r = el.getBoundingClientRect(); return r.width > 4 && r.height > 4 && r.right > 0 && r.bottom > 0 && r.left < window.innerWidth && r.top < window.innerHeight; };
+  function isOpen(){ return !!layer; }
+  function step(){ return steps[idx]; }
+  function start(list, options){
+    stop();
+    steps = list.slice(); idx = 0; opts = options || {};
+    layer = document.createElement("div");
+    layer.className = "tour-layer dim"; layer.id = "tourLayer";
+    layer.innerHTML = `
+      <div class="tour-block"></div>
+      <div class="tour-hole" style="display:none"></div>
+      <div class="tour-card" role="dialog" aria-modal="true" aria-label="Tutorial">
+        <div class="tour-titlebar"><span class="td r"></span><span class="td y"></span><span class="td g"></span><span class="tour-path" data-t="path"></span><button class="tour-skip" data-t="skip">Skip tutorial</button></div>
+        <div class="tour-body"><div class="tour-kicker" data-t="kicker"></div><h3 class="tour-title" data-t="title"></h3><div class="tour-text" data-t="text"></div><div class="tour-mock" data-t="mock"></div><div class="tour-hint" data-t="hint" style="display:none;">Tap the highlighted item to follow along</div></div>
+        <div class="tour-foot"><div class="tour-dots" data-t="dots"></div><div class="tour-btns"><button class="tour-btn" data-t="back">Back</button><button class="tour-btn primary" data-t="next">Next</button></div></div>
+      </div>`;
+    document.body.appendChild(layer);
+    layer.querySelector('[data-t="skip"]').onclick = () => finish(true);
+    layer.querySelector('[data-t="back"]').onclick = () => go(idx - 1);
+    layer.querySelector('[data-t="next"]').onclick = () => next();
+    keyFn = e => {
+      if(!layer) return;
+      if(e.key === "Escape"){ e.preventDefault(); e.stopPropagation(); finish(true); }
+      else if(e.key === "ArrowRight" || e.key === "Enter"){ if(!(e.target && /^(BUTTON|A)$/.test(e.target.tagName))){ e.preventDefault(); next(); } }
+      else if(e.key === "ArrowLeft"){ e.preventDefault(); go(idx - 1); }
+    };
+    document.addEventListener("keydown", keyFn, true);
+    resizeFn = () => place();
+    window.addEventListener("resize", resizeFn);
+    tick = setInterval(place, 400);
+    go(0);
+  }
+  function next(){ if(idx >= steps.length - 1) finish(false); else go(idx + 1); }
+  function go(i){
+    if(!layer) return;
+    idx = Math.max(0, Math.min(steps.length - 1, i));
+    const s = step(), q = sel => layer.querySelector('[data-t="' + sel + '"]');
+    q("path").textContent = s.path || "tutorial";
+    q("kicker").textContent = s.kicker || ("Step " + (idx + 1) + " of " + steps.length);
+    q("title").textContent = s.title || "";
+    q("text").innerHTML = s.text || "";
+    q("mock").innerHTML = s.mock || "";
+    q("dots").innerHTML = steps.map((_, k) => `<i class="${k === idx ? "on" : ""}"></i>`).join("");
+    q("back").disabled = idx === 0;
+    q("next").textContent = idx >= steps.length - 1 ? (s.doneLabel || "Done") : "Next";
+    if(typeof s.before === "function"){ try{ s.before(); }catch(e){} }
+    const t = find(s.target);
+    if(t && typeof t.scrollIntoView === "function"){ try{ t.scrollIntoView({ block: "center", inline: "nearest" }); }catch(e){} }
+    setTimeout(place, 60);
+    place();
+  }
+  function place(){
+    if(!layer) return;
+    const s = step(), card = layer.querySelector(".tour-card"), hole = layer.querySelector(".tour-hole");
+    const vw = window.innerWidth, vh = window.innerHeight, gap = 14;
+    const t = find(s.target);
+    const hasTarget = !!(t && visible(t));
+    const hint = layer.querySelector('[data-t="hint"]');
+    if(hint) hint.style.display = hasTarget ? "" : "none";
+    const cw = card.offsetWidth, ch = card.offsetHeight;
+    if(hasTarget){
+      const r = t.getBoundingClientRect(), pad = 6;
+      layer.classList.remove("dim");
+      hole.style.display = "block";
+      hole.style.left = (r.left - pad) + "px"; hole.style.top = (r.top - pad) + "px";
+      hole.style.width = (r.width + pad * 2) + "px"; hole.style.height = (r.height + pad * 2) + "px";
+      let top, left;
+      if(vw < 560){
+        left = Math.max(10, (vw - cw) / 2);
+        top = (r.top + r.height / 2 > vh * 0.5) ? 10 : vh - ch - 10;
+      }else{
+        left = Math.min(Math.max(10, r.left + r.width / 2 - cw / 2), vw - cw - 10);
+        if(r.bottom + gap + ch <= vh - 8) top = r.bottom + gap + pad;
+        else if(r.top - gap - ch >= 8) top = r.top - gap - ch - pad;
+        else { top = Math.max(10, (vh - ch) / 2); left = (r.left > vw / 2) ? Math.max(10, r.left - cw - gap) : Math.min(vw - cw - 10, r.right + gap); }
+      }
+      card.style.left = left + "px"; card.style.top = Math.max(8, Math.min(vh - ch - 8, top)) + "px";
+    }else{
+      layer.classList.add("dim");
+      hole.style.display = "none";
+      card.style.left = Math.max(10, (vw - cw) / 2) + "px";
+      card.style.top = Math.max(10, (vh - ch) / 2) + "px";
+    }
+  }
+  function finish(skipped){
+    const cb = skipped ? opts.onSkip : opts.onFinish, always = opts.onEnd;
+    stop();
+    try{ if(cb) cb(); if(always) always(skipped); }catch(e){ console.warn(e); }
+  }
+  function stop(){
+    if(tick){ clearInterval(tick); tick = null; }
+    if(keyFn){ document.removeEventListener("keydown", keyFn, true); keyFn = null; }
+    if(resizeFn){ window.removeEventListener("resize", resizeFn); resizeFn = null; }
+    if(layer){ layer.remove(); layer = null; }
+  }
+  return { start, stop, isOpen, next, go: i => go(i) };
+})();
+
+
+/* ---------- K.I.T.E tutorial (new accounts, and "Replay tutorial" in Settings) ---------- */
+const TOUR_PENDING = uid => "d4n_tour_pending_" + uid;
+const TOUR_DONE = uid => "d4n_tour_done_" + uid;
+function tourStepsKite(){
+  const row = (n, label, meta, cls) => `<div class="tm-row ${cls || ""}"><span class="n">${n}</span><span class="l">${label}</span>${meta ? `<span class="m">${meta}</span>` : ""}</div>`;
+  const mock = (path, inner) => `<div class="tm"><div class="tm-path">${path}</div>${inner}</div>`;
+  const down = `<div class="tm-arrow">&darr;</div>`;
+  return [
+    { path: "welcome", kicker: "Welcome", title: "Welcome to K.I.T.E",
+      text: "This quick tour takes about a minute. First you'll see <b>how to build your study material</b>, in order. Then it shows what <b>every other button</b> does, and where <b>Settings</b> is hiding. You can skip it any time." },
+    { path: "~/study", kicker: "Making decks · 1 of 4", title: "Start with a subject", target: '[data-go="select_subject"]',
+      text: "Everything lives inside a <b>subject</b>, like Mathematics or Biology. Open <b>Select Subject</b>, tap <b>Add New Subject</b>, and type a name.",
+      mock: mock("~/study", row("1.", "Select Subject", "0 subjects", "hl") + down + row("", "Add New Subject", "", "acc hl") + `<div class="tm-field"><i>New subject name:</i> Mathematics</div>`) },
+    { path: "~/study/mathematics", kicker: "Making decks · 2 of 4", title: "Add topics inside it",
+      text: "Open your subject and you'll see its <b>topics</b>, like Algebra or Fractions. Use <b>Manage Topics</b> to add one. Every flashcard and note belongs to a topic, which keeps things tidy.",
+      mock: mock("~/study/mathematics", row("1.", "Algebra", "0 cards") + row("", "Manage Topics", "add / rename / delete", "acc hl")) },
+    { path: "~/study/mathematics/algebra", kicker: "Making decks · 3 of 4", title: "Add flashcards",
+      text: "Open a topic, choose <b>Flashcard Manager</b>, then <b>Add New Flashcard</b>. Type the <b>question</b>, type the <b>answer</b>, and tap <b>Add Card</b>. Repeat for every card.",
+      mock: mock("~/study/mathematics/algebra", row("1.", "Flashcard Manager", "0 cards", "hl") + down + row("1.", "Add New Flashcard", "", "acc hl") + `<div class="tm-field"><i>Question</i> What is 2 + 2?</div><div class="tm-field"><i>Answer</i> 4</div>`) },
+    { path: "~/study/mathematics/algebra", kicker: "Making decks · 4 of 4", title: "Add notes",
+      text: "In the same topic, <b>Read Mode</b> is for notes. Tap <b>New Note</b> to write one, or import text from a file. Notes sit next to your flashcards in that topic.",
+      mock: mock("~/study/mathematics/algebra", row("3.", "Read Mode", "0 notes", "hl") + down + row("", "New Note", "", "acc hl")) },
+    { path: "~/study/mathematics/algebra", title: "Then study what you made",
+      text: "Inside a topic you can <b>Study Flashcards</b> (flip through them), <b>Take Quiz</b> (needs at least 2 cards), open <b>Read Mode</b> for your notes, and see <b>View Progress</b> for just that topic.",
+      mock: mock("topic menu", row("2.", "Study Flashcards") + row("3.", "Read Mode") + row("4.", "Take Quiz") + row("5.", "View Progress")) },
+    { path: "~/study", kicker: "The main menu", title: "Set Study Timer", target: '[data-go="timer"]',
+      text: "Choose how many minutes you want to focus and start the countdown. It keeps running while you move around the app, and it counts toward your progress." },
+    { path: "~/study", kicker: "The main menu", title: "View Progress", target: '[data-go="progress"]',
+      text: "See your study sessions, scores by subject and your daily goal. Open the full history any time, and change your goal from the same page." },
+    { path: "~/study", kicker: "The main menu", title: "Import / Export", target: '[data-go="sync_data"]',
+      text: "Download a backup of everything, export just one subject, or load a backup file back in (it merges, it never wipes). You can also import a list of flashcards straight into a topic." },
+    { path: "~/study", kicker: "The main menu", title: "Search", target: '[data-go="search"]',
+      text: "Search across <b>all</b> your subjects, flashcards and notes at once." },
+    { path: "~/study", kicker: "Settings", title: "Settings is behind the lights", target: () => document.querySelector(".titlebar"),
+      text: "Settings isn't in the menu. Tap the three coloured lights at the top <b>in this order: red, yellow, green</b>. Each one turns blue. Then tap a light one more time and <b>Settings</b> opens: themes, your account, cloud sync, installing the app, and replaying this tutorial.",
+      mock: `<div class="tm"><div class="tm-seq"><span class="tm-light" style="background:#ff5f56">1</span><span class="tm-arrow">&rarr;</span><span class="tm-light" style="background:#ffbd2e">2</span><span class="tm-arrow">&rarr;</span><span class="tm-light" style="background:#27c93f">3</span><span class="tm-arrow">&rarr;</span><span class="tm-note">tap once more</span></div></div>` },
+    { path: "ready", kicker: "All set", title: "You're ready", doneLabel: "Add my first subject",
+      text: "Start with a subject, then a topic, then your first flashcards. You can replay this tour any time from <b>Settings</b>." }
+  ];
+}
+function markTourDone(){
+  if(!currentUser) return;
+  try{ localStorage.setItem(TOUR_DONE(currentUser.uid), "1"); localStorage.removeItem(TOUR_PENDING(currentUser.uid)); }catch(e){}
+  updateDoc(doc(db, "users", currentUser.uid), { tutorialDone: true }).catch(() => {});
+}
+function startKiteTour(){
+  Tour.start(tourStepsKite(), {
+    onSkip: () => markTourDone(),
+    onFinish: () => {
+      markTourDone();
+      const b = document.querySelector('[data-go="select_subject"]');
+      if(b) b.click();
+    }
+  });
+}
+function maybeStartKiteTour(){
+  if(!currentUser) return;
+  let pending = false, done = false;
+  try{ pending = localStorage.getItem(TOUR_PENDING(currentUser.uid)) === "1"; done = localStorage.getItem(TOUR_DONE(currentUser.uid)) === "1"; }catch(e){}
+  if(!pending || done) return;
+  setTimeout(() => { if(!Tour.isOpen() && APP_READY) startKiteTour(); }, 900);
+}
+function replayKiteTour(){
+  // the tour points at the main menu, so go there first
+  try{
+    if(windowedActive()){ wmCloseAllExceptHome(); render(); }
+    else { navStack = []; goto("home", {}, false); }
+  }catch(e){}
+  setTimeout(startKiteTour, 450);
+}
 
 /* ========== SECRET DOTS ========== */
 function setupSecretDots(container,winId,isHome){
@@ -3387,10 +3617,11 @@ function attachHandlers(){
     const name=document.getElementById("initialTopicName").value.trim();
     if(!name){toast("Topic name can't be empty");return}
     ensureTopic(subject,name);
+    const tagged=untaggedCount(subject);
     (DATA.flashcards[subject]||[]).forEach(c=>{if(!c.topic)c.topic=name});
     (DATA.notes[subject]||[]).forEach(n=>{if(!n.topic)n.topic=name});
     saveData(DATA);
-    toast(`Tagged ${untaggedCount(subject)} item(s) as "${name}"`);
+    toast(`Tagged ${tagged} item(s) as "${name}"`);
     if(windowedActive()){wmReplace('topic_picker',{subject,assigned:true});return}
     navStack=[];
     goto("topic_picker",{subject,assigned:true},false);
@@ -4118,6 +4349,7 @@ function attachHandlers(){
   { const da=document.getElementById("deleteAccountBtn"); if(da)da.addEventListener("click",showDeleteAccount); }
 
   /* ---- TERMS ---- */
+  { const rt=document.getElementById("replayTourBtn"); if(rt)rt.addEventListener("click",replayKiteTour); }
   { const tb=document.getElementById("viewTermsBtn"); if(tb)tb.addEventListener("click",()=>showLegal("terms")); }
   { const pb=document.getElementById("viewPrivacyBtn"); if(pb)pb.addEventListener("click",()=>showLegal("privacy")); }
 
@@ -4163,12 +4395,15 @@ function attachHandlers(){
   const signOutBtn=document.getElementById("signOutBtn");
   if(signOutBtn)signOutBtn.addEventListener("click",handleSignOut);
   const wipeBtn=document.getElementById("wipeDataBtn");
-  if(wipeBtn)wipeBtn.addEventListener("click",()=>{
-    if(!confirm("Delete ALL saved data? This is permanent."))return;
-    if(!confirm("Are you absolutely sure?"))return;
+  if(wipeBtn)wipeBtn.addEventListener("click",async()=>{
+    if(!confirm("Delete ALL your saved data?\n\nThis removes your flashcards, notes, topics and study history from THIS device AND from your cloud account. Any other device signed in to your account will lose it too on its next sync. This cannot be undone."))return;
+    if(!confirm("Are you absolutely sure? There is no way to recover this."))return;
     try{localStorage.removeItem(STORAGE_KEY);localStorage.removeItem(TIMER_KEY);localStorage.removeItem(WM_STATE_KEY)}catch(e){}
     DATA={flashcards:{},study_sessions:[],notes:{},topics:{}};
-    saveData(DATA);
+    try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DATA))}catch(e){}
+    // Push the empty state immediately, so the wipe actually propagates instead of
+    // racing the debounced saveData schedule.
+    if(currentUser){ try{ await pushDataToCloud(); }catch(e){ console.warn("Cloud wipe failed:",e); } }
     TIMER=blankTimer();saveTimer();
     stopChirping();ttsStop();
     WM.windows=[{id:genId('win'),page:'home',params:{},parentId:null,x:30,y:30,z:++WM.zCounter,isHome:true}];
@@ -4281,12 +4516,14 @@ async function deleteMyAccount(password){
   const user=auth.currentUser;
   if(!user||!user.email) throw {code:"app/no-user"};
   const uid=user.uid;
+  const savedUserDoc = currentUserDoc ? {...currentUserDoc} : null;
   // 1. Firebase requires a fresh sign-in before deleting an account
   await reauthenticateWithCredential(user,EmailAuthProvider.credential(user.email,password));
   // 2. stop anything that could re-create data while we delete it
   accountDeleting=true;
   stopDataListener();
   clearTimeout(syncDebounceTimer);
+  let authDeleted=false;
   try{
     // 3. cloud data: study content, then usage stats + suggestions tied to this account, then the account record
     await deleteDoc(doc(db,"study_data",uid));
@@ -4299,7 +4536,13 @@ async function deleteMyAccount(password){
     await deleteDoc(doc(db,"users",uid));
     // 4. the login itself
     await deleteUser(user);
+    authDeleted=true;
   }catch(e){
+    // If the login still exists, put the users doc back so the account isn't
+    // silently re-created with a new displayId on the next sign-in.
+    if(!authDeleted && savedUserDoc){
+      try{ await setDoc(doc(db,"users",uid), savedUserDoc); }catch(_){}
+    }
     accountDeleting=false;
     startDataListener();
     throw e;
@@ -4495,6 +4738,12 @@ document.addEventListener('visibilitychange',()=>{
   }else{
     pauseSessionTimer();
     if(currentUser) pushAnalyticsToCloud();
+  }
+});
+window.addEventListener('online',()=>{
+  if(currentUser && APP_READY){
+    startSessionTimer();
+    if(localDirty) pushDataToCloud();
   }
 });
 if('speechSynthesis' in window){
