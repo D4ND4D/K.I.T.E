@@ -19,8 +19,12 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="K.I.T.E">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
 <style>
-/* ============ THEMES ============ */
 :root, [data-theme="default"]{
   --bg:#0c0e0f; --panel:#121517; --panel-2:#161a1c;
   --border:#22282b; --border-bright:#5ee6d0;
@@ -29,78 +33,16 @@
   --grey:#7b8389; --grey-dim:#52585c; --white:#e9edee;
   --on-primary:#06231e;
 }
-[data-theme="light"]{
-  --bg:#f4f6f7; --panel:#ffffff; --panel-2:#eef1f3;
-  --border:#d6dbdf; --border-bright:#0e8c7a;
-  --cyan:#0e8c7a; --amber:#b26a00; --green:#1e8e3e; --red:#d93025;
-  --magenta:#8e44ad;
-  --grey:#5f6368; --grey-dim:#9aa0a6; --white:#1a1d1f;
-  --on-primary:#ffffff;
-}
-[data-theme="nord"]{
-  --bg:#2e3440; --panel:#3b4252; --panel-2:#434c5e;
-  --border:#4c566a; --border-bright:#88c0d0;
-  --cyan:#88c0d0; --amber:#ebcb8b; --green:#a3be8c; --red:#bf616a;
-  --magenta:#b48ead;
-  --grey:#81a1c1; --grey-dim:#616e88; --white:#eceff4;
-  --on-primary:#2e3440;
-}
-[data-theme="dracula"]{
-  --bg:#191a21; --panel:#21222c; --panel-2:#282a36;
-  --border:#44475a; --border-bright:#bd93f9;
-  --cyan:#8be9fd; --amber:#f1fa8c; --green:#50fa7b; --red:#ff5555;
-  --magenta:#ff79c6;
-  --grey:#6272a4; --grey-dim:#4a5374; --white:#f8f8f2;
-  --on-primary:#191a21;
-}
-[data-theme="gruvbox"]{
-  --bg:#1d2021; --panel:#282828; --panel-2:#32302f;
-  --border:#3c3836; --border-bright:#83a598;
-  --cyan:#83a598; --amber:#fabd2f; --green:#b8bb26; --red:#fb4934;
-  --magenta:#d3869b;
-  --grey:#a89984; --grey-dim:#665c54; --white:#ebdbb2;
-  --on-primary:#1d2021;
-}
-[data-theme="catppuccin"]{
-  --bg:#11111b; --panel:#1e1e2e; --panel-2:#181825;
-  --border:#313244; --border-bright:#cba6f7;
-  --cyan:#89dceb; --amber:#f9e2af; --green:#a6e3a1; --red:#f38ba8;
-  --magenta:#f5c2e7;
-  --grey:#a6adc8; --grey-dim:#6c7086; --white:#cdd6f4;
-  --on-primary:#11111b;
-}
-[data-theme="tokyonight"]{
-  --bg:#1a1b26; --panel:#1f2335; --panel-2:#24283b;
-  --border:#2f334d; --border-bright:#7aa2f7;
-  --cyan:#7dcfff; --amber:#e0af68; --green:#9ece6a; --red:#f7768e;
-  --magenta:#bb9af7;
-  --grey:#a9b1d6; --grey-dim:#565f89; --white:#c0caf5;
-  --on-primary:#1a1b26;
-}
-[data-theme="rosepine"]{
-  --bg:#191724; --panel:#1f1d2e; --panel-2:#26233a;
-  --border:#403d52; --border-bright:#ebbcba;
-  --cyan:#9ccfd8; --amber:#f6c177; --green:#31748f; --red:#eb6f92;
-  --magenta:#c4a7e7;
-  --grey:#908caa; --grey-dim:#6e6a86; --white:#e0def4;
-  --on-primary:#191724;
-}
-[data-theme="onedark"]{
-  --bg:#21252b; --panel:#282c34; --panel-2:#2c313a;
-  --border:#3b4048; --border-bright:#61afef;
-  --cyan:#56b6c2; --amber:#e5c07b; --green:#98c379; --red:#e06c75;
-  --magenta:#c678dd;
-  --grey:#abb2bf; --grey-dim:#5c6370; --white:#dcdfe4;
-  --on-primary:#21252b;
-}
-[data-theme="solarized"]{
-  --bg:#fdf6e3; --panel:#eee8d5; --panel-2:#e7e0c9;
-  --border:#d5cdb6; --border-bright:#268bd2;
-  --cyan:#268bd2; --amber:#b58900; --green:#859900; --red:#dc322f;
-  --magenta:#d33682;
-  --grey:#657b83; --grey-dim:#93a1a1; --white:#073642;
-  --on-primary:#fdf6e3;
-}
+[data-theme="light"]{ --bg:#f4f6f7; --panel:#ffffff; --panel-2:#eef1f3; --border:#d6dbdf; --border-bright:#0e8c7a; --cyan:#0e8c7a; --amber:#b26a00; --green:#1e8e3e; --red:#d93025; --magenta:#8e44ad; --grey:#5f6368; --grey-dim:#9aa0a6; --white:#1a1d1f; --on-primary:#ffffff; }
+[data-theme="nord"]{ --bg:#2e3440; --panel:#3b4252; --panel-2:#434c5e; --border:#4c566a; --border-bright:#88c0d0; --cyan:#88c0d0; --amber:#ebcb8b; --green:#a3be8c; --red:#bf616a; --magenta:#b48ead; --grey:#81a1c1; --grey-dim:#616e88; --white:#eceff4; --on-primary:#2e3440; }
+[data-theme="dracula"]{ --bg:#191a21; --panel:#21222c; --panel-2:#282a36; --border:#44475a; --border-bright:#bd93f9; --cyan:#8be9fd; --amber:#f1fa8c; --green:#50fa7b; --red:#ff5555; --magenta:#ff79c6; --grey:#6272a4; --grey-dim:#4a5374; --white:#f8f8f2; --on-primary:#191a21; }
+[data-theme="gruvbox"]{ --bg:#1d2021; --panel:#282828; --panel-2:#32302f; --border:#3c3836; --border-bright:#83a598; --cyan:#83a598; --amber:#fabd2f; --green:#b8bb26; --red:#fb4934; --magenta:#d3869b; --grey:#a89984; --grey-dim:#665c54; --white:#ebdbb2; --on-primary:#1d2021; }
+[data-theme="catppuccin"]{ --bg:#11111b; --panel:#1e1e2e; --panel-2:#181825; --border:#313244; --border-bright:#cba6f7; --cyan:#89dceb; --amber:#f9e2af; --green:#a6e3a1; --red:#f38ba8; --magenta:#f5c2e7; --grey:#a6adc8; --grey-dim:#6c7086; --white:#cdd6f4; --on-primary:#11111b; }
+[data-theme="tokyonight"]{ --bg:#1a1b26; --panel:#1f2335; --panel-2:#24283b; --border:#2f334d; --border-bright:#7aa2f7; --cyan:#7dcfff; --amber:#e0af68; --green:#9ece6a; --red:#f7768e; --magenta:#bb9af7; --grey:#a9b1d6; --grey-dim:#565f89; --white:#c0caf5; --on-primary:#1a1b26; }
+[data-theme="rosepine"]{ --bg:#191724; --panel:#1f1d2e; --panel-2:#26233a; --border:#403d52; --border-bright:#ebbcba; --cyan:#9ccfd8; --amber:#f6c177; --green:#31748f; --red:#eb6f92; --magenta:#c4a7e7; --grey:#908caa; --grey-dim:#6e6a86; --white:#e0def4; --on-primary:#191724; }
+[data-theme="onedark"]{ --bg:#21252b; --panel:#282c34; --panel-2:#2c313a; --border:#3b4048; --border-bright:#61afef; --cyan:#56b6c2; --amber:#e5c07b; --green:#98c379; --red:#e06c75; --magenta:#c678dd; --grey:#abb2bf; --grey-dim:#5c6370; --white:#dcdfe4; --on-primary:#21252b; }
+[data-theme="solarized"]{ --bg:#fdf6e3; --panel:#eee8d5; --panel-2:#e7e0c9; --border:#d5cdb6; --border-bright:#268bd2; --cyan:#268bd2; --amber:#b58900; --green:#859900; --red:#dc322f; --magenta:#d33682; --grey:#657b83; --grey-dim:#93a1a1; --white:#073642; --on-primary:#fdf6e3; }
+
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{margin:0;padding:0;height:100%;background:var(--bg)}
 body{margin:0;padding:0;background:var(--bg);color:var(--white);font-family:"JetBrains Mono","IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;height:100%;display:flex;align-items:center;justify-content:center;overflow:auto;overscroll-behavior-y:none}
@@ -133,10 +75,31 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .titlebar-back:active{background:color-mix(in srgb, var(--cyan) 10%, transparent)}
 .screen{padding:18px 16px 20px;flex:1;display:flex;flex-direction:column;min-height:0;overflow-y:auto}
 
-/* === K.I.T.E brand block === */
-.brand-kite{text-align:center;margin-bottom:16px}
+.brand-kite{text-align:center;margin-bottom:16px;position:relative}
 .kite-name{font-size:22px;font-weight:700;color:var(--cyan);letter-spacing:.22em;line-height:1}
 .kite-meaning{font-size:9px;color:var(--grey-dim);letter-spacing:.14em;text-transform:uppercase;margin-top:6px;font-weight:600}
+
+.hint-wrap{position:relative;display:inline-block;}
+.hint-popover{display:none;position:absolute;top:calc(100% + 6px);right:0;width:290px;max-width:88vw;max-height:min(62vh,400px);overflow-y:auto;background:var(--panel-2);border:1px solid var(--border-bright);border-radius:8px;padding:12px;z-index:100;font-size:11.5px;color:var(--white);box-shadow:0 4px 15px rgba(0,0,0,.6);line-height:1.5;text-align:left;}
+.hint-wrap:hover .hint-popover{display:block;}
+.hint-popover.show{display:block;}
+.hint-popover code{color:var(--amber);font-family:inherit;}
+.hint-popover .hl{color:var(--cyan);font-weight:bold;}
+.hint-title{color:var(--grey);margin-bottom:8px;font-size:11px;letter-spacing:.02em;}
+.hint-row{display:flex;flex-direction:column;gap:2px;padding:7px 0;border-bottom:1px solid var(--border);}
+.hint-row:last-child{border-bottom:none;padding-bottom:0;}
+.hint-label{color:var(--grey-dim);font-size:10px;text-transform:uppercase;letter-spacing:.05em;font-weight:700;}
+.hint-example{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.hint-in{color:var(--amber);font-family:inherit;font-size:11.5px;background:var(--bg);padding:2px 7px;border-radius:3px;border:1px solid var(--border);}
+.hint-arrow{color:var(--cyan);font-size:13px;font-weight:700;}
+.hint-out{color:var(--white);font-size:12px;min-height:22px;display:inline-flex;align-items:center;}
+.hint-out .katex{font-size:12px;}
+
+.math-toggle-wrap{display:flex;align-items:center;justify-content:flex-end;gap:8px;color:var(--grey-dim);cursor:pointer;user-select:none;margin-bottom:6px;font-size:11px;}
+.math-switch{width:28px;height:16px;border-radius:8px;background:var(--border);position:relative;transition:background .2s;flex-shrink:0}
+.math-switch::after{content:"";position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:var(--grey);transition:transform .2s,background .2s}
+.math-switch.on{background:color-mix(in srgb, var(--cyan) 30%, transparent)}
+.math-switch.on::after{transform:translateX(12px);background:var(--cyan)}
 
 h1.page-title{font-size:18px;margin:0 0 2px;color:var(--amber);font-weight:700;letter-spacing:.02em;display:flex;align-items:center;justify-content:center;gap:8px}
 .cursor{display:inline-block;width:9px;height:16px;background:var(--amber);animation:blink 1.1s steps(1) infinite;vertical-align:-3px}
@@ -296,7 +259,6 @@ details.tts-prefs[open] summary::before{content:"▾ "}
 .paywall-coming-icon span{font-size:9.5px;color:var(--grey-dim);letter-spacing:.04em}
 .paywall-copy-hint{text-align:center;color:var(--grey-dim);font-size:10.5px;margin-top:-6px;margin-bottom:14px;letter-spacing:.05em}
 
-/* === Analytics === */
 .analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .analytics-box{background:var(--panel-2);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
 .analytics-box .an-val{font-size:22px;font-weight:700;color:var(--cyan)}
@@ -313,7 +275,6 @@ details.tts-prefs[open] summary::before{content:"▾ "}
 .analytics-bar.top .ab-fill{background:var(--green)}
 .analytics-bar.bottom .ab-fill{background:var(--red)}
 
-/* === Theme picker (Settings) === */
 .theme-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
 .theme-option{display:flex;align-items:center;gap:10px;width:100%;background:transparent;border:1px solid var(--border);color:var(--white);font-family:inherit;font-size:12.5px;padding:8px 9px;border-radius:6px;cursor:pointer;text-align:left}
 .theme-option:hover{background:var(--panel-2)}
@@ -321,7 +282,6 @@ details.tts-prefs[open] summary::before{content:"▾ "}
 .theme-swatch{display:flex;gap:3px;flex-shrink:0}
 .theme-swatch span{width:12px;height:12px;border-radius:3px;display:block;border:1px solid rgba(0,0,0,.15)}
 
-/* === Terms & Conditions === */
 .terms-row{display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--grey);margin:6px 0 14px;line-height:1.5;cursor:pointer;text-align:left}
 .terms-row input{margin-top:2px;accent-color:var(--cyan);flex-shrink:0;width:16px;height:16px}
 .terms-row a{color:var(--cyan);cursor:pointer;text-decoration:underline}
@@ -343,42 +303,66 @@ details.tts-prefs[open] summary::before{content:"▾ "}
 .terms-foot{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--border)}
 .terms-foot .btn{margin:0}
 
-/* === Idle dot hint === */
 .dot.hint{background:#4d9fff!important;box-shadow:0 0 8px rgba(77,159,255,.85);transition:background .18s,box-shadow .18s}
 
-/* === Admin make-admin button === */
 .make-admin-btn{background:transparent;border:1px solid var(--border-bright);color:var(--cyan);border-radius:6px;font-family:inherit;font-size:11.5px;padding:5px 9px;cursor:pointer;flex-shrink:0}
 .make-admin-btn:active{transform:scale(.94)}
 
+.math-preview {
+  min-height: 36px;
+  padding: 10px;
+  background: var(--bg);
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  margin-top: -8px;
+  margin-bottom: 14px;
+  font-size: 14.5px;
+  color: var(--white);
+  overflow-x: auto;
+}
+.math-preview:empty::before {
+  content: "Live preview will appear here...";
+  color: var(--grey-dim);
+  font-style: italic;
+}
+
+.chart-type-btn{background:var(--bg);border:1px solid var(--border);color:var(--white);font-family:inherit;font-size:13px;padding:10px;border-radius:6px;cursor:pointer;transition:border-color .15s,background .15s;flex:1;}
+.chart-type-btn:hover{border-color:var(--border-bright);}
+.chart-type-btn.active{background:color-mix(in srgb, var(--cyan) 12%, transparent);border-color:var(--cyan);color:var(--cyan);}
+.chart-card{transition:border-color .15s;cursor:pointer;}
+.chart-card:hover{border-color:var(--border-bright)!important;}
+
 @media (max-width:380px){.qa-text{font-size:14.5px}.timer-display{font-size:38px}.display-id{font-size:22px;padding:16px 10px}}
-/* ===== guided tour (same engine in K.I.T.E and the Library) ===== */
+/* ===== guided tour: follow-along coach ===== */
 .tour-layer{position:fixed;inset:0;z-index:30000;font-family:inherit;pointer-events:none}
-.tour-block{position:absolute;inset:0;background:transparent;pointer-events:none}
-.tour-layer.dim .tour-block{background:rgba(0,0,0,.76)}
+.tour-blk{position:absolute;display:none;background:transparent;pointer-events:auto}
+.tour-blk[data-b="full"]{left:0;top:0;right:0;bottom:0}
+.tour-layer.dim .tour-blk[data-b="full"]{background:rgba(0,0,0,.76)}
 .tour-hole{position:absolute;border:2px solid var(--cyan);border-radius:10px;box-shadow:0 0 0 9999px rgba(0,0,0,.76);pointer-events:none;transition:left .2s,top .2s,width .2s,height .2s}
-.tour-card{position:absolute;width:min(440px,calc(100vw - 20px));max-height:calc(100vh - 20px);background:var(--panel);border:1px solid var(--border-bright);border-radius:10px;box-shadow:0 18px 50px -12px rgba(0,0,0,.9);display:flex;flex-direction:column;overflow:hidden;pointer-events:auto}
+.tour-hole.live{animation:tourPulse 1.4s ease-in-out infinite}
+@keyframes tourPulse{0%,100%{box-shadow:0 0 0 9999px rgba(0,0,0,.76),0 0 0 0 color-mix(in srgb,var(--cyan) 55%,transparent)}50%{box-shadow:0 0 0 9999px rgba(0,0,0,.76),0 0 0 8px color-mix(in srgb,var(--cyan) 0%,transparent)}}
+.tour-card{position:absolute;pointer-events:auto;width:min(440px,calc(100vw - 20px));max-height:calc(100vh - 20px);background:var(--panel);border:1px solid var(--border-bright);border-radius:10px;box-shadow:0 18px 50px -12px rgba(0,0,0,.9);display:flex;flex-direction:column;overflow:hidden}
 .tour-titlebar{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--panel-2);border-bottom:1px solid var(--border)}
 .tour-titlebar .td{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 .tour-titlebar .td.r{background:#ff5f56}.tour-titlebar .td.y{background:#ffbd2e}.tour-titlebar .td.g{background:#27c93f}
 .tour-path{flex:1;min-width:0;margin-left:6px;font-size:11px;color:var(--grey-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tour-skip{flex-shrink:0;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--grey);font-family:inherit;font-size:11.5px;padding:5px 10px;cursor:pointer}
+.tour-skip{flex-shrink:0;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--grey);font-family:inherit;font-size:11.5px;padding:5px 10px;cursor:pointer;width:auto}
 .tour-skip:hover{color:var(--white);border-color:var(--border-bright)}
+.tour-progress{height:3px;background:var(--border)}
+.tour-progress>div{height:100%;width:0;background:var(--cyan);transition:width .25s}
 .tour-body{padding:14px 16px 6px;overflow-y:auto}
 .tour-kicker{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan);font-weight:700;margin-bottom:6px}
 .tour-title{margin:0 0 8px;font-size:16px;color:var(--amber);line-height:1.3;font-weight:700}
 .tour-text{font-size:13px;line-height:1.65;color:var(--grey)}
 .tour-text b{color:var(--white)}
+.tour-hint{font-size:12px;color:var(--cyan);margin-top:10px;padding:8px 10px;border:1px dashed var(--cyan);border-radius:8px;background:color-mix(in srgb,var(--cyan) 7%,transparent);font-weight:600}
 .tour-mock{margin-top:12px}
 .tour-mock:empty{display:none}
-.tour-hint{font-size:11px;color:var(--cyan);margin-top:10px;padding-top:8px;border-top:1px dashed var(--border);letter-spacing:.02em}
 .tour-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px 14px;flex-wrap:wrap}
-.tour-dots{display:flex;gap:5px;flex-wrap:wrap;max-width:150px}
-.tour-dots i{width:6px;height:6px;border-radius:50%;background:var(--border);display:block;transition:transform .15s}
-.tour-dots i.on{background:var(--cyan);transform:scale(1.5)}
+.tour-count{font-size:11px;color:var(--grey-dim)}
 .tour-btns{display:flex;gap:8px;margin-left:auto}
 .tour-btn{background:var(--panel-2);border:1px solid var(--border);border-radius:8px;color:var(--white);font-family:inherit;font-size:13px;font-weight:600;padding:9px 14px;cursor:pointer;width:auto}
 .tour-btn.primary{background:var(--cyan);color:var(--on-primary);border-color:var(--cyan)}
-.tour-btn:disabled{opacity:.35;cursor:default}
 .tm{border:1px solid var(--border);border-radius:8px;background:var(--bg);padding:8px;font-size:12px;display:flex;flex-direction:column;gap:6px}
 .tm-path{font-size:10.5px;color:var(--grey-dim)}
 .tm-row{display:flex;gap:8px;align-items:center;border:1px solid var(--border);border-radius:6px;padding:7px 9px;background:var(--panel-2);color:var(--white)}
@@ -392,6 +376,27 @@ details.tts-prefs[open] summary::before{content:"▾ "}
 .tm-note{color:var(--grey);font-size:11.5px}
 .tm-light{width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:11px;flex-shrink:0}
 .tm-seq{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+/* ===== charts inside flashcards ===== */
+.chart-box{margin:12px 0 6px;padding:10px 12px;border:1px dashed var(--border-bright);border-radius:8px;background:var(--panel-2)}
+.chart-box .cb-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.chart-box .cb-title{font-size:12px;color:var(--cyan);font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.chart-box .dim{color:var(--grey-dim);text-transform:none;font-weight:400}
+.chart-box .chart-types{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px}
+.chart-box .chart-types .chart-type-btn{width:100%}
+.chart-box .cc-in{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--white);font-family:inherit;font-size:13px;padding:8px 9px;margin:0 0 6px}
+.chart-box .cc-in:focus{outline:none;border-color:var(--cyan)}
+.chart-box select.cc-in{margin-top:6px}
+.chart-box .cr{display:flex;gap:6px;align-items:flex-start}
+.chart-box .cr .cc-in{margin:0 0 6px;min-width:0}
+.chart-box .cr .cc-num{max-width:96px}
+.chart-box .x-btn{flex-shrink:0;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--red);font-family:inherit;font-size:15px;line-height:1;padding:6px 9px;cursor:pointer;width:auto}
+.chart-box .mini-btn{width:auto}
+.card-chart{margin:10px 0 4px}
+.card-chart svg{width:100%;height:auto;display:block}
+.list-row .card-chart{flex-basis:100%;margin-top:8px}
+.chart-box .mini-btn{background:transparent;border:1px solid var(--border);color:var(--cyan);border-radius:6px;font-family:inherit;font-size:11.5px;padding:5px 10px;cursor:pointer}
+.chart-box .mini-btn:hover{border-color:var(--border-bright)}
 
 </style>
 </head>
@@ -476,7 +481,6 @@ function saveTtsPrefs(){
 }
 loadTtsPrefs();
 
-/* ========== THEMES ========== */
 const THEME_KEY="d4n_theme_v1";
 const THEMES=[
   {id:"default",   name:"Teal",        bg:"#0c0e0f", accent:"#5ee6d0"},
@@ -503,7 +507,6 @@ function applyTheme(id){
 }
 applyTheme(currentTheme());
 
-/* ========== INSTALL (PWA) CHECK ========== */
 async function runPwaCheck(box){
   const rows=[];
   const add=(ok,label,note)=>rows.push(`<div><span style="color:var(--${ok?'green':'red'});">${ok?'✓':'✗'}</span> ${esc(label)}${note?` <span style="color:var(--grey-dim);">${esc(note)}</span>`:''}</div>`);
@@ -552,8 +555,7 @@ async function runPwaCheck(box){
   }
 }
 
-/* ========== STORAGE ========== */
-const EMPTY_DATA = { flashcards:{}, study_sessions:[], notes:{}, topics:{} };
+const EMPTY_DATA = { flashcards:{}, study_sessions:[], notes:{}, topics:{}, charts:{} };
 const STORAGE_KEY = "d4n_study_data_v1";
 const TIMER_KEY = "d4n_timer_state_v1";
 const WM_ENABLED_KEY = "d4n_wm_enabled_v1";
@@ -573,6 +575,9 @@ let seqState = {};
 let dragState = null;
 let chirpInterval = null;
 
+let autoMathEnabled = true;
+try { autoMathEnabled = localStorage.getItem("d4n_auto_math") !== "false"; } catch(e){}
+
 function loadData(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -582,6 +587,7 @@ function loadData(){
       if(!d.study_sessions) d.study_sessions = [];
       if(!d.notes) d.notes = {};
       if(!d.topics) d.topics = {};
+      if(!d.charts) d.charts = {};
       return d;
     }
   }catch(e){}
@@ -609,7 +615,6 @@ function loadTimer(){
   return blankTimer();
 }
 function saveTimer(){try{localStorage.setItem(TIMER_KEY,JSON.stringify(TIMER))}catch(e){}}
-/* ========== OFFLINE USER CACHE ========== */
 function cacheUserDoc(doc){
   try{ localStorage.setItem(USER_CACHE_KEY, JSON.stringify(doc)); }catch(e){}
 }
@@ -622,7 +627,6 @@ function getCachedUserDoc(){
 function clearUserCache(){
   try{ localStorage.removeItem(USER_CACHE_KEY); }catch(e){}
 }
-/* ========== ANALYTICS ========== */
 function trackFeature(featureName){
   try{
     const raw = localStorage.getItem(ANALYTICS_QUEUE_KEY);
@@ -709,7 +713,6 @@ async function pushAnalyticsToCloud(){
   }
 }
 
-/* ========== AUTH ========== */
 function generateDisplayId(){const c="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";const p=n=>Array.from({length:n},()=>c[Math.floor(Math.random()*c.length)]).join("");return `D4N-${p(3)}-${p(3)}`}
 function friendlyAuthError(e){const c=e&&e.code?e.code:"";switch(c){case"auth/email-already-in-use":return"That email is already registered.";case"auth/invalid-email":return"That email doesn't look right.";case"auth/weak-password":return"Password must be at least 6 characters.";case"auth/user-not-found":return"No account with that email.";case"auth/wrong-password":case"auth/invalid-credential":return"Incorrect email or password.";case"auth/too-many-requests":return"Too many attempts. Try again in a minute.";case"auth/network-request-failed":return"Network error. Check your connection.";default:return(e&&e.message)||"Something went wrong."}}
 function showAuthGate(html){const g=document.getElementById("authGate");g.style.display="flex";g.innerHTML=html;document.getElementById("app").style.display="none"}
@@ -745,13 +748,11 @@ function showLoginScreen(){
     try{await sendPasswordResetEmail(auth,email);errEl.style.color="var(--green)";errEl.textContent="Reset link sent — check your inbox."}catch(e){errEl.style.color="var(--red)";errEl.textContent=friendlyAuthError(e)}
   });
 }
-/* ========== TERMS & CONDITIONS + PRIVACY POLICY ========== */
-// Fill these in. Until LEGAL_EMAIL is set, the contact lines point to "Send a Suggestion" in Settings.
 const LEGAL_EMAIL="";
-const LEGAL_DATE="October 13, 2026";   // used for "Last updated" and "Effective date"
-const TERMS_VERSION="1.0";             // bump when you change the text
+const LEGAL_DATE="October 13, 2026";
+const TERMS_VERSION="1.0";
 const TERMS_KEY="d4n_terms_accepted_v1";
-const LEGAL={"terms": {"title": "Terms & Conditions", "sections": [["1. Who we are", ["K.I.T.E is a product and property of Lumin. K.I.T.E operates as a study assistant application used to make studying better and easier for students. By continuing to use K.I.T.E you are agreeing to these Terms & Conditions below. If you do not agree, your account will not be created."]], ["2. Who can use K.I.T.E", ["You may use K.I.T.E if you are using the app for personal, non-commercial study purposes.", "If you are under 18, you confirm that you have permission from a parent or guardian to use K.I.T.E and to create an account.", "You are responsible for anything that happens on your account. DO NOT share your password. DO NOT let someone else use your account."]], ["3. Your account", ["To use K.I.T.E, you must create an account with an email, username, and password. You agree to:", ["Provide truthful information when you register.", "Keep your password private. If you think someone else has your password, change it immediately.", "Use one account per person. Do not create multiple accounts to abuse free features or bypass any restriction.", "Not impersonate another person."], "You can delete your account at any time from Settings. We may also suspend or delete your account if you break these Terms."]], ["4. What you own vs. what we own", ["**You own your content.** Everything you write into K.I.T.E — flashcards, answers, notes, topics, and study history — belongs to you. We do not claim ownership over it.", "**We own the App.** The design, code, name, logo, and everything else that makes K.I.T.E work belong to us. You may not copy, resell, or redistribute the App itself.", "**You grant us a limited licence.** To operate the App, we need permission to store and sync your content on your behalf (for example, on Firebase servers). By using K.I.T.E, you give us that permission — nothing more. We do not use your content for advertising or sell it to anyone."]], ["5. Acceptable use", ["Do not use K.I.T.E to:", ["Upload illegal content, hate speech, or anything that harasses or harms another person.", "Attempt to access another user's account or data.", "Reverse-engineer, modify, or attempt to break the App.", "Spam other users, or use the App to send unsolicited messages."], "We reserve the right to remove any account that violates these rules without warning."]], ["6. Study data and privacy", ["Your study content is stored on secure Firebase servers, connected to your account, so you can access it from any device.", "We also collect anonymous usage statistics to improve the App. A separate Privacy Policy explains exactly what is stored, where, why, and how you can delete it. Please read it alongside these Terms.", "By using K.I.T.E, you agree to the practices described in the Privacy Policy."]], ["7. Not a substitute for teachers or real study", ["K.I.T.E is a tool to help you study. It is not a replacement for teachers, textbooks, schools, or your own effort.", "Any quiz scores, progress charts, or “streaks” you see are for motivation only — they are not official academic records. Do not rely on them for anything important."]], ["8. Availability and changes", ["K.I.T.E is offered as is. We try to keep it running, but we cannot promise it will always be available, error-free, or uninterrupted. We may:", ["Change, add, or remove features at any time.", "Temporarily pause the App for maintenance.", "Discontinue the App entirely, with reasonable notice where possible."], "Your study content remains yours even if the App changes."]], ["9. Limitation of liability", ["To the fullest extent allowed by law:", ["K.I.T.E is provided without warranties of any kind.", "We are not liable for any loss of data, lost study time, exam outcomes, or indirect damages arising from your use of the App.", "If you lose your study content — whether through account deletion, technical failure, or any other reason — our responsibility is limited to helping you recover it from our backups if possible."], "**Always keep your own backup.** K.I.T.E includes an Export feature in the Import / Export section. Use it periodically to download a copy of your flashcards, notes, and history to your device. This is your best protection against data loss."]], ["10. Ending your use of K.I.T.E", ["You may stop using K.I.T.E at any time. You can delete your account from Settings.", "We may suspend or end your access if you break these Terms, abuse the App, or if we discontinue the service.", "When your account is deleted, we delete your study content and analytics from our servers within a reasonable period, except where we are required by law to keep records."]], ["11. Changes to these Terms", ["We may update these Terms from time to time. When we do, we will change the “Last updated” date at the top. If a change is significant, we will notify you in the App. Continuing to use K.I.T.E after a change means you accept the updated Terms."]], ["12. Contact", ["Questions about these Terms? Contact:", "D4N\nLumin\n{{EMAIL}}"]]]}, "privacy": {"title": "Privacy Policy", "sections": [["", ["This Privacy Policy explains what information K.I.T.E collects, where it is stored, how it is used, and how you can control or delete it. It should be read together with the Terms & Conditions.", "By creating an account and using K.I.T.E, you agree to this Privacy Policy."]], ["1. Who is responsible for your data", ["K.I.T.E is a product of Lumin (“we”, “us”, “our”). We are responsible for the personal information collected through the App.", "Contact for privacy questions: {{EMAIL}}"]], ["2. What information we collect", ["**Information you give us:**", ["Email address", "Username", "Password (stored encrypted — we never see the actual password)", "Your study content — flashcards, answers, notes, topics, and study session history"], "**Information created automatically:**", ["Your User ID (a short code like D4N-A2K-9QX that identifies your account)", "Account creation date and last login time", "Anonymous usage statistics — which features you use, how long your sessions last, and which screens you visit. These statistics are grouped before being reviewed and are not linked to your name or email in any report we look at."], "**Information we do NOT collect:**", ["No phone number", "No physical address", "No payment details (payments, when applicable, are handled outside the App)", "No location data", "No contacts, camera, microphone, or files from your device"]]], ["3. Where your information is stored", ["Your data is stored on Google Firebase servers (Firebase Authentication and Cloud Firestore). Firebase is operated by Google LLC and is protected by Google's security infrastructure.", "Your password is stored by Firebase in encrypted (hashed) form. Neither we nor anyone at Lumin can read your password.", "Your study content (flashcards, notes, sessions) is stored under your account and can only be accessed by you (when logged in) or by an admin of Lumin for support and moderation purposes."]], ["4. Why we collect it", ["We use your information to:", ["Let you log in and access your account", "Save and sync your study content across your devices", "Track your progress, streaks, and session history", "Understand which features are used and which are not, so we can improve K.I.T.E", "Respond to support requests or issues you report"], "We do not use your information to:", ["Show you advertisements", "Sell your data to anyone", "Build a profile of you for marketing", "Share with any third party except as described in Section 5"]]], ["5. Who can see your information", ["**You.** When signed in, you can see and edit all of your own study content.", "**Lumin admins.** The operator of K.I.T.E can see the list of registered users (username, email, User ID) for account management, approval, and support. Admins do not routinely browse individual study content. We only look at a specific user's data if that user asks us for help or if we need to investigate abuse.", "**Google Firebase.** As our hosting provider, Google processes your data on our behalf to keep the App running. Google does not use your K.I.T.E data for its own purposes.", "**Other users.** Other K.I.T.E users cannot see your content. The App has no public profiles, no social feed, and no shared content features.", "We do not sell, rent, or trade your personal information."]], ["6. Cookies and local storage", ["K.I.T.E uses your browser's local storage to:", ["Keep you logged in between visits", "Save your preferences (like timer settings and text-to-speech voice settings)", "Cache your study content locally so the App can work offline"], "K.I.T.E does not use advertising cookies or third-party tracking cookies.", "You can clear this local storage at any time from your browser settings, or by using the “Delete All Saved Data” option in the App's Settings. Note: clearing local storage while logged out will remove the offline copy of your content — your data will still be on our servers and will be restored on next login."]], ["7. Analytics", ["To improve K.I.T.E, we collect anonymous usage data:", ["Which features are used most and least", "How long sessions last", "How many users are active per month", "Aggregate counts of accounts created or removed"], "This data is stored separately from your personal content and is grouped before it is looked at. When we review it, we see numbers and feature names — not names or study content. Everything you do in K.I.T.E is recorded under your account so the App can count it correctly, but the analytics we look at are fully anonymous: we only see totals, feature names and numbers \u2014 never names, emails, usernames or study content \u2014 and we do not look at individual users' activity. We do not share this data."]], ["8. Children's privacy", ["K.I.T.E is designed for students, including students under 18. If you are under 18, you should have permission from a parent or guardian before creating an account.", "We do not knowingly collect personal information beyond what is needed to run the App. We do not target advertising at minors. Parents or guardians who believe their child has provided information without permission may contact us at {{EMAIL}} to request review or deletion."]], ["9. Data retention and deletion", ["Your account and study content are kept as long as your account is active.", "You can delete your account at any time from the App's Settings. When you do:", ["Your account, study content, and analytics are removed from our servers within a reasonable period (usually within 30 days).", "Firebase backups may retain copies for a short period before they are permanently overwritten.", "We may retain limited records if required by law, or to prevent abuse of the App."], "You can also export your data at any time from the Import/Export section of the App. This gives you a .json file containing all of your flashcards, notes, and session history. We recommend doing this periodically as a personal backup."]], ["10. Security", ["We take reasonable steps to protect your information:", ["Passwords are hashed by Firebase — we never see them.", "Data is transmitted over HTTPS.", "Access to Firestore is protected by security rules that only allow users to read and write their own data.", "Admin access to the user list is limited to a small number of accounts."], "No system is perfectly secure. If you believe your account has been compromised, change your password immediately and contact us."]], ["11. Changes to this Privacy Policy", ["We may update this Privacy Policy from time to time. When we do, we will update the “Last updated” date at the top of this document. If a change is significant, we will notify you inside the App. Continuing to use K.I.T.E after a change means you accept the updated Privacy Policy."]], ["12. Contact", ["For questions about this Privacy Policy, or to request deletion of your account or data:", "D4N\nLumin\n{{EMAIL}}"]]]}};
+const LEGAL={"terms": {"title": "Terms & Conditions", "sections": [["1. Who we are", ["K.I.T.E is a product and property of Lumin. K.I.T.E operates as a study assistant application used to make studying better and easier for students. By continuing to use K.I.T.E you are agreeing to these Terms & Conditions below. If you do not agree, your account will not be created."]], ["2. Who can use K.I.T.E", ["You may use K.I.T.E if you are using the app for personal, non-commercial study purposes.", "If you are under 18, you confirm that you have permission from a parent or guardian to use K.I.T.E and to create an account.", "You are responsible for anything that happens on your account. DO NOT share your password. DO NOT let someone else use your account."]], ["3. Your account", ["To use K.I.T.E, you must create an account with an email, username, and password. You agree to:", ["Provide truthful information when you register.", "Keep your password private. If you think someone else has your password, change it immediately.", "Use one account per person. Do not create multiple accounts to abuse free features or bypass any restriction.", "Not impersonate another person."], "You can delete your account at any time from Settings. We may also suspend or delete your account if you break these Terms."]], ["4. What you own vs. what we own", ["**You own your content.** Everything you write into K.I.T.E — flashcards, answers, notes, topics, and study history — belongs to you. We do not claim ownership over it.", "**We own the App.** The design, code, name, logo, and everything else that makes K.I.T.E work belong to us. You may not copy, resell, or redistribute the App itself.", "**You grant us a limited licence.** To operate the App, we need permission to store and sync your content on your behalf (for example, on Firebase servers). By using K.I.T.E, you give us that permission — nothing more. We do not use your content for advertising or sell it to anyone."]], ["5. Acceptable use", ["Do not use K.I.T.E to:", ["Upload illegal content, hate speech, or anything that harasses or harms another person.", "Attempt to access another user's account or data.", "Reverse-engineer, modify, or attempt to break the App.", "Spam other users, or use the App to send unsolicited messages."], "We reserve the right to remove any account that violates these rules without warning."]], ["6. Study data and privacy", ["Your study content is stored on secure Firebase servers, connected to your account, so you can access it from any device.", "We also collect anonymous usage statistics to improve the App. A separate Privacy Policy explains exactly what is stored, where, why, and how you can delete it. Please read it alongside these Terms.", "By using K.I.T.E, you agree to the practices described in the Privacy Policy."]], ["7. Not a substitute for teachers or real study", ["K.I.T.E is a tool to help you study. It is not a replacement for teachers, textbooks, schools, or your own effort.", "Any quiz scores, progress charts, or “streaks” you see are for motivation only — they are not official academic records. Do not rely on them for anything important."]], ["8. Availability and changes", ["K.I.T.E is offered as is. We try to keep it running, but we cannot promise it will always be available, error-free, or uninterrupted. We may:", ["Change, add, or remove features at any time.", "Temporarily pause the App for maintenance.", "Discontinue the App entirely, with reasonable notice where possible."], "Your study content remains yours even if the App changes."]], ["9. Limitation of liability", ["To the fullest extent allowed by law:", ["K.I.T.E is provided without warranties of any kind.", "We are not liable for any loss of data, lost study time, exam outcomes, or indirect damages arising from your use of the App.", "If you lose your study content — whether through account deletion, technical failure, or any other reason — our responsibility is limited to helping you recover it from our backups if possible."], "**Always keep your own backup.** K.I.T.E includes an Export feature in the Import / Export section. Use it periodically to download a copy of your flashcards, notes, and history to your device. This is your best protection against data loss."]], ["10. Ending your use of K.I.T.E", ["You may stop using K.I.T.E at any time. You can delete your account from Settings.", "We may suspend or end your access if you break these Terms, abuse the App, or if we discontinue the service.", "When your account is deleted, we delete your study content and analytics from our servers within a reasonable period, except where we are required by law to keep records."]], ["11. Changes to these Terms", ["We may update these Terms from time to time. When we do, we will change the “Last updated” date at the top. If a change is significant, we will notify you in the App. Continuing to use K.I.T.E after a change means you accept the updated Terms."]], ["12. Contact", ["Questions about these Terms? Contact:", "D4N\nLumin\n{{EMAIL}}"]]]}, "privacy": {"title": "Privacy Policy", "sections": [["", ["This Privacy Policy explains what information K.I.T.E collects, where it is stored, how it is used, and how you can control or delete it. It should be read together with the Terms & Conditions.", "By creating an account and using K.I.T.E, you agree to this Privacy Policy."]], ["1. Who is responsible for your data", ["K.I.T.E is a product of Lumin (“we”, “us”, “our”). We are responsible for the personal information collected through the App.", "Contact for privacy questions: {{EMAIL}}"]], ["2. What information we collect", ["**Information you give us:**", ["Email address", "Username", "Password (stored encrypted — we never see the actual password)", "Your study content — flashcards, answers, notes, topics, and study session history"], "**Information created automatically:**", ["Your User ID (a short code like D4N-A2K-9QX that identifies your account)", "Account creation date and last login time", "Anonymous usage statistics — which features you use, how long your sessions last, and which screens you visit. These statistics are grouped before being reviewed and are not linked to your name or email in any report we look at."], "**Information we do NOT collect:**", ["No phone number", "No physical address", "No payment details (payments, when applicable, are handled outside the App)", "No location data", "No contacts, camera, microphone, or files from your device"]]], ["3. Where your information is stored", ["Your data is stored on Google Firebase servers (Firebase Authentication and Cloud Firestore). Firebase is operated by Google LLC and is protected by Google's security infrastructure.", "Your password is stored by Firebase in encrypted (hashed) form. Neither we nor anyone at Lumin can read your password.", "Your study content (flashcards, notes, sessions) is stored under your account and can only be accessed by you (when logged in) or by an admin of Lumin for support and moderation purposes."]], ["4. Why we collect it", ["We use your information to:", ["Let you log in and access your account", "Save and sync your study content across your devices", "Track your progress, streaks, and session history", "Understand which features are used and which are not, so we can improve K.I.T.E", "Respond to support requests or issues you report"], "We do not use your information to:", ["Show you advertisements", "Sell your data to anyone", "Build a profile of you for marketing", "Share with any third party except as described in Section 5"]]], ["5. Who can see your information", ["**You.** When signed in, you can see and edit all of your own study content.", "**Lumin admins.** The operator of K.I.T.E can see the list of registered users (username, email, User ID) for account management, approval, and support. Admins do not routinely browse individual study content. We only look at a specific user's data if that user asks us for help or if we need to investigate abuse.", "**Google Firebase.** As our hosting provider, Google processes your data on our behalf to keep the App running. Google does not use your K.I.T.E data for its own purposes.", "**Other users.** Other K.I.T.E users cannot see your content. The App has no public profiles, no social feed, and no shared content features.", "We do not sell, rent, or trade your personal information."]], ["6. Cookies and local storage", ["K.I.T.E uses your browser's local storage to:", ["Keep you logged in between visits", "Save your preferences (like timer settings and text-to-speech voice settings)", "Cache your study content locally so the App can work offline"], "K.I.T.E does not use advertising cookies or third-party tracking cookies.", "You can clear this local storage at any time from your browser settings, or by using the “Delete All Saved Data” option in the App's Settings. Note: clearing local storage while logged out will remove the offline copy of your content — your data will still be on our servers and will be restored on next login."]], ["7. Analytics", ["To improve K.I.T.E, we collect anonymous usage data:", ["Which features are used most and least", "How long sessions last", "How many users are active per month", "Aggregate counts of accounts created or removed"], "This data is stored separately from your personal content and is grouped before it is looked at. When we review it, we see numbers and feature names — not names or study content. Everything you do in K.I.T.E is recorded under your account so the App can count it correctly, but the analytics we look at are fully anonymous: we only see totals, feature names and numbers — never names, emails, usernames or study content — and we do not look at individual users' activity. We do not share this data."]], ["8. Children's privacy", ["K.I.T.E is designed for students, including students under 18. If you are under 18, you should have permission from a parent or guardian before creating an account.", "We do not knowingly collect personal information beyond what is needed to run the App. We do not target advertising at minors. Parents or guardians who believe their child has provided information without permission may contact us at {{EMAIL}} to request review or deletion."]], ["9. Data retention and deletion", ["Your account and study content are kept as long as your account is active.", "You can delete your account at any time from the App's Settings. When you do:", ["Your account, study content, and analytics are removed from our servers within a reasonable period (usually within 30 days).", "Firebase backups may retain copies for a short period before they are permanently overwritten.", "We may retain limited records if required by law, or to prevent abuse of the App."], "You can also export your data at any time from the Import/Export section of the App. This gives you a .json file containing all of your flashcards, notes, and session history. We recommend doing this periodically as a personal backup."]], ["10. Security", ["We take reasonable steps to protect your information:", ["Passwords are hashed by Firebase — we never see them.", "Data is transmitted over HTTPS.", "Access to Firestore is protected by security rules that only allow users to read and write their own data.", "Admin access to the user list is limited to a small number of accounts."], "No system is perfectly secure. If you believe your account has been compromised, change your password immediately and contact us."]], ["11. Changes to this Privacy Policy", ["We may update this Privacy Policy from time to time. When we do, we will update the “Last updated” date at the top of this document. If a change is significant, we will notify you inside the App. Continuing to use K.I.T.E after a change means you accept the updated Privacy Policy."]], ["12. Contact", ["For questions about this Privacy Policy, or to request deletion of your account or data:", "D4N\nLumin\n{{EMAIL}}"]]]}};
 function legalText(t){
   return esc(t.replace(/\{\{EMAIL\}\}/g,LEGAL_EMAIL||"Send a Suggestion in Settings"))
     .replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>");
@@ -763,7 +764,6 @@ function legalDocHTML(doc){
       :`<p>${legalText(it)}</p>`).join("")
   ).join("");
 }
-// which = "terms" | "privacy". Pass onAgree to show an "I agree" button (used on the sign-up screen).
 function showLegal(which,onAgree){
   const old=document.getElementById("termsOverlay");if(old)old.remove();
   const ov=document.createElement("div");
@@ -783,7 +783,7 @@ function showLegal(which,onAgree){
   const show=(w)=>{
     const doc=LEGAL[w]||LEGAL.terms;
     ov.querySelectorAll(".terms-tab").forEach(b=>b.classList.toggle("active",b.dataset.legal===w));
-    document.getElementById("termsVer").textContent=`K.I.T.E \u2014 ${doc.title} \u00b7 Last updated: ${LEGAL_DATE} \u00b7 Effective: ${LEGAL_DATE}`;
+    document.getElementById("termsVer").textContent=`K.I.T.E — ${doc.title} · Last updated: ${LEGAL_DATE} · Effective: ${LEGAL_DATE}`;
     const body=document.getElementById("termsBody");
     body.innerHTML=legalDocHTML(doc);body.scrollTop=0;
   };
@@ -841,7 +841,6 @@ function showPaywallScreen(){
   if(!claimed)   return paywallInstructions(requested, method);
   return paywallWaiting(requested, method);
 }
-
 function paywallPlanPicker(){
   const currency = isJamaicaUser() ? "JMD" : "USD";
   const cards = Object.entries(PLANS).map(([id,p],i)=>{
@@ -866,7 +865,6 @@ function paywallPlanPicker(){
   });
   document.getElementById("pwSignOut").addEventListener("click",handleSignOut);
 }
-
 async function pickPaywallPlan(planId){
   if(!currentUser||!PLANS[planId])return;
   const currency = isJamaicaUser() ? "JMD" : "USD";
@@ -877,7 +875,6 @@ async function pickPaywallPlan(planId){
     showPaywallScreen();
   }catch(e){console.error(e);toast("Could not save plan. Try again.")}
 }
-
 function paywallMethodPicker(planId){
   const p = PLANS[planId];
   const currency = currentUserDoc.currency || (isJamaicaUser() ? "JMD" : "USD");
@@ -916,7 +913,6 @@ function paywallMethodPicker(planId){
     }catch(e){toast("Could not go back. Try again.")}
   });
 }
-
 async function pickPaywallMethod(method){
   if(!currentUser)return;
   try{
@@ -925,7 +921,6 @@ async function pickPaywallMethod(method){
     showPaywallScreen();
   }catch(e){console.error(e);toast("Could not save. Try again.")}
 }
-
 function paywallInstructions(planId, method){
   if(method === "lynk" && !LYNk_ENABLED) method = "cash";
   const p = PLANS[planId];
@@ -934,7 +929,6 @@ function paywallInstructions(planId, method){
   const id = currentUserDoc?.displayId || "—";
   let body = "";
   let showClaim = false;
-
   if(method === "lynk"){
     showClaim = true;
     body = `
@@ -968,7 +962,6 @@ function paywallInstructions(planId, method){
     <div class="auth-link"><a id="pwMethodBack">← Change payment method</a></div>
     <div class="auth-link"><a id="pwSignOut2">Sign out</a></div>
   </div>`);
-
   const copyEls = ["lynkNum","lynkRef","cashRef"];
   copyEls.forEach(cid=>{
     const el = document.getElementById(cid);
@@ -993,7 +986,6 @@ function paywallInstructions(planId, method){
   });
   document.getElementById("pwSignOut2").addEventListener("click",handleSignOut);
 }
-
 async function markPaymentClaimed(){
   if(!currentUser)return;
   try{
@@ -1005,7 +997,6 @@ async function markPaymentClaimed(){
     showPaywallScreen();
   }catch(e){console.error(e);toast("Could not save. Try again.")}
 }
-
 function paywallWaiting(planId, method){
   const p = PLANS[planId];
   const currency = currentUserDoc.currency || "JMD";
@@ -1041,8 +1032,6 @@ function paywallWaiting(planId, method){
   });
   document.getElementById("pwSignOut3").addEventListener("click",handleSignOut);
 }
-
-// Legacy alias
 function showPendingScreen(){ showPaywallScreen(); }
 function showExpiredScreen(){
   const id=currentUserDoc?.displayId||"—";
@@ -1072,7 +1061,6 @@ async function checkStatusAgain(){
 }
 function routeBasedOnStatus(){
   if(!currentUser||!currentUserDoc)return;
-  // FREE FOR EVERYONE — for now 
   bootApp();
 }
 let booting = false;
@@ -1113,6 +1101,7 @@ async function pushDataToCloud(){
       notes: DATA.notes,
       topics: DATA.topics,
       study_sessions: DATA.study_sessions,
+      charts: DATA.charts || {},
       updatedAt: serverTimestamp()
     });
     lastSyncedAt = new Date();
@@ -1134,6 +1123,7 @@ async function pullDataFromCloud(){
       DATA.notes = cloud.notes || {};
       DATA.topics = cloud.topics || {};
       DATA.study_sessions = cloud.study_sessions || [];
+      DATA.charts = cloud.charts || {};
       try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA)); }catch(e){}
       lastSyncedAt = cloud.updatedAt && cloud.updatedAt.toDate ? cloud.updatedAt.toDate() : new Date();
       localDirty = false;
@@ -1161,6 +1151,7 @@ function startDataListener(){
     DATA.notes = cloud.notes || {};
     DATA.topics = cloud.topics || {};
     DATA.study_sessions = cloud.study_sessions || [];
+    DATA.charts = cloud.charts || {};
     try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA)); }catch(e){}
     lastSyncedAt = cloudTime;
     suppressPush = false;
@@ -1224,7 +1215,7 @@ onAuthStateChanged(auth,async(user)=>{
     if(expiryCheckInterval){clearInterval(expiryCheckInterval);expiryCheckInterval=null}
     showLoginScreen();return;
   }
-    setTimeout(()=>{
+  setTimeout(()=>{
     if(!APP_READY){
       const cached = getCachedUserDoc();
       if(cached && cached.uid === user.uid){
@@ -1234,7 +1225,6 @@ onAuthStateChanged(auth,async(user)=>{
     }
   }, 3500);
   currentUser=user;
-  // Offline and signed in before
   if(!navigator.onLine){
     const cachedOffline=getCachedUserDoc();
     if(cachedOffline&&cachedOffline.uid===user.uid){
@@ -1245,12 +1235,11 @@ onAuthStateChanged(auth,async(user)=>{
   }
   showLoadingScreen();
   try{
-       const userRef=doc(db,"users",user.uid);
+    const userRef=doc(db,"users",user.uid);
     let snap;
     try{
       snap=await getDoc(userRef);
     }catch(e){
-      // OFFLINE 
       const cached = getCachedUserDoc();
       if(cached && cached.uid === user.uid){
         currentUserDoc = cached;
@@ -1284,7 +1273,6 @@ onAuthStateChanged(auth,async(user)=>{
   }catch(e){console.error(e);showErrorScreen("Failed to load your account.")}
 });
 
-/* ========== WINDOW MANAGER ========== */
 function loadWM(){
   try{
     WM_ENABLED=localStorage.getItem(WM_ENABLED_KEY)==="1";
@@ -1296,7 +1284,7 @@ function loadWM(){
       if(p.focusedId)WM.focusedId=p.focusedId;
     }
   }catch(e){}
-    if(!WM.windows.find(w=>w.isHome)){
+  if(!WM.windows.find(w=>w.isHome)){
     const estW = 560, estH = 520;
     const hx = Math.max(20, Math.round((window.innerWidth - estW) / 2));
     const hy = Math.max(20, Math.round((window.innerHeight - estH) / 2));
@@ -1305,7 +1293,6 @@ function loadWM(){
     WM.windows.unshift(hw);
     WM.focusedId=hw.id;
   }
-
   WM_RECENTER_HOME = true;
 }
 function wmCenterHome(){
@@ -1338,7 +1325,8 @@ function wmCloseAllExceptHome(){WM.windows=WM.windows.filter(w=>w.isHome);WM.foc
 function wmOpen(page,params,parentId){
   const parent=parentId?wmWindowById(parentId):null;
   const merged={...(params||{})};
-  if(merged.subject===undefined&&parent&&parent.params&&parent.params.subject!==undefined)merged.subject=parent.params.subject;
+  if(merged.clearSubject){ delete merged.subject; delete merged.clearSubject; }
+  else if(merged.subject===undefined&&parent&&parent.params&&parent.params.subject!==undefined)merged.subject=parent.params.subject;
   if(merged.topic===undefined&&parent&&parent.params&&parent.params.topic!==undefined&&!(params&&params.clearTopic))merged.topic=parent.params.topic;
   const existing=WM.windows.find(w=>w.page===page);
   if(existing){
@@ -1366,8 +1354,7 @@ function wmOpen(page,params,parentId){
     y=Math.min(parent.y+60+(sibCount%6)*30,Math.max(20,window.innerHeight-300));
     x=Math.max(20,x);y=Math.max(20,y);
   }
-  // Center home-type pages on screen
-  if(page === 'home' || page === 'select_subject' || page === 'progress' || page === 'sync_data' || page === 'search'){
+  if(page === 'home' || page === 'select_subject' || page === 'progress' || page === 'sync_data' || page === 'search' || page === 'charts'){
     const estW = 560, estH = 500;
     x = Math.max(20, Math.round((window.innerWidth - estW) / 2));
     y = Math.max(20, Math.round((window.innerHeight - estH) / 2));
@@ -1381,7 +1368,8 @@ function wmGoBackTo(page,params){
   const cur=wmWindowById(CURRENT_WIN_ID);
   if(!cur)return;
   const merged={...(params||{})};
-  if(merged.subject===undefined&&cur.params&&cur.params.subject!==undefined)merged.subject=cur.params.subject;
+  if(merged.clearSubject){ delete merged.subject; delete merged.clearSubject; }
+  else if(merged.subject===undefined&&cur.params&&cur.params.subject!==undefined)merged.subject=cur.params.subject;
   if(merged.topic===undefined&&cur.params&&cur.params.topic!==undefined&&!(params&&params.clearTopic))merged.topic=cur.params.topic;
   const descIds=new Set(wmDescendants(cur.id).map(d=>d.id));
   const existing=WM.windows.find(w=>w.page===page&&w.id!==cur.id&&!descIds.has(w.id));
@@ -1402,7 +1390,8 @@ function wmReplace(page,params){
   const cur=wmWindowById(CURRENT_WIN_ID);
   if(!cur)return;
   const merged={...(params||{})};
-  if(merged.subject===undefined&&cur.params&&cur.params.subject!==undefined)merged.subject=cur.params.subject;
+  if(merged.clearSubject){ delete merged.subject; delete merged.clearSubject; }
+  else if(merged.subject===undefined&&cur.params&&cur.params.subject!==undefined)merged.subject=cur.params.subject;
   if(merged.topic===undefined&&cur.params&&cur.params.topic!==undefined&&!(params&&params.clearTopic))merged.topic=cur.params.topic;
   const descIds=new Set(wmDescendants(cur.id).map(d=>d.id));
   WM.windows=WM.windows.filter(w=>!descIds.has(w.id));
@@ -1422,36 +1411,21 @@ function wmPropagateSubject(windowId,oldSubject,newSubject){
   const w=wmWindowById(windowId);if(!w)return;
   if(w.params&&w.params.subject===oldSubject)w.params.subject=newSubject;
   switch(w.page){
-    case 'topic_menu':
-    case 'study_session':
-    case 'quiz_session':
-    case 'quiz_complete':
-    case 'study_complete':
-    case 'flashcard_menu':
-    case 'card_list_view':
-    case 'manage_card_list':
-    case 'edit_card_form':
-    case 'add_card_form':
-    case 'delete_choice':
-    case 'delete_card_list':
-    case 'read_menu':
-    case 'read_new_choice':
-    case 'read_write_form':
-    case 'read_import':
-    case 'read_view':
-    case 'read_edit_list':
-    case 'topic_progress':
-    case 'manage_topics':
-    case 'add_topic_form':
+    case 'topic_menu': case 'study_session': case 'quiz_session':
+    case 'quiz_complete': case 'study_complete': case 'flashcard_menu':
+    case 'card_list_view': case 'manage_card_list': case 'edit_card_form':
+    case 'add_card_form': case 'delete_choice': case 'delete_card_list':
+    case 'read_menu': case 'read_new_choice': case 'read_write_form':
+    case 'read_import': case 'read_view': case 'read_edit_list':
+    case 'topic_progress': case 'manage_topics': case 'add_topic_form':
     case 'rename_topic_form':
-            w.page='topic_picker';
+      w.page='topic_picker';
       w.params={subject:newSubject,clearTopic:true};
       break;
   }
   wmDescendants(windowId).forEach(d=>wmPropagateSubject(d.id,oldSubject,newSubject));
 }
 
-/* ========== HELPERS ========== */
 function normQ(q){return(q||"").trim().toLowerCase().replace(/\s+/g,' ')}
 function genId(p){return `${p}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,7)}`}
 function slug(s){return(s||"").toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9\-]/g,'')}
@@ -1476,7 +1450,6 @@ function isAdmin(){
 function isSuperAdmin(){
   return !!(currentUser && currentUser.uid === ADMIN_UID);
 }
-/* --- TOPIC HELPERS --- */
 function topicsFor(subject){
   const stored=DATA.topics[subject]||[];
   const fromItems=new Set();
@@ -1506,7 +1479,6 @@ function untaggedCount(subject){
 function topicSessions(subject,topic){
   return (DATA.study_sessions||[]).filter(s=>s.subject===subject&&(!topic||s.topic===topic));
 }
-/* ========== EXPORT / IMPORT ========== */
 function buildExportPayload(opts={}){
   const {subjectsFilter=null,includeData=true}=opts;
   const list=subjectsFilter?subjectsFilter:subjects();
@@ -1516,9 +1488,16 @@ function buildExportPayload(opts={}){
     notes[s]=(DATA.notes[s]||[]).map(n=>({...n}));
     topics[s]=[...(DATA.topics[s]||[])];
   });
+  const charts={};
+  const allChartSubjects = Object.keys(DATA.charts||{});
+  allChartSubjects.forEach(s=>{
+    if(!subjectsFilter || subjectsFilter.includes(s)){
+      charts[s] = (DATA.charts[s]||[]).map(c=>({...c}));
+    }
+  });
   let study_sessions=[];
   if(includeData)study_sessions=DATA.study_sessions.filter(s=>!subjectsFilter||subjectsFilter.includes(s.subject));
-  return{type:"d4n_study_backup",version:3,exported_at:new Date().toISOString(),flashcards,notes,topics,study_sessions};
+  return{type:"d4n_study_backup",version:4,exported_at:new Date().toISOString(),flashcards,notes,topics,study_sessions,charts};
 }
 function downloadJSON(payload,base){
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
@@ -1540,15 +1519,15 @@ function downloadExampleNotes(){
   downloadJSON(ex,"d4n-example-notes");
 }
 function downloadExampleBackup(){
-  const ex={type:"d4n_study_backup",version:3,exported_at:new Date().toISOString(),
+  const ex={type:"d4n_study_backup",version:4,exported_at:new Date().toISOString(),
     flashcards:{"Example Subject":[{question:"What is a flashcard?",answer:"A card with a question on one side and the answer on the other.",topic:"Basics",review_count:0,last_reviewed:null,created:new Date().toISOString()}]},
     notes:{"Example Subject":[{id:"note_example",title:"Example Topic",content:"Sample notes content.",topic:"Basics",created:new Date().toISOString()}]},
     topics:{"Example Subject":["Basics"]},
-    study_sessions:[]};
+    study_sessions:[],charts:{}};
   downloadJSON(ex,"d4n-example-backup");
 }
 function mergeImportedData(incoming){
-  const stats={newSubjects:0,newCards:0,skippedCards:0,newSessions:0,skippedSessions:0,newNotes:0,skippedNotes:0,newTopics:0};
+  const stats={newSubjects:0,newCards:0,skippedCards:0,newSessions:0,skippedSessions:0,newNotes:0,skippedNotes:0,newTopics:0,newCharts:0,skippedCharts:0};
   const inFC=incoming.flashcards||{};
   for(const subject in inFC){
     const cards=inFC[subject]||[];
@@ -1595,6 +1574,19 @@ function mergeImportedData(incoming){
     if(skeys.has(key)){stats.skippedSessions++;return}
     DATA.study_sessions.push(s);skeys.add(key);stats.newSessions++;
   });
+  const inCh=incoming.charts||{};
+  if(!DATA.charts) DATA.charts={};
+  for(const subject in inCh){
+    if(!DATA.charts[subject]) DATA.charts[subject]=[];
+    const existingIds=new Set(DATA.charts[subject].map(c=>c.id));
+    (inCh[subject]||[]).forEach(c=>{
+      if(!c) return;
+      const cid = c.id || genId('chart');
+      if(existingIds.has(cid)){stats.skippedCharts++;return}
+      DATA.charts[subject].push({...c, id: cid});
+      existingIds.add(cid);stats.newCharts++;
+    });
+  }
   DATA.study_sessions.sort((a,b)=>new Date(a.date)-new Date(b.date));
   saveData(DATA);
   return stats;
@@ -1640,7 +1632,93 @@ function parseCardsFile(file,cb){
   reader.readAsText(file);
 }
 
-/* ========== TTS ========== */
+// ---- KATEX HELPERS ----
+function renderMath(element) {
+  if (!element || !window.renderMathInElement) return;
+  try {
+    window.renderMathInElement(element, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false},
+        {left: '\\[', right: '\\]', display: true}
+      ],
+      throwOnError: false
+    });
+  } catch (e) {
+    console.warn("KaTeX render error:", e);
+  }
+}
+
+function renderHintMath(latex) {
+  if (!window.katex || typeof window.katex.renderToString !== "function") {
+    return "<code>" + esc(latex) + "</code>";
+  }
+  try {
+    return window.katex.renderToString(latex, {
+      throwOnError: false,
+      displayMode: false,
+      output: "html"
+    });
+  } catch (e) {
+    return "<code>" + esc(latex) + "</code>";
+  }
+}
+
+function buildHintPopover() {
+  const examples = [
+    { label: "Fractions", input: "4/3",      latex: "\\frac{4}{3}" },
+    { label: "Grouped",   input: "(a+b)/c",  latex: "\\frac{a+b}{c}" },
+    { label: "Powers",    input: "x^2",      latex: "x^{2}" },
+    { label: "Subscripts",input: "H_2O",     latex: "H_{2}O" },
+    { label: "Advanced",  input: "$\\sqrt{x}$", latex: "\\sqrt{x}" }
+  ];
+  const rows = examples.map(ex => `
+    <div class="hint-row">
+      <div class="hint-label">${esc(ex.label)}</div>
+      <div class="hint-example">
+        <code class="hint-in">${esc(ex.input)}</code>
+        <span class="hint-arrow">→</span>
+        <span class="hint-out">${renderHintMath(ex.latex)}</span>
+      </div>
+    </div>
+  `).join("");
+  return `<div class="hint-popover">
+    <div class="hint-title">Type normally — we'll format it:</div>
+    ${rows}
+  </div>`;
+}
+
+function autoFormatMath(str) {
+  if (!str) return "";
+  if (!autoMathEnabled) return str;
+  const mathBlocks = [];
+  let out = str.replace(/\$(.+?)\$/g, (match) => {
+    mathBlocks.push(match);
+    return `___MATH_BLOCK_${mathBlocks.length - 1}___`;
+  });
+  out = out.replace(/([a-zA-Z0-9]+)\^([a-zA-Z0-9]{2,})/g, '$1^{$2}');
+  out = out.replace(/([a-zA-Z0-9]+)_([a-zA-Z0-9]{2,})/g, '$1_{$2}');
+  out = out.replace(/\(([^)]+)\)\s*\/\s*([a-zA-Z0-9]+)/g, '\\frac{$1}{$2}');
+  out = out.replace(/\b([a-zA-Z0-9]+)\s*\/\s*([a-zA-Z0-9]+)\b/g, '\\frac{$1}{$2}');
+  out = out.replace(/(\\frac\{.*?\}\{.*?\})/g, '$$$1$$');
+  out = out.replace(/([a-zA-Z0-9]+(?:\^[\{\}a-zA-Z0-9\-]+|_[\{\}a-zA-Z0-9\-]+)+)/g, '$$$1$$');
+  out = out.replace(/___MATH_BLOCK_(\d+)___/g, (match, idx) => mathBlocks[idx]);
+  out = out.replace(/\$\s*\$/g, '');
+  return out.trim();
+}
+
+window.updateMathPreview = function(sourceId, targetId) {
+  const src = document.getElementById(sourceId);
+  const tgt = document.getElementById(targetId);
+  if (!src || !tgt) return;
+  tgt.style.display = autoMathEnabled ? "" : "none";
+  if (autoMathEnabled) {
+    tgt.textContent = autoFormatMath(src.value);
+    renderMath(tgt);
+  }
+};
+
 function ttsPlay(subject,noteId){
   const note=getNote(subject,noteId);
   if(!note||!('speechSynthesis' in window)){toast("Text-to-speech isn't available here");return}
@@ -1669,7 +1747,6 @@ function ttsStop(){
   ttsState='stopped';ttsNoteId=null;ttsNoteTitle=null;renderFloatBar();
 }
 
-/* ========== TIMER ========== */
 function timerRemaining(){if(!TIMER.active)return 0;if(TIMER.paused)return TIMER.pausedRemaining;return Math.max(0,Math.ceil((TIMER.endsAt-Date.now())/1000))}
 function fmtMMSS(sec){sec=Math.max(0,Math.round(sec||0));return `${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`}
 function chirp(){try{const ctx=new(window.AudioContext||window.webkitAudioContext)();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=1046;g.gain.value=0.09;o.start();setTimeout(()=>{try{o.stop();ctx.close()}catch(e){}},180)}catch(e){}if(navigator.vibrate)navigator.vibrate(150)}
@@ -1698,7 +1775,6 @@ function tickTimer(){
   if(onTimerPage)render();else renderFloatBar();
 }
 
-/* ========== QUIZ TIMER ========== */
 function quizRemaining(p){
   if(!p||!p.timerMode||p.timerMode==='none')return 0;
   if(p.checked&&typeof p.frozenRemaining==='number')return p.frozenRemaining;
@@ -1742,7 +1818,6 @@ function endQuizTimeUp(){
   goto("quiz_complete",comp,false);
 }
 
-/* ========== ANSWER MATCHING ========== */
 function levenshtein(a,b){
   const m=a.length,n=b.length;
   if(m===0)return n;if(n===0)return m;
@@ -1793,7 +1868,6 @@ function answerSimilarity(user,expected){
   return Math.max(seq,Math.round(f1*100));
 }
 
-/* ========== STREAKS / GOALS / CHARTS ========== */
 function todayKey(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 function dailyGoalKey(){return `d4n_goal_${currentUser?currentUser.uid:'anon'}`}
 function getDailyGoal(){
@@ -1869,7 +1943,6 @@ function barChartHTML(data,goal){
   }).join("")}</div>`;
 }
 
-/* ========== SUGGESTIONS ========== */
 async function submitSuggestion(text){
   if(!currentUser) throw new Error("not signed in");
   const ref = doc(collection(db,"suggestions"));
@@ -1899,7 +1972,208 @@ async function deleteSuggestion(id){
   await deleteDoc(doc(db,"suggestions",id));
 }
 
-/* ========== SHELL ========== */
+/* ============ CHARTS ============ */
+function chartSubjects(){
+  if(!DATA.charts) return [];
+  return Object.keys(DATA.charts).filter(s => (DATA.charts[s]||[]).length > 0).sort();
+}
+function totalChartCount(){
+  if(!DATA.charts) return 0;
+  let n=0; for(const s in DATA.charts) n += (DATA.charts[s]||[]).length; return n;
+}
+function ensureCharts(subject){
+  if(!DATA.charts) DATA.charts = {};
+  if(!DATA.charts[subject]) DATA.charts[subject] = [];
+}
+function truncateLabel(s, max=10){
+  s = String(s==null ? "" : s);
+  return s.length > max ? s.slice(0, max-1) + "…" : s;
+}
+function formatChartNum(n){
+  if(typeof n !== "number") n = parseFloat(n) || 0;
+  if(Math.abs(n) >= 1000) return n.toFixed(0);
+  if(Number.isInteger(n)) return String(n);
+  return n.toFixed(2).replace(/\.?0+$/, "");
+}
+function renderChartSVG(chart, W, H){
+  W = W || 500; H = H || 300;
+  const pad = { top: 40, right: 20, bottom: 50, left: 50 };
+  const innerW = W - pad.left - pad.right;
+  const innerH = H - pad.top - pad.bottom;
+  const labels = chart.labels || [];
+  const values = (chart.values || []).map(v => typeof v === "number" ? v : (parseFloat(v) || 0));
+  let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;background:var(--bg);border-radius:8px;border:1px solid var(--border);font-family:inherit;" xmlns="http://www.w3.org/2000/svg">`;
+  if(chart.title){
+    svg += `<text x="${W/2}" y="24" text-anchor="middle" fill="var(--white)" font-weight="700" font-size="14">${esc(chart.title)}</text>`;
+  }
+  if(!labels.length || !values.length){
+    svg += `<text x="${W/2}" y="${H/2}" text-anchor="middle" fill="var(--grey)">No data</text></svg>`;
+    return svg;
+  }
+  const palette = ["#5ee6d0","#f0b35e","#7ee787","#ff6b6b","#c792ea","#89dceb","#f9e2af","#a6e3a1","#ebbcba","#7aa2f7"];
+  const primary = chart.color || palette[0];
+  if(chart.type === "pie"){
+    const total = values.reduce((a,b)=>a+Math.max(0,b),0) || 1;
+    const cx = W * 0.35, cy = H * 0.5 + 10, r = Math.min(W * 0.28, H * 0.35);
+    let angle = -Math.PI / 2;
+    values.forEach((v,i)=>{
+      const slice = (Math.max(0,v)/total) * 2 * Math.PI;
+      const color = palette[i % palette.length];
+      if(slice >= Math.PI * 2 - 0.001){
+        svg += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${color}" stroke="var(--bg)" stroke-width="1"/>`;
+      } else if(slice > 0){
+        const x1 = cx + r * Math.cos(angle), y1 = cy + r * Math.sin(angle);
+        const x2 = cx + r * Math.cos(angle + slice), y2 = cy + r * Math.sin(angle + slice);
+        const largeArc = slice > Math.PI ? 1 : 0;
+        svg += `<path d="M ${cx} ${cy} L ${x1.toFixed(1)} ${y1.toFixed(1)} A ${r} ${r} 0 ${largeArc} 1 ${x2.toFixed(1)} ${y2.toFixed(1)} Z" fill="${color}" stroke="var(--bg)" stroke-width="1"/>`;
+      }
+      angle += slice;
+    });
+    const legendX = W * 0.68;
+    let legendY = 50;
+    values.forEach((v,i)=>{
+      const color = palette[i % palette.length];
+      svg += `<rect x="${legendX}" y="${legendY}" width="10" height="10" fill="${color}" rx="1"/>`;
+      svg += `<text x="${legendX + 14}" y="${legendY + 9}" fill="var(--white)" font-size="10">${esc(truncateLabel(labels[i], 12))} (${formatChartNum(v)})</text>`;
+      legendY += 16;
+    });
+  } else {
+    const max = Math.max(...values, 1);
+    const min = Math.min(...values, 0);
+    const range = (max - min) || 1;
+    const x0 = pad.left, x1 = W - pad.right;
+    const y0 = H - pad.bottom, y1 = pad.top;
+    for(let i=0;i<=4;i++){
+      const gy = y1 + innerH * (i/4);
+      const gv = max - (range * i / 4);
+      svg += `<line x1="${x0}" y1="${gy.toFixed(1)}" x2="${x1}" y2="${gy.toFixed(1)}" stroke="var(--border)" stroke-width="1" stroke-dasharray="2 3" opacity="0.6"/>`;
+      svg += `<text x="${x0 - 6}" y="${(gy + 3).toFixed(1)}" text-anchor="end" fill="var(--grey-dim)" font-size="9">${formatChartNum(gv)}</text>`;
+    }
+    svg += `<line x1="${x0}" y1="${y1}" x2="${x0}" y2="${y0}" stroke="var(--border)" stroke-width="1"/>`;
+    svg += `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y0}" stroke="var(--border)" stroke-width="1"/>`;
+    const n = labels.length;
+    const step = innerW / n;
+    const barW = Math.min(step * 0.7, 50);
+    const getY = v => y0 - ((v - min) / range) * innerH;
+    if(chart.type === "line"){
+      const pts = labels.map((_,i)=>[x0 + step*(i+0.5), getY(values[i])]);
+      const path = pts.map((p,i)=> (i===0?"M":"L") + " " + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+      const areaPath = path + ` L ${pts[pts.length-1][0].toFixed(1)} ${y0} L ${pts[0][0].toFixed(1)} ${y0} Z`;
+      svg += `<path d="${areaPath}" fill="${primary}" opacity="0.15"/>`;
+      svg += `<path d="${path}" fill="none" stroke="${primary}" stroke-width="2" stroke-linejoin="round"/>`;
+      pts.forEach((p,i)=>{
+        svg += `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="4" fill="${primary}" stroke="var(--bg)" stroke-width="2"/>`;
+        svg += `<text x="${p[0].toFixed(1)}" y="${(p[1]-9).toFixed(1)}" text-anchor="middle" fill="var(--white)" font-size="10" font-weight="600">${formatChartNum(values[i])}</text>`;
+        svg += `<text x="${p[0].toFixed(1)}" y="${y0 + 14}" text-anchor="middle" fill="var(--grey)" font-size="10">${esc(truncateLabel(labels[i]))}</text>`;
+      });
+    } else {
+      labels.forEach((label,i)=>{
+        const cx = x0 + step * (i + 0.5);
+        const yv = getY(values[i]);
+        const barH = Math.max(0, y0 - yv);
+        svg += `<rect x="${(cx-barW/2).toFixed(1)}" y="${yv.toFixed(1)}" width="${barW.toFixed(1)}" height="${barH.toFixed(1)}" fill="${primary}" rx="2"/>`;
+        svg += `<text x="${cx.toFixed(1)}" y="${(yv-4).toFixed(1)}" text-anchor="middle" fill="var(--white)" font-size="10" font-weight="600">${formatChartNum(values[i])}</text>`;
+        svg += `<text x="${cx.toFixed(1)}" y="${y0+14}" text-anchor="middle" fill="var(--grey)" font-size="10">${esc(truncateLabel(label))}</text>`;
+      });
+    }
+  }
+  svg += `</svg>`;
+  return svg;
+}
+
+window.chartEditorUpdate = function(field, index, value){
+  const st = window._chartEditorState;
+  if(!st) return;
+  if(field === "title"){ st.title = value; }
+  else if(field === "label"){ st.labels[index] = value; }
+  else if(field === "value"){ st.values[index] = parseFloat(value) || 0; }
+  chartEditorRefreshPreview();
+};
+window.chartEditorUpdateSubject = function(v){
+  if(window._chartEditorState) window._chartEditorState.subject = v;
+};
+function chartEditorRefreshPreview(){
+  const el = document.getElementById("chartPreview");
+  if(!el || !window._chartEditorState) return;
+  el.innerHTML = renderChartSVG(window._chartEditorState, 500, 260);
+}
+
+function pageCharts(){
+  const csubs = chartSubjects();
+  let body = `<div class="menu"><button class="menu-item accent" data-go="chart_editor" data-clear-subject="1"><span class="label">+ New Chart</span></button></div>`;
+  if(csubs.length === 0){
+    body += emptyState("📊","No charts yet.","Tap \"+ New Chart\" to visualize your data.");
+  } else {
+    csubs.forEach(subj=>{
+      body += `<div class="qa-label" style="color:var(--amber);margin:18px 0 8px;">${esc(subj)}</div>`;
+      (DATA.charts[subj]||[]).forEach(chart=>{
+        body += `<div class="chart-card" data-go="chart_editor" data-subject="${esc(subj)}" data-chart-id="${esc(chart.id)}" style="background:var(--panel-2);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:10px;">
+          <div style="pointer-events:none;">${renderChartSVG(chart, 500, 180)}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+            <div style="font-weight:600;font-size:13.5px;">${esc(chart.title||"Untitled Chart")}</div>
+            <div style="font-size:10.5px;color:var(--grey-dim);text-transform:uppercase;letter-spacing:.05em;">${esc(chart.type)}</div>
+          </div>
+        </div>`;
+      });
+    });
+  }
+  body += backBtn("home","Back to Main Menu");
+  return shell("CHARTS", `${totalChartCount()} chart${totalChartCount()===1?"":"s"}`, body, {path:"~/study/charts"});
+}
+
+function pageChartEditor(){
+  if(!nav.params.editorToken){
+    nav.params.editorToken = Date.now() + "_" + Math.random().toString(36).slice(2,7);
+  }
+  const token = nav.params.editorToken;
+  if(!window._chartEditorState || window._chartEditorState._token !== token){
+    const p = nav.params;
+    let st = null;
+    if(Array.isArray(p.labels) && Array.isArray(p.values)){
+      st = { labels: [...p.labels], values: [...p.values], title: p.title || "", type: p.type || "bar", color: p.color || "#5ee6d0", subject: p.subject || "General", chartId: p.chartId || null };
+    } else if(p.chartId && p.subject){
+      const existing = (DATA.charts[p.subject]||[]).find(c => c.id === p.chartId);
+      if(existing){
+        st = { labels: [...(existing.labels||[])], values: [...(existing.values||[])], title: existing.title || "", type: existing.type || "bar", color: existing.color || "#5ee6d0", subject: p.subject, chartId: existing.id };
+      }
+    }
+    if(!st){
+      st = { labels: ["A","B","C"], values: [10,20,30], title: "", type: "bar", color: "#5ee6d0", subject: p.subject || chartSubjects()[0] || subjects()[0] || "General", chartId: null };
+    }
+    st._token = token;
+    window._chartEditorState = st;
+  }
+  const st = window._chartEditorState;
+  const typeButtons = ["bar","line","pie"].map(t =>
+    `<button class="chart-type-btn ${st.type===t?'active':''}" data-chart-type="${t}">${t.charAt(0).toUpperCase()+t.slice(1)}</button>`
+  ).join("");
+  const rows = st.labels.map((label, i) => `
+    <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center;">
+      <input type="text" value="${esc(label)}" placeholder="Label" oninput="chartEditorUpdate('label', ${i}, this.value)" style="flex:2;margin-bottom:0;">
+      <input type="number" value="${st.values[i]}" placeholder="Value" oninput="chartEditorUpdate('value', ${i}, this.value)" style="flex:1;margin-bottom:0;">
+      <button class="mini-btn danger" data-chart-remove-row="${i}" style="margin-bottom:0;" title="Remove row">×</button>
+    </div>
+  `).join("");
+  const body = `
+    <div id="chartPreview" style="margin-bottom:14px;">${renderChartSVG(st, 500, 260)}</div>
+    <label class="field-label">Title (optional)</label>
+    <input type="text" id="chartTitleInput" value="${esc(st.title)}" oninput="chartEditorUpdate('title', 0, this.value)" placeholder="e.g. Weekly Study Hours">
+    <label class="field-label">Subject</label>
+    <input type="text" id="chartSubjectInput" value="${esc(st.subject)}" oninput="chartEditorUpdateSubject(this.value)" placeholder="e.g. Mathematics">
+    <label class="field-label">Chart type</label>
+    <div style="display:flex;gap:8px;margin-bottom:14px;">${typeButtons}</div>
+    <label class="field-label">Data</label>
+    <div>${rows}</div>
+    <button class="btn btn-ghost" id="chartAddRow" style="margin-bottom:14px;">+ Add row</button>
+    <div class="btn-row">
+      <button class="btn btn-ghost" data-back="1">Cancel</button>
+      <button class="btn btn-primary" id="chartSaveBtn">Save chart</button>
+    </div>
+    ${st.chartId ? `<div class="btn-row" style="margin-top:8px;"><button class="btn btn-danger" id="chartDeleteBtn">Delete chart</button></div>` : ""}
+  `;
+  return shell(st.chartId ? "EDIT CHART" : "NEW CHART", "", body, {path:"~/study/charts/editor"});
+}
+
 function shell(titleHTML,subtitle,bodyHTML,opts={}){
   const path=opts.path||"~/study";
   const isHome=opts.isHome;
@@ -1928,7 +2202,12 @@ function shell(titleHTML,subtitle,bodyHTML,opts={}){
 function goto(page,params={},push=true){
   if(push&&!windowedActive())navStack.push({page:nav.page,params:nav.params});
   const merged=Object.assign({},params);
-  if(merged.subject===undefined&&nav.params&&nav.params.subject!==undefined)merged.subject=nav.params.subject;
+  if(merged.clearSubject){
+    delete merged.subject;
+    delete merged.clearSubject;
+  } else if(merged.subject===undefined&&nav.params&&nav.params.subject!==undefined){
+    merged.subject=nav.params.subject;
+  }
   if(merged.topic===undefined&&nav.params&&nav.params.topic!==undefined&&!merged.clearTopic)merged.topic=nav.params.topic;
   nav={page,params:merged};
   render();
@@ -1986,9 +2265,78 @@ function wmHandleGo(page,params,btn){
   render();
 }
 
-/* ========== PAGES ========== */
+/* ---------- charts inside flashcards: made in the card form (add + edit), shown when studying and viewing ---------- */
+function cloneChart(c){
+  if(!c) return null;
+  return { type: c.type || "bar", title: c.title || "", color: c.color || "#5ee6d0", labels: (c.labels || []).slice(), values: (c.values || []).slice() };
+}
+function cleanCardChart(st){
+  if(!st) return { ok: true, chart: null };
+  const labels = [], values = [];
+  (st.labels || []).forEach((l, i) => {
+    const lab = String(l == null ? "" : l).trim();
+    const raw = st.values ? st.values[i] : "";
+    const v = typeof raw === "number" ? raw : parseFloat(String(raw == null ? "" : raw).replace(",", "."));
+    if(lab && isFinite(v)){ labels.push(lab.slice(0, 40)); values.push(v); }
+  });
+  if(!labels.length) return { ok: false, error: "Add at least one chart row with a label and a number, or remove the chart" };
+  return { ok: true, chart: { type: ["bar", "line", "pie"].includes(st.type) ? st.type : "bar", title: String(st.title || "").trim().slice(0, 60), color: st.color || "#5ee6d0", labels, values } };
+}
+function chartBlockHTML(card){
+  return (card && card.chart && card.chart.labels && card.chart.labels.length) ? `<div class="card-chart">${renderChartSVG(card.chart, 500, 220)}</div>` : "";
+}
+function cardChartInnerHTML(subject){
+  const st = window._cardChart;
+  if(!st){
+    const saved = (DATA.charts && DATA.charts[subject]) || [];
+    return `<div class="cb-head"><span class="cb-title">Chart <span class="dim">(optional)</span></span><button type="button" class="mini-btn" onclick="cardChartAction('open')">+ Add chart</button></div>`
+      + (saved.length ? `<select class="cc-in" onchange="cardChartAction('pick',this.value)"><option value="">Use a saved chart…</option>${saved.map((c, i) => `<option value="${i}">${esc(c.title || "Untitled")} (${esc(c.type || "bar")})</option>`).join("")}</select>` : "");
+  }
+  const rows = st.labels.map((l, i) => `<div class="cr"><input type="text" class="cc-in" placeholder="Label" value="${esc(l)}" oninput="cardChartAction('label',${i},this.value)"><input type="text" class="cc-in cc-num" inputmode="decimal" placeholder="Number" value="${esc(st.values[i])}" oninput="cardChartAction('value',${i},this.value)"><button type="button" class="x-btn" onclick="cardChartAction('del',${i})" aria-label="Remove row">&times;</button></div>`).join("");
+  return `<div class="cb-head"><span class="cb-title">Chart</span><button type="button" class="mini-btn" onclick="cardChartAction('remove')">Remove chart</button></div>
+    <div class="chart-types">${["bar", "line", "pie"].map(t => `<button type="button" class="chart-type-btn${st.type === t ? " active" : ""}" onclick="cardChartAction('type','${t}')">${t[0].toUpperCase() + t.slice(1)}</button>`).join("")}</div>
+    <input type="text" class="cc-in" maxlength="60" placeholder="Chart title (optional)" value="${esc(st.title)}" oninput="cardChartAction('title',0,this.value)">
+    <div class="chart-rows">${rows}</div>
+    <button type="button" class="mini-btn" onclick="cardChartAction('add')">+ Add row</button>
+    <div class="cb-preview" id="cardChartPreview"></div>`;
+}
+function cardChartBoxHTML(subject, card){
+  window._cardChart = card && card.chart ? cloneChart(card.chart) : null;
+  window._cardChartSubject = subject;
+  if(window._cardChart) setTimeout(cardChartPreview, 30);     // editing a card that already has a chart: draw its preview
+  return `<div class="chart-box" id="cardChartBox">${cardChartInnerHTML(subject)}</div>`;
+}
+function cardChartPaint(){
+  const box = document.getElementById("cardChartBox");
+  if(!box) return;
+  box.innerHTML = cardChartInnerHTML(window._cardChartSubject);
+  cardChartPreview();
+}
+function cardChartPreview(){
+  const el = document.getElementById("cardChartPreview");
+  if(!el) return;
+  const r = cleanCardChart(window._cardChart);
+  el.innerHTML = r.ok && r.chart ? `<div class="card-chart">${renderChartSVG(r.chart, 500, 220)}</div>` : `<div class="note" style="margin:6px 0 0;">The preview shows up once a row has a label and a number.</div>`;
+}
+window.cardChartReset = () => { window._cardChart = null; cardChartPaint(); };
+window.cardChartAction = (a, i, v) => {
+  let st = window._cardChart;
+  switch(a){
+    case "open": window._cardChart = { type: "bar", title: "", color: "#5ee6d0", labels: ["", ""], values: ["", ""] }; cardChartPaint(); return;
+    case "remove": window._cardChart = null; cardChartPaint(); return;
+    case "pick": { const c = (DATA.charts && DATA.charts[window._cardChartSubject] || [])[parseInt(i, 10)]; if(c){ window._cardChart = cloneChart(c); cardChartPaint(); } return; }
+    case "type": st.type = i; cardChartPaint(); return;
+    case "add": st.labels.push(""); st.values.push(""); cardChartPaint(); return;
+    case "del": if(st.labels.length > 1){ st.labels.splice(i, 1); st.values.splice(i, 1); } cardChartPaint(); return;
+    case "title": st.title = v; break;
+    case "label": st.labels[i] = v; break;
+    case "value": st.values[i] = v; break;
+  }
+  cardChartPreview();
+};
+
 function pageHome(){
-  const adminBtn=isAdmin()?`<button class="menu-item accent" data-go="admin_panel"><span class="num">6.</span><span class="label">Admin Panel</span><span class="meta">manage users</span></button>`:"";
+  const adminBtn=isAdmin()?`<button class="menu-item accent" data-go="admin_panel"><span class="num">7.</span><span class="label">Admin Panel</span><span class="meta">manage users</span></button>`:"";
   const body=`
     <div class="menu">
       <button class="menu-item" data-go="select_subject"><span class="num">1.</span><span class="label">Select Subject</span><span class="meta">${subjects().length} subjects</span></button>
@@ -2091,7 +2439,7 @@ function pageManageTopics(){
     });
     body+=`</div>`;
   }
-    body+=`<div class="menu" style="margin-top:14px;">
+  body+=`<div class="menu" style="margin-top:14px;">
     <button class="menu-item" data-go="rename_subject_form"><span class="label">Rename Subject</span><span class="meta">${esc(subject)}</span></button>
     <button class="menu-item" data-go="topic_picker" data-clearstack="1" data-clearTopic="1"><span class="label">Back to Topics</span></button>
   </div>`;
@@ -2221,10 +2569,23 @@ function pageAddCardForm(){
   const topic=nav.params.topic;
   const body=`
     <div class="page-sub" style="margin-top:-6px;">Adding to <strong style="color:var(--amber);">${esc(subject)}</strong> › <strong style="color:var(--amber);">${esc(topic)}</strong></div>
+    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px; margin-bottom:8px;">
+      <div class="hint-wrap" style="${autoMathEnabled ? '' : 'display:none;'}">
+        <button type="button" class="mini-btn math-hint-btn" style="font-size:10.5px; padding:4px 8px; border-radius:4px; color:var(--amber); border-color:var(--amber);">Hint 💡</button>
+        ${buildHintPopover()}
+      </div>
+      <div class="math-toggle-wrap math-toggle-btn" style="margin-bottom:0;">
+        <span style="text-align:right; line-height:1.2;">auto-correct math</span>
+        <div class="math-switch ${autoMathEnabled?'on':''}"></div>
+      </div>
+    </div>
     <label class="field-label">Question</label>
-    <textarea id="cardQuestion" placeholder="What is...?" autofocus></textarea>
+    <textarea id="cardQuestion" placeholder="What is...?" autofocus oninput="updateMathPreview('cardQuestion', 'previewQ')"></textarea>
+    <div class="math-preview" id="previewQ" style="${autoMathEnabled?'':'display:none;'}"></div>
     <label class="field-label">Answer</label>
-    <textarea id="cardAnswer" placeholder="The answer is..."></textarea>
+    <textarea id="cardAnswer" placeholder="The answer is..." oninput="updateMathPreview('cardAnswer', 'previewA')"></textarea>
+    <div class="math-preview" id="previewA" style="${autoMathEnabled?'':'display:none;'}"></div>
+    ${cardChartBoxHTML(nav.params.subject, null)}
     <div class="btn-row"><button class="btn btn-ghost" data-go="flashcard_menu" data-clearstack="1">Done</button><button class="btn btn-primary" id="addCardGo">Add Card</button></div>
     <div class="page-sub" style="margin-top:10px;">Cards lock to this topic automatically.</div>
   `;
@@ -2237,7 +2598,7 @@ function pageCardListView(){
   let body;
   if(cards.length===0){body=emptyState("📭","No cards in this topic yet.","")}
   else{
-    const rows=cards.map(c=>`<div class="list-row"><span class="lr-q">${esc(c.question)}</span><span class="lr-meta">${c.review_count||0}× reviewed</span></div>`).join("");
+    const rows=cards.map(c=>`<div class="list-row" style="flex-wrap:wrap;"><span class="lr-q">${esc(c.question)}</span><span class="lr-meta">${c.review_count||0}× reviewed</span>${chartBlockHTML(c)}</div>`).join("");
     body=`${rows}<hr class="div"><div class="page-sub" style="margin-bottom:0;">Total: ${cards.length}</div>`;
   }
   body+=backBtn("flashcard_menu","Back");
@@ -2292,10 +2653,23 @@ function pageEditCardForm(){
   const card=(DATA.flashcards[subject]||[])[cardIdx]||{question:'',answer:''};
   const body=`
     <div class="page-sub" style="margin-top:-6px;">Editing in <strong style="color:var(--amber);">${esc(topic)}</strong></div>
+    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px; margin-bottom:8px;">
+      <div class="hint-wrap" style="${autoMathEnabled ? '' : 'display:none;'}">
+        <button type="button" class="mini-btn math-hint-btn" style="font-size:10.5px; padding:4px 8px; border-radius:4px; color:var(--amber); border-color:var(--amber);">Hint 💡</button>
+        ${buildHintPopover()}
+      </div>
+      <div class="math-toggle-wrap math-toggle-btn" style="margin-bottom:0;">
+        <span style="text-align:right; line-height:1.2;">auto-correct math</span>
+        <div class="math-switch ${autoMathEnabled?'on':''}"></div>
+      </div>
+    </div>
     <label class="field-label">Question</label>
-    <textarea id="editQuestion" autofocus>${esc(card.question)}</textarea>
+    <textarea id="editQuestion" autofocus oninput="updateMathPreview('editQuestion', 'previewEQ')">${esc(card.question)}</textarea>
+    <div class="math-preview" id="previewEQ" style="${autoMathEnabled?'':'display:none;'}"></div>
     <label class="field-label">Answer</label>
-    <textarea id="editAnswer">${esc(card.answer)}</textarea>
+    <textarea id="editAnswer" oninput="updateMathPreview('editAnswer', 'previewEA')">${esc(card.answer)}</textarea>
+    <div class="math-preview" id="previewEA" style="${autoMathEnabled?'':'display:none;'}"></div>
+    ${cardChartBoxHTML(subject, card)}
     <div class="btn-row"><button class="btn btn-ghost" data-back="1">Cancel</button><button class="btn btn-primary" id="saveEditBtn">Save Changes</button></div>
   `;
   return shell("EDIT FLASHCARD",subject,body,{path:`~/study/${slug(subject)}/${slug(topic)}/edit`});
@@ -2396,8 +2770,19 @@ function pageReadWriteForm(){
   const body=`
     <label class="field-label">Note title</label>
     <input type="text" id="noteTitle" placeholder="e.g. Chapter 3 Summary" value="${note?esc(note.title):''}" autofocus>
+    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px; margin-bottom:8px;">
+      <div class="hint-wrap" style="${autoMathEnabled ? '' : 'display:none;'}">
+        <button type="button" class="mini-btn math-hint-btn" style="font-size:10.5px; padding:4px 8px; border-radius:4px; color:var(--amber); border-color:var(--amber);">Hint 💡</button>
+        ${buildHintPopover()}
+      </div>
+      <div class="math-toggle-wrap math-toggle-btn" style="margin-bottom:0;">
+        <span style="text-align:right; line-height:1.2;">auto-correct math</span>
+        <div class="math-switch ${autoMathEnabled?'on':''}"></div>
+      </div>
+    </div>
     <label class="field-label">Content</label>
-    <textarea id="noteContent" placeholder="Write your notes here..." style="min-height:180px;">${note?esc(note.content):''}</textarea>
+    <textarea id="noteContent" placeholder="Write your notes here..." style="min-height:180px;" oninput="updateMathPreview('noteContent', 'previewN')">${note?esc(note.content):''}</textarea>
+    <div class="math-preview" id="previewN" style="${autoMathEnabled?'':'display:none;'}"></div>
     <div class="btn-row"><button class="btn btn-ghost" data-back="1">Cancel</button><button class="btn btn-primary" id="saveNoteBtn">${note?'Save Changes':'Save Note'}</button></div>
   `;
   return shell(note?"EDIT NOTE":"WRITE NOTE",topic,body,{path:`~/study/${slug(subject)}/${slug(topic)}/read/${note?'edit':'new'}`});
@@ -2453,7 +2838,6 @@ function pageReadView(){
   return shell("READ MODE",topic,body,{path:`~/study/${slug(subject)}/${slug(topic)}/read/${slug(note.title)}`});
 }
 
-/* ---- STUDY (topic-scoped) ---- */
 function pageStudySession(){
   const{subject,topic,order,idx,revealed}=nav.params;
   const cards=cardsInTopic(subject,topic);
@@ -2468,9 +2852,9 @@ function pageStudySession(){
   const pct=((idx+1)/total)*100;
   let qa;
   if(!revealed){
-    qa=`<div class="card"><div class="qa-label q">Question</div><div class="qa-text">${esc(card.question)}</div></div><button class="btn btn-primary" id="revealBtn">Reveal answer</button>`;
+    qa=`<div class="card"><div class="qa-label q">Question</div><div class="qa-text">${esc(card.question)}</div>${chartBlockHTML(card)}</div><button class="btn btn-primary" id="revealBtn">Reveal answer</button>`;
   }else{
-    qa=`<div class="card"><div class="qa-label q">Question</div><div class="qa-text" style="margin-bottom:14px;">${esc(card.question)}</div><hr class="div" style="margin:10px 0;"><div class="qa-label a">Answer</div><div class="qa-text">${esc(card.answer)}</div></div>
+    qa=`<div class="card"><div class="qa-label q">Question</div><div class="qa-text" style="margin-bottom:14px;">${esc(card.question)}</div>${chartBlockHTML(card)}<hr class="div" style="margin:10px 0;"><div class="qa-label a">Answer</div><div class="qa-text">${esc(card.answer)}</div></div>
       <div class="page-sub" style="margin-bottom:8px;">Did you get it right?</div>
       <div class="yn-row"><button class="btn btn-danger" data-study-answer="n">✗ No</button><button class="btn btn-primary" data-study-answer="y" style="background:var(--green);border-color:var(--green);">✓ Yes</button></div>`;
   }
@@ -2490,7 +2874,6 @@ function pageStudyComplete(){
   return shell("SESSION COMPLETE!",topic,body,{path:`~/study/${slug(subject)}/${slug(topic)}/study/done`});
 }
 
-/* ---- QUIZ ---- */
 function quizTimerOptsHTML(mode){
   if(mode==='perq')return `<label class="field-label">Seconds per question</label><input type="number" id="quizPerQSeconds" min="5" max="600" value="30">`;
   if(mode==='whole')return `<label class="field-label">Minutes for the whole quiz</label><input type="number" id="quizWholeMinutes" min="1" max="180" value="5">`;
@@ -2539,12 +2922,12 @@ function pageQuizSession(){
   let inner;
   if(!checked){
     if(p.answerMode==='mcq'){
-      inner=`<div class="card"><div class="qa-label q">Question</div><div class="qa-text">${esc(card.question)}</div></div>`;
+      inner=`<div class="card"><div class="qa-label q">Question</div><div class="qa-text">${esc(card.question)}</div>${chartBlockHTML(card)}</div>`;
       (p.choices||[]).forEach((c,i)=>{
         inner+=`<button class="btn btn-ghost" data-mcq-choice="${i}" style="text-align:left;justify-content:flex-start;margin-bottom:8px;">${String.fromCharCode(65+i)}. ${esc(c)}</button>`;
       });
     }else{
-      inner=`<div class="card"><div class="qa-label q">Question</div><div class="qa-text">${esc(card.question)}</div></div>
+      inner=`<div class="card"><div class="qa-label q">Question</div><div class="qa-text">${esc(card.question)}</div>${chartBlockHTML(card)}</div>
         <label class="field-label">Your answer</label>
         <input type="text" id="quizAnswerInput" placeholder="Type your answer..." autofocus value="${esc(userAnswer||"")}">
         <button class="btn btn-primary" id="submitAnswerBtn">Submit</button>`;
@@ -2582,7 +2965,6 @@ function pageQuizComplete(){
   return shell("QUIZ COMPLETE!",topic,body,{path:`~/study/${slug(subject)}/${slug(topic)}/quiz/done`});
 }
 
-/* ---- TIMER ---- */
 function pageTimer(){
   const runningNote=TIMER.active?`<div class="page-sub">A timer is already running (${fmtMMSS(timerRemaining())} left${TIMER.paused?' · paused':''}). Starting a new one replaces it.</div>`:"";
   const body=`
@@ -2623,7 +3005,6 @@ function pageTimerActive(){
   return shell(done?"TIME'S UP!":(paused?"TIMER PAUSED":"TIMER ACTIVE"),"",body,{path:"~/study/timer/active"});
 }
 
-/* ---- PROGRESS ---- */
 function pageProgress(){
   const sessions=DATA.study_sessions;
   if(sessions.length===0){
@@ -2752,19 +3133,18 @@ function pageFullHistory(){
   return shell("FULL HISTORY",`${filtered.length} session${filtered.length===1?'':'s'}`,body,{path:"~/study/progress/history"});
 }
 
-/* ---- SYNC / SETTINGS ---- */
 function pageSyncData(){
   const subs=subjects();
   const opts=subs.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join("");
   const body=`
     <div class="card">
       <div class="qa-label" style="color:var(--cyan);">Full Export</div>
-      <div class="qa-text" style="font-size:13.5px;margin-bottom:12px;">Everything — subjects, topics, flashcards, notes, and session history.</div>
+      <div class="qa-text" style="font-size:13.5px;margin-bottom:12px;">Everything — subjects, topics, flashcards, notes, session history, and charts.</div>
       <button class="btn btn-primary" id="exportFullBtn">Download full backup</button>
     </div>
     <div class="card">
       <div class="qa-label" style="color:var(--cyan);">Export (No Data)</div>
-      <div class="qa-text" style="font-size:13.5px;margin-bottom:12px;">Subjects, topics, cards, and notes — no review history or session stats.</div>
+      <div class="qa-text" style="font-size:13.5px;margin-bottom:12px;">Subjects, topics, cards, notes, and charts — no review history or session stats.</div>
       <button class="btn btn-primary" id="exportNoDataBtn">Download clean export</button>
     </div>
     <div class="card">
@@ -2781,7 +3161,7 @@ function pageSyncData(){
       <input type="file" id="importFileInput" accept="application/json,.json" style="display:none;">
       <button class="btn btn-primary" id="importDataBtn" style="background:var(--green);border-color:var(--green);">Choose backup file</button>
     </div>
-       <div id="importPreview"></div>
+    <div id="importPreview"></div>
     <div class="card">
       <div class="qa-label" style="color:var(--green);">Import Cards into a Topic</div>
       ${subs.length===0?`<div class="qa-text" style="font-size:13.5px;">No subjects yet.</div>`:`
@@ -2873,12 +3253,11 @@ function pageSettings(){
       <button class="menu-item" data-go="home" data-clearstack="1"><span class="label">Back to Main Menu</span></button>
     </div>
     <div class="page-sub" style="margin-top:16px;">Property of Lumin</div>
-    <div class="page-sub" style="margin-top:2px;color:var(--grey-dim);font-size:10.5px;">V6.5.0</div>
+    <div class="page-sub" style="margin-top:2px;color:var(--grey-dim);font-size:10.5px;">V6.8.0</div>
   `;
   return shell("SETTINGS","",body,{path:"~/study/settings"});
 }
 
-/* ---- ADMIN PANEL ---- */
 let adminUsersCache=null;
 let adminFilterMode="all";
 let adminSuggestionsCache=null;
@@ -2995,7 +3374,7 @@ function pageAdminPanel(){
           const expStr=exp?exp.toLocaleDateString():"—";
           const created=u.createdAt?(u.createdAt.toDate?u.createdAt.toDate():new Date(u.createdAt)):null;
           const createdStr=created?created.toLocaleDateString():"—";
-                    let adminBtn = "";
+          let adminBtn = "";
           if(isSuperAdmin()){
             if(isAdm && u.uid !== ADMIN_UID){
               adminBtn = `<button class="make-admin-btn" data-demote-admin="${u.uid}" data-demote-admin-name="${esc(u.username||"user")}">Remove Admin</button>`;
@@ -3048,7 +3427,6 @@ function pageAdminPanel(){
       if(agg.bottomFeatures.length === 0){
         body += `<div class="card"><div class="qa-text" style="font-size:13px;color:var(--grey);">No feature data yet.</div></div>`;
       }else{
-        const min = agg.bottomFeatures[0][1];
         const max = Math.max(...agg.bottomFeatures.map(f=>f[1]), 1);
         agg.bottomFeatures.forEach(([name, count])=>{
           const pct = Math.max(4, Math.round((count/max)*100));
@@ -3152,7 +3530,6 @@ async function handleSuggestionAction(action,id){
   }catch(e){console.error(e);toast("Failed: "+((e&&e.message)||"unknown"))}
 }
 
-/* ========== SHARED FRAGMENTS ========== */
 function emptyState(icon,title,sub){return `<div class="empty-state"><div class="big">${icon}</div><div>${esc(title)}</div><div>${esc(sub)}</div></div>`}
 function backBtn(target,label){return `<div class="btn-row"><button class="btn btn-ghost" data-go="${target}" data-clearstack="1">${esc(label)}</button></div>`}
 function scoreBlock(correct,total,pct){
@@ -3163,7 +3540,6 @@ function scoreBlock(correct,total,pct){
   const cv=`var(--${color})`;
   return `<div class="card" style="text-align:center;"><div style="font-size:24px;font-weight:700;color:${cv};">${correct}/${total} (${pct.toFixed(1)}%)</div><div class="bar-track" style="margin-top:12px;margin-bottom:0;"><div class="bar-fill ${color}" style="width:${pct}%;"></div></div><div style="margin-top:14px;font-weight:700;color:${cv};">${msg}</div></div>`;
 }
-/* ========== PAGE MAP ========== */
 const PAGE_MAP={
   home:pageHome,select_subject:pageSelectSubject,new_subject_form:pageNewSubjectForm,
   topic_picker:pageTopicPicker,topic_menu:pageTopicMenu,manage_topics:pageManageTopics,
@@ -3181,10 +3557,10 @@ const PAGE_MAP={
   progress:pageProgress,progress_history:pageFullHistory,goals_settings:pageGoalsSettings,
   sync_data:pageSyncData,settings:pageSettings,search:pageSearch,
   rename_subject_form:pageRenameSubjectForm,
+  charts:pageCharts,chart_editor:pageChartEditor,
   admin_panel:pageAdminPanel
 };
 
-/* ========== RENDER ========== */
 function render(){
   if(!APP_READY)return;
   const app=document.getElementById("app");
@@ -3195,6 +3571,7 @@ function render(){
   const fn=PAGE_MAP[nav.page]||pageHome;
   app.innerHTML=fn();
   attachHandlers();
+  renderMath(app);
   renderFloatBar();
   window.scrollTo(0,0);
 }
@@ -3217,12 +3594,11 @@ function renderDesktop(){
   html+=`</div><button class="home-pill" id="wmHomePill">⌂ Home</button>`;
   app.innerHTML=html;
   CURRENT_WIN_ID=WM.focusedId;
-  // Keep nav in sync with the focused window — handlers like addCardGo / saveNoteBtn
-  // / startQuizBtn read nav.params at click time.
   const focusedWin=wmWindowById(WM.focusedId);
   if(focusedWin)nav={page:focusedWin.page,params:focusedWin.params};
   attachHandlers();
   attachWindowHandlers();
+  renderMath(app);
   requestAnimationFrame(()=>{wmCenterHome();drawLines()});
 }
 function drawLines(){
@@ -3252,7 +3628,6 @@ function drawLines(){
   svg.innerHTML=html;
 }
 
-/* ========== FLOAT BAR ========== */
 function renderFloatBar(){
   const bar=document.getElementById('floatBar');
   const app=document.getElementById('app');
@@ -3295,7 +3670,6 @@ function renderFloatBar(){
   if(fpTtsStop)fpTtsStop.addEventListener('click',e=>{e.stopPropagation();ttsStop();render()});
 }
 
-/* ========== WINDOW DRAG & FOCUS ========== */
 function attachWindowHandlers(){
   document.querySelectorAll('.wm-window').forEach(el=>{
     el.addEventListener('mousedown',()=>{
@@ -3346,93 +3720,186 @@ document.addEventListener('mousemove',e=>{
 });
 document.addEventListener('mouseup',()=>{if(dragState){saveWM();dragState=null}});
 
-/* ---------- guided tour (same engine in K.I.T.E and the Library) ---------- */
+/* ---------- guided tour: a follow-along coach (K.I.T.E) ----------
+   The person clicks the REAL buttons as they light up. Clicks work only inside the highlighted area, the tour
+   watches what happens in the app and moves on by itself, and if the person ends up somewhere else it
+   takes them back to where the step needs them to be. */
 const Tour = (() => {
-  let layer = null, steps = [], idx = 0, opts = {}, tick = null, keyFn = null, resizeFn = null;
-  const find = sel => { try{ return typeof sel === "function" ? sel() : (sel ? document.querySelector(sel) : null); }catch(e){ return null; } };
-  const visible = el => { if(!el) return false; const r = el.getBoundingClientRect(); return r.width > 4 && r.height > 4 && r.right > 0 && r.bottom > 0 && r.left < window.innerWidth && r.top < window.innerHeight; };
+  let layer = null, steps = [], idx = -1, opts = {}, ctx = {};
+  let tick = null, keyFn = null, resizeFn = null;
+  let advancing = false, mismatchSince = 0, lastEnsure = 0, lastScrolled = null;
+
+  const safe = (fn, arg) => { try{ return fn(arg); }catch(e){ return undefined; } };
+  // an element counts if it is really on the page (even below the fold: the tour scrolls to it)
+  const isVisible = el => {
+    if(!el || !el.getBoundingClientRect) return false;
+    const r = el.getBoundingClientRect();
+    return r.width > 3 && r.height > 3;
+  };
+  // where to look for the highlighted things: the window that is in front (PC) or the whole page (phone)
+  function rootFor(s){
+    if(s && s.scope === "home") return document.querySelector(".wm-window") || document.getElementById("app") || document;
+    if(typeof windowedActive === "function" && windowedActive()){
+      const wins = Array.from(document.querySelectorAll(".wm-window"));
+      return document.querySelector(".wm-window.focused") || wins[wins.length - 1] || document;
+    }
+    return document.getElementById("app") || document;
+  }
+  function pick(spec, root){
+    const out = [];
+    const add = x => {
+      if(!x) return;
+      if(Array.isArray(x)) x.forEach(add);
+      else if(x.nodeType === 1) out.push(x);
+      else if(typeof x === "string"){ const el = root.querySelector(x); if(el) out.push(el); }
+      else if(typeof x === "object" && x.sel){
+        const list = Array.from(root.querySelectorAll(x.sel));
+        const el = x.label ? list.find(e => (e.textContent || "").replace(/\s+/g, " ").toLowerCase().includes(x.label.toLowerCase())) : list[0];
+        if(el) out.push(el);
+      }
+    };
+    add(typeof spec === "function" ? spec(ctx, root) : spec);
+    return out.filter(isVisible);
+  }
+  const union = els => els.reduce((u, el) => {
+    const r = el.getBoundingClientRect();
+    return { left: Math.min(u.left, r.left), top: Math.min(u.top, r.top), right: Math.max(u.right, r.right), bottom: Math.max(u.bottom, r.bottom) };
+  }, { left: 1e9, top: 1e9, right: -1e9, bottom: -1e9 });
+  const val = (v, c) => typeof v === "function" ? v(c) : v;
+
   function isOpen(){ return !!layer; }
-  function step(){ return steps[idx]; }
   function start(list, options){
     stop();
-    steps = list.slice(); idx = 0; opts = options || {};
+    steps = list.slice(); idx = -1; opts = options || {}; ctx = {};
     layer = document.createElement("div");
     layer.className = "tour-layer dim"; layer.id = "tourLayer";
     layer.innerHTML = `
-      <div class="tour-block"></div>
+      <div class="tour-blk" data-b="full"></div><div class="tour-blk" data-b="t"></div><div class="tour-blk" data-b="b"></div><div class="tour-blk" data-b="l"></div><div class="tour-blk" data-b="r"></div>
       <div class="tour-hole" style="display:none"></div>
-      <div class="tour-card" role="dialog" aria-modal="true" aria-label="Tutorial">
+      <div class="tour-card" role="dialog" aria-label="Tutorial">
         <div class="tour-titlebar"><span class="td r"></span><span class="td y"></span><span class="td g"></span><span class="tour-path" data-t="path"></span><button class="tour-skip" data-t="skip">Skip tutorial</button></div>
-        <div class="tour-body"><div class="tour-kicker" data-t="kicker"></div><h3 class="tour-title" data-t="title"></h3><div class="tour-text" data-t="text"></div><div class="tour-mock" data-t="mock"></div><div class="tour-hint" data-t="hint" style="display:none;">Tap the highlighted item to follow along</div></div>
-        <div class="tour-foot"><div class="tour-dots" data-t="dots"></div><div class="tour-btns"><button class="tour-btn" data-t="back">Back</button><button class="tour-btn primary" data-t="next">Next</button></div></div>
+        <div class="tour-progress"><div data-t="bar"></div></div>
+        <div class="tour-body"><div class="tour-kicker" data-t="kicker"></div><h3 class="tour-title" data-t="title"></h3><div class="tour-text" data-t="text"></div><div class="tour-hint" data-t="hint" style="display:none"></div><div class="tour-mock" data-t="mock"></div></div>
+        <div class="tour-foot"><div class="tour-count" data-t="count"></div><div class="tour-btns"><button class="tour-btn primary" data-t="next">Next</button></div></div>
       </div>`;
     document.body.appendChild(layer);
     layer.querySelector('[data-t="skip"]').onclick = () => finish(true);
-    layer.querySelector('[data-t="back"]').onclick = () => go(idx - 1);
     layer.querySelector('[data-t="next"]').onclick = () => next();
     keyFn = e => {
       if(!layer) return;
-      if(e.key === "Escape"){ e.preventDefault(); e.stopPropagation(); finish(true); }
-      else if(e.key === "ArrowRight" || e.key === "Enter"){ if(!(e.target && /^(BUTTON|A)$/.test(e.target.tagName))){ e.preventDefault(); next(); } }
-      else if(e.key === "ArrowLeft"){ e.preventDefault(); go(idx - 1); }
+      if(e.key === "Escape"){ e.preventDefault(); e.stopPropagation(); finish(true); return; }
+      const s = steps[idx], typing = e.target && /^(INPUT|TEXTAREA|SELECT|BUTTON|A)$/.test(e.target.tagName);
+      if(!s || s.waitFor || typing) return;
+      if(e.key === "ArrowRight" || e.key === "Enter"){ e.preventDefault(); next(); }
     };
     document.addEventListener("keydown", keyFn, true);
     resizeFn = () => place();
     window.addEventListener("resize", resizeFn);
-    tick = setInterval(place, 400);
-    go(0);
+    tick = setInterval(() => { place(); check(); }, 120);
+    next();
   }
-  function next(){ if(idx >= steps.length - 1) finish(false); else go(idx + 1); }
+  function kicker(s){
+    if(s.kicker) return s.kicker;
+    const same = steps.filter(x => x.phase === s.phase);
+    return `${s.phase} · ${same.indexOf(s) + 1} of ${same.length}`;
+  }
+  function next(){
+    let j = idx + 1;
+    while(j < steps.length && steps[j].when && !safe(steps[j].when, ctx)) j++;
+    if(j >= steps.length) finish(false); else go(j);
+  }
+  function ensureStep(s){
+    if(s.ensure) safe(s.ensure, ctx);
+    else if(s.page && typeof tourNavigate === "function") tourNavigate(s.page, s.params ? safe(s.params, ctx) || {} : {});
+  }
   function go(i){
     if(!layer) return;
-    idx = Math.max(0, Math.min(steps.length - 1, i));
-    const s = step(), q = sel => layer.querySelector('[data-t="' + sel + '"]');
+    idx = i; const s = steps[idx];
+    advancing = false; mismatchSince = 0; lastEnsure = Date.now(); lastScrolled = null;
+    const q = k => layer.querySelector('[data-t="' + k + '"]');
+    if(s.enter) safe(s.enter, ctx);
     q("path").textContent = s.path || "tutorial";
-    q("kicker").textContent = s.kicker || ("Step " + (idx + 1) + " of " + steps.length);
-    q("title").textContent = s.title || "";
-    q("text").innerHTML = s.text || "";
-    q("mock").innerHTML = s.mock || "";
-    q("dots").innerHTML = steps.map((_, k) => `<i class="${k === idx ? "on" : ""}"></i>`).join("");
-    q("back").disabled = idx === 0;
-    q("next").textContent = idx >= steps.length - 1 ? (s.doneLabel || "Done") : "Next";
-    if(typeof s.before === "function"){ try{ s.before(); }catch(e){} }
-    const t = find(s.target);
-    if(t && typeof t.scrollIntoView === "function"){ try{ t.scrollIntoView({ block: "center", inline: "nearest" }); }catch(e){} }
-    setTimeout(place, 60);
+    q("kicker").textContent = kicker(s);
+    q("title").textContent = val(s.title, ctx) || "";
+    q("text").innerHTML = val(s.text, ctx) || "";
+    q("mock").innerHTML = val(s.mock, ctx) || "";
+    const hint = q("hint"), h = val(s.hint, ctx);
+    hint.textContent = h || ""; hint.style.display = h ? "" : "none";
+    q("bar").style.width = Math.round(idx / Math.max(1, steps.length - 1) * 100) + "%";
+    q("count").textContent = (idx + 1) + " / " + steps.length;
+    const nb = q("next"), action = !!s.waitFor;
+    if(action && !s.skipOk){ nb.style.display = "none"; }
+    else{
+      nb.style.display = "";
+      nb.textContent = action ? "Skip step" : (idx >= steps.length - 1 ? (s.doneLabel || "Finish") : (s.nextLabel || "Next"));
+      nb.classList.toggle("primary", !action);
+    }
+    if(s.page && typeof nav !== "undefined" && nav.page !== s.page) ensureStep(s);
     place();
   }
+  function setBlockers(r){
+    const g = k => layer.querySelector('[data-b="' + k + '"]');
+    const full = g("full"), t = g("t"), b = g("b"), l = g("l"), rt = g("r");
+    if(!r){ full.style.display = "block"; [t, b, l, rt].forEach(x => x.style.display = "none"); return; }
+    full.style.display = "none"; [t, b, l, rt].forEach(x => x.style.display = "block");
+    const vw = window.innerWidth, vh = window.innerHeight;
+    Object.assign(t.style,  { left: "0px", top: "0px", width: vw + "px", height: r.T + "px" });
+    Object.assign(b.style,  { left: "0px", top: r.B + "px", width: vw + "px", height: Math.max(0, vh - r.B) + "px" });
+    Object.assign(l.style,  { left: "0px", top: r.T + "px", width: r.L + "px", height: Math.max(0, r.B - r.T) + "px" });
+    Object.assign(rt.style, { left: r.R + "px", top: r.T + "px", width: Math.max(0, vw - r.R) + "px", height: Math.max(0, r.B - r.T) + "px" });
+  }
   function place(){
-    if(!layer) return;
-    const s = step(), card = layer.querySelector(".tour-card"), hole = layer.querySelector(".tour-hole");
-    const vw = window.innerWidth, vh = window.innerHeight, gap = 14;
-    const t = find(s.target);
-    const hasTarget = !!(t && visible(t));
-    const hint = layer.querySelector('[data-t="hint"]');
-    if(hint) hint.style.display = hasTarget ? "" : "none";
+    if(!layer || idx < 0) return;
+    const s = steps[idx], card = layer.querySelector(".tour-card"), hole = layer.querySelector(".tour-hole");
+    const vw = window.innerWidth, vh = window.innerHeight, gap = 14, pad = 6;
+    const els = pick(s.target, rootFor(s));
     const cw = card.offsetWidth, ch = card.offsetHeight;
-    if(hasTarget){
-      const r = t.getBoundingClientRect(), pad = 6;
+    if(els.length){
+      // bring it into view once
+      if(lastScrolled !== els[0]){
+        lastScrolled = els[0];
+        const r0 = els[0].getBoundingClientRect();
+        if(r0.top < 60 || r0.bottom > vh - 60){ try{ els[0].scrollIntoView({ block: "center", inline: "nearest" }); }catch(e){} }
+      }
+      const u = union(els);
+      const L = Math.max(0, u.left - pad), T = Math.max(0, u.top - pad), R = Math.min(vw, u.right + pad), B = Math.min(vh, u.bottom + pad);
       layer.classList.remove("dim");
       hole.style.display = "block";
-      hole.style.left = (r.left - pad) + "px"; hole.style.top = (r.top - pad) + "px";
-      hole.style.width = (r.width + pad * 2) + "px"; hole.style.height = (r.height + pad * 2) + "px";
+      hole.style.left = L + "px"; hole.style.top = T + "px"; hole.style.width = (R - L) + "px"; hole.style.height = (B - T) + "px";
+      hole.classList.toggle("live", !!s.interactive);
+      setBlockers(s.interactive ? { L, T, R, B } : null);
       let top, left;
       if(vw < 560){
         left = Math.max(10, (vw - cw) / 2);
-        top = (r.top + r.height / 2 > vh * 0.5) ? 10 : vh - ch - 10;
+        top = ((T + B) / 2 > vh * 0.5) ? 10 : vh - ch - 10;
       }else{
-        left = Math.min(Math.max(10, r.left + r.width / 2 - cw / 2), vw - cw - 10);
-        if(r.bottom + gap + ch <= vh - 8) top = r.bottom + gap + pad;
-        else if(r.top - gap - ch >= 8) top = r.top - gap - ch - pad;
-        else { top = Math.max(10, (vh - ch) / 2); left = (r.left > vw / 2) ? Math.max(10, r.left - cw - gap) : Math.min(vw - cw - 10, r.right + gap); }
+        left = Math.min(Math.max(10, (L + R) / 2 - cw / 2), vw - cw - 10);
+        if(B + gap + ch <= vh - 8) top = B + gap;
+        else if(T - gap - ch >= 8) top = T - gap - ch;
+        else { top = Math.max(10, (vh - ch) / 2); left = (L > vw / 2) ? Math.max(10, L - cw - gap) : Math.min(vw - cw - 10, R + gap); }
       }
       card.style.left = left + "px"; card.style.top = Math.max(8, Math.min(vh - ch - 8, top)) + "px";
     }else{
       layer.classList.add("dim");
       hole.style.display = "none";
+      setBlockers(null);
       card.style.left = Math.max(10, (vw - cw) / 2) + "px";
       card.style.top = Math.max(10, (vh - ch) / 2) + "px";
     }
+  }
+  // watch the app: move on when the step is done, or help when the person ended up somewhere else
+  function check(){
+    if(!layer || advancing || idx < 0) return;
+    const s = steps[idx];
+    if(s.waitFor && safe(s.waitFor, ctx)){
+      advancing = true;
+      setTimeout(() => { if(layer && steps[idx] === s) next(); }, s.delay == null ? 350 : s.delay);
+      return;
+    }
+    if(s.page && typeof nav !== "undefined" && nav.page !== s.page){
+      if(!mismatchSince) mismatchSince = Date.now();
+      if(Date.now() - mismatchSince > 900 && Date.now() - lastEnsure > 1800){ lastEnsure = Date.now(); ensureStep(s); }
+    }else mismatchSince = 0;
   }
   function finish(skipped){
     const cb = skipped ? opts.onSkip : opts.onFinish, always = opts.onEnd;
@@ -3444,49 +3911,111 @@ const Tour = (() => {
     if(keyFn){ document.removeEventListener("keydown", keyFn, true); keyFn = null; }
     if(resizeFn){ window.removeEventListener("resize", resizeFn); resizeFn = null; }
     if(layer){ layer.remove(); layer = null; }
+    idx = -1;
   }
-  return { start, stop, isOpen, next, go: i => go(i) };
+  return { start, stop, isOpen, next };
 })();
-
 
 /* ---------- K.I.T.E tutorial (new accounts, and "Replay tutorial" in Settings) ---------- */
 const TOUR_PENDING = uid => "d4n_tour_pending_" + uid;
 const TOUR_DONE = uid => "d4n_tour_done_" + uid;
+
+// take the app to a page (used when the person wanders off, or presses "Skip step")
+function tourNavigate(page, params){
+  params = params || {};
+  try{
+    if(windowedActive()){
+      const home = (WM.windows || []).find(w => w.isHome) || (WM.windows || [])[0];
+      wmCloseAllExceptHome();
+      if(page !== "home") wmOpen(page, params, home && home.id);
+      render();
+    }else{
+      navStack = [];
+      goto(page, params, false);
+    }
+  }catch(e){ console.warn("tour navigate failed:", e); }
+}
+function tourFocus(sel){ setTimeout(() => { const el = document.querySelector(sel); if(el && typeof el.focus === "function") el.focus(); }, 380); }
+const tourCards = c => ((DATA.flashcards && DATA.flashcards[c.subject]) || []).filter(x => x.topic === c.topic).length;
+const tourNotes = c => ((DATA.notes && DATA.notes[c.subject]) || []).filter(x => x.topic === c.topic).length;
+
 function tourStepsKite(){
+  const A = "Build your first deck", B = "The main menu";
   const row = (n, label, meta, cls) => `<div class="tm-row ${cls || ""}"><span class="n">${n}</span><span class="l">${label}</span>${meta ? `<span class="m">${meta}</span>` : ""}</div>`;
   const mock = (path, inner) => `<div class="tm"><div class="tm-path">${path}</div>${inner}</div>`;
-  const down = `<div class="tm-arrow">&darr;</div>`;
+  const subj = c => c.subject ? esc(c.subject) : "your subject";
+  const params = c => ({ subject: c.subject, topic: c.topic });
+  const homeEnsure = () => tourNavigate("home");
+  const click = "Click the highlighted button.";
+  const goStep = (phase, path, page, title, text, target, toPage, extra) => Object.assign({
+    phase, path, page, title, text, target, interactive: true, hint: click, skipOk: true, params,
+    waitFor: () => nav.page === toPage
+  }, extra || {});
   return [
-    { path: "welcome", kicker: "Welcome", title: "Welcome to K.I.T.E",
-      text: "This quick tour takes about a minute. First you'll see <b>how to build your study material</b>, in order. Then it shows what <b>every other button</b> does, and where <b>Settings</b> is hiding. You can skip it any time." },
-    { path: "~/study", kicker: "Making decks · 1 of 4", title: "Start with a subject", target: '[data-go="select_subject"]',
-      text: "Everything lives inside a <b>subject</b>, like Mathematics or Biology. Open <b>Select Subject</b>, tap <b>Add New Subject</b>, and type a name.",
-      mock: mock("~/study", row("1.", "Select Subject", "0 subjects", "hl") + down + row("", "Add New Subject", "", "acc hl") + `<div class="tm-field"><i>New subject name:</i> Mathematics</div>`) },
-    { path: "~/study/mathematics", kicker: "Making decks · 2 of 4", title: "Add topics inside it",
-      text: "Open your subject and you'll see its <b>topics</b>, like Algebra or Fractions. Use <b>Manage Topics</b> to add one. Every flashcard and note belongs to a topic, which keeps things tidy.",
-      mock: mock("~/study/mathematics", row("1.", "Algebra", "0 cards") + row("", "Manage Topics", "add / rename / delete", "acc hl")) },
-    { path: "~/study/mathematics/algebra", kicker: "Making decks · 3 of 4", title: "Add flashcards",
-      text: "Open a topic, choose <b>Flashcard Manager</b>, then <b>Add New Flashcard</b>. Type the <b>question</b>, type the <b>answer</b>, and tap <b>Add Card</b>. Repeat for every card.",
-      mock: mock("~/study/mathematics/algebra", row("1.", "Flashcard Manager", "0 cards", "hl") + down + row("1.", "Add New Flashcard", "", "acc hl") + `<div class="tm-field"><i>Question</i> What is 2 + 2?</div><div class="tm-field"><i>Answer</i> 4</div>`) },
-    { path: "~/study/mathematics/algebra", kicker: "Making decks · 4 of 4", title: "Add notes",
-      text: "In the same topic, <b>Read Mode</b> is for notes. Tap <b>New Note</b> to write one, or import text from a file. Notes sit next to your flashcards in that topic.",
-      mock: mock("~/study/mathematics/algebra", row("3.", "Read Mode", "0 notes", "hl") + down + row("", "New Note", "", "acc hl")) },
-    { path: "~/study/mathematics/algebra", title: "Then study what you made",
-      text: "Inside a topic you can <b>Study Flashcards</b> (flip through them), <b>Take Quiz</b> (needs at least 2 cards), open <b>Read Mode</b> for your notes, and see <b>View Progress</b> for just that topic.",
+    { phase: "Welcome", kicker: "Welcome", path: "welcome", page: "home", ensure: homeEnsure, nextLabel: "Let's go",
+      title: "Let's build your first deck together",
+      text: "You'll make a <b>subject</b>, a <b>topic</b>, a <b>flashcard</b> and a <b>note</b> by clicking the real buttons as they light up. After that you'll see what the other buttons do. You can skip any time." },
+
+    goStep(A, "~/study", "home", "Open Select Subject", "Everything you study lives in a <b>subject</b>, like Mathematics or Biology. Click <b>Select Subject</b>.", '[data-go="select_subject"]', "select_subject", { params: () => ({}), ensure: homeEnsure }),
+    goStep(A, "~/study/subjects", "select_subject", "Add a new subject", "This is your list of subjects. Click <b>Add New Subject</b> to make one.", '[data-go="new_subject_form"]', "new_subject_form", { params: () => ({}) }),
+    { phase: A, path: "~/study/new-subject", page: "new_subject_form", params: () => ({}), title: "Name your subject",
+      text: "Type a subject name, like <b>Mathematics</b>, then click <b>Continue</b>.",
+      target: ["#newSubjectName", "#newSubjectGo"], interactive: true, hint: "Type a name, then click Continue.",
+      enter: () => tourFocus("#newSubjectName"),
+      waitFor: () => nav.page === "topic_picker" && !!(nav.params && nav.params.subject) },
+
+    goStep(A, "~/study/subject", "topic_picker", "Now add a topic", c => `Your subject <b>${subj(c)}</b> is ready. Inside it you organise everything into <b>topics</b>, like Algebra or Fractions. Click <b>Manage Topics</b>.`, '[data-go="manage_topics"]', "manage_topics", { enter: c => { c.subject = (nav.params && nav.params.subject) || c.subject; } }),
+    goStep(A, "~/study/subject/topics", "manage_topics", "Add a new topic", "Click <b>Add New Topic</b>.", '[data-go="add_topic_form"]', "add_topic_form"),
+    { phase: A, path: "~/study/subject/new-topic", page: "add_topic_form", params, title: "Name your topic",
+      text: "Type a topic name, like <b>Algebra</b>, then click <b>Create Topic</b>.",
+      target: ["#newTopicName", "#addTopicGo"], interactive: true, hint: "Type a name, then click Create Topic.",
+      enter: c => { c.topicsBefore = (topicsFor(c.subject) || []).length; tourFocus("#newTopicName"); },
+      waitFor: c => (topicsFor(c.subject) || []).length > (c.topicsBefore || 0) },
+    goStep(A, "~/study/subject/topics", "manage_topics", "Back to your topics", "Topic created. Click <b>Back to Topics</b> to see it in your list.", '[data-go="topic_picker"]', "topic_picker"),
+    goStep(A, "~/study/subject", "topic_picker", "Open your topic", "Every topic has its own menu for flashcards, notes and quizzes. Click your topic to open it.", '[data-go="topic_menu"]', "topic_menu"),
+
+    goStep(A, "~/study/subject/topic", "topic_menu", "Open the Flashcard Manager", "This is your topic's menu. Flashcards are made in the <b>Flashcard Manager</b>.", { sel: '[data-go="flashcard_menu"]', label: "Flashcard Manager" }, "flashcard_menu", { enter: c => { c.topic = (nav.params && nav.params.topic) || c.topic; } }),
+    goStep(A, "~/study/subject/topic/cards", "flashcard_menu", "Add a new flashcard", "Click <b>Add New Flashcard</b>.", '[data-go="add_card_form"]', "add_card_form"),
+    { phase: A, path: "~/study/subject/topic/new-card", page: "add_card_form", params, title: "Write your flashcard",
+      text: "Type a <b>question</b> and its <b>answer</b>, then click <b>Add Card</b>. For example: What is 2 + 2? and 4. (This form can also attach a <b>chart</b> to a card. We'll skip that for now.)",
+      target: ["#cardQuestion", "#cardAnswer", "#addCardGo"], interactive: true, hint: "Fill in both boxes, then click Add Card.",
+      enter: c => { c.cardsBefore = tourCards(c); tourFocus("#cardQuestion"); },
+      waitFor: c => tourCards(c) > (c.cardsBefore || 0) },
+    goStep(A, "~/study/subject/topic/new-card", "add_card_form", "That's your first flashcard", "You can keep adding as many as you like. When you're done, click <b>Done</b>.", '[data-go="flashcard_menu"]', "flashcard_menu"),
+    goStep(A, "~/study/subject/topic/cards", "flashcard_menu", "Back to your topic", "Next, notes. Click <b>Back to Topic</b>.", { sel: '[data-go="topic_menu"]', label: "Back to Topic" }, "topic_menu"),
+
+    goStep(A, "~/study/subject/topic", "topic_menu", "Open Read Mode", "<b>Read Mode</b> is where your notes for this topic live.", { sel: '[data-go="read_menu"]', label: "Read Mode" }, "read_menu"),
+    goStep(A, "~/study/subject/topic/notes", "read_menu", "Add a note", "Click <b>New Note</b>.", '[data-go="read_new_choice"]', "read_new_choice"),
+    goStep(A, "~/study/subject/topic/notes", "read_new_choice", "Write it yourself", "You can import text from a file, or write it right here. Click <b>Write New Note</b>.", '[data-go="read_write_form"]', "read_write_form"),
+    { phase: A, path: "~/study/subject/topic/new-note", page: "read_write_form", params, title: "Write your note",
+      text: "Give the note a <b>title</b>, write something in the big box, then click <b>Save Note</b>.",
+      target: ["#noteTitle", "#noteContent", "#saveNoteBtn"], interactive: true, hint: "Add a title and some text, then click Save Note.",
+      enter: c => { c.notesBefore = tourNotes(c); tourFocus("#noteTitle"); },
+      waitFor: c => tourNotes(c) > (c.notesBefore || 0) },
+    { phase: A, path: "~/study/subject/topic/notes", page: "read_menu", params, nextLabel: "Show me the main menu", title: "You made your first deck!",
+      text: "A <b>subject</b>, a <b>topic</b>, a <b>flashcard</b> and a <b>note</b>: that's the whole structure. From any topic you can also <b>Study Flashcards</b> and <b>Take Quiz</b> (once you have 2 or more cards), and see <b>View Progress</b> for that topic.",
       mock: mock("topic menu", row("2.", "Study Flashcards") + row("3.", "Read Mode") + row("4.", "Take Quiz") + row("5.", "View Progress")) },
-    { path: "~/study", kicker: "The main menu", title: "Set Study Timer", target: '[data-go="timer"]',
-      text: "Choose how many minutes you want to focus and start the countdown. It keeps running while you move around the app, and it counts toward your progress." },
-    { path: "~/study", kicker: "The main menu", title: "View Progress", target: '[data-go="progress"]',
+
+    { phase: B, path: "~/study", page: "home", ensure: homeEnsure, title: "Set Study Timer", target: '[data-go="timer"]',
+      text: "Welcome back to the main menu. Choose how many minutes you want to focus and start the countdown. It keeps running while you move around, and it counts toward your progress." },
+    { phase: B, path: "~/study", page: "home", ensure: homeEnsure, title: "View Progress", target: '[data-go="progress"]',
       text: "See your study sessions, scores by subject and your daily goal. Open the full history any time, and change your goal from the same page." },
-    { path: "~/study", kicker: "The main menu", title: "Import / Export", target: '[data-go="sync_data"]',
+    { phase: B, path: "~/study", page: "home", ensure: homeEnsure, title: "Import / Export", target: '[data-go="sync_data"]',
       text: "Download a backup of everything, export just one subject, or load a backup file back in (it merges, it never wipes). You can also import a list of flashcards straight into a topic." },
-    { path: "~/study", kicker: "The main menu", title: "Search", target: '[data-go="search"]',
+    { phase: B, path: "~/study", page: "home", ensure: homeEnsure, title: "Search", target: '[data-go="search"]',
       text: "Search across <b>all</b> your subjects, flashcards and notes at once." },
-    { path: "~/study", kicker: "Settings", title: "Settings is behind the lights", target: () => document.querySelector(".titlebar"),
-      text: "Settings isn't in the menu. Tap the three coloured lights at the top <b>in this order: red, yellow, green</b>. Each one turns blue. Then tap a light one more time and <b>Settings</b> opens: themes, your account, cloud sync, installing the app, and replaying this tutorial.",
-      mock: `<div class="tm"><div class="tm-seq"><span class="tm-light" style="background:#ff5f56">1</span><span class="tm-arrow">&rarr;</span><span class="tm-light" style="background:#ffbd2e">2</span><span class="tm-arrow">&rarr;</span><span class="tm-light" style="background:#27c93f">3</span><span class="tm-arrow">&rarr;</span><span class="tm-note">tap once more</span></div></div>` },
-    { path: "ready", kicker: "All set", title: "You're ready", doneLabel: "Add my first subject",
-      text: "Start with a subject, then a topic, then your first flashcards. You can replay this tour any time from <b>Settings</b>." }
+    { phase: B, path: "~/study", page: "home", ensure: homeEnsure, scope: "home", title: "Settings is behind the lights",
+      target: (c, root) => Array.from(root.querySelectorAll(".titlebar [data-dot]")).slice(0, 3), interactive: true, skipOk: true,
+      hint: "Click red, then yellow, then green. Then click any light once more.",
+      text: "Settings isn't in the menu. Try it now: click the three coloured lights <b>in this order: red, yellow, green</b>. Each one turns blue. Then click a light one more time and <b>Settings</b> opens.",
+      mock: `<div class="tm"><div class="tm-seq"><span class="tm-light" style="background:#ff5f56">1</span><span class="tm-arrow">&rarr;</span><span class="tm-light" style="background:#ffbd2e">2</span><span class="tm-arrow">&rarr;</span><span class="tm-light" style="background:#27c93f">3</span><span class="tm-arrow">&rarr;</span><span class="tm-note">click once more</span></div></div>`,
+      waitFor: () => nav.page === "settings" },
+    { phase: B, when: () => nav.page === "settings", path: "~/study/settings", page: "settings", title: "This is Settings",
+      target: "#replayTourBtn",
+      text: "Themes, your account, cloud sync, installing the app and more live here. <b>Replay tutorial</b> is right here if you ever want to see this again." },
+
+    { phase: "All set", kicker: "All set", path: "ready", page: "home", ensure: homeEnsure, doneLabel: "Finish", title: "You're ready",
+      text: "You've built a subject, a topic, a flashcard and a note, and you know where everything is. Keep going, add more cards, and try a quiz when you have two or more." }
   ];
 }
 function markTourDone(){
@@ -3497,11 +4026,7 @@ function markTourDone(){
 function startKiteTour(){
   Tour.start(tourStepsKite(), {
     onSkip: () => markTourDone(),
-    onFinish: () => {
-      markTourDone();
-      const b = document.querySelector('[data-go="select_subject"]');
-      if(b) b.click();
-    }
+    onFinish: () => { markTourDone(); tourNavigate("home"); }
   });
 }
 function maybeStartKiteTour(){
@@ -3512,15 +4037,12 @@ function maybeStartKiteTour(){
   setTimeout(() => { if(!Tour.isOpen() && APP_READY) startKiteTour(); }, 900);
 }
 function replayKiteTour(){
-  // the tour points at the main menu, so go there first
-  try{
-    if(windowedActive()){ wmCloseAllExceptHome(); render(); }
-    else { navStack = []; goto("home", {}, false); }
-  }catch(e){}
+  tourNavigate("home");
   setTimeout(startKiteTour, 450);
 }
 
-/* ========== SECRET DOTS ========== */
+
+
 function setupSecretDots(container,winId,isHome){
   const dots=container.querySelectorAll('[data-dot]');
   if(!dots.length)return;
@@ -3563,7 +4085,6 @@ function setupSecretDots(container,winId,isHome){
   });
 }
 
-/* ========== EVENT WIRING ========== */
 function attachHandlers(){
   const app=document.getElementById("app");
   if(windowedActive()){
@@ -3576,30 +4097,140 @@ function attachHandlers(){
     setupSecretDots(app,'single',nav.page==='home');
   }
 
-        app.querySelectorAll("[data-sug-action]").forEach(el=>{
+  app.querySelectorAll("[data-sug-action]").forEach(el=>{
     el.addEventListener("click",()=>{
-       handleSuggestionAction(el.dataset.sugAction,el.dataset.sugId);
+      handleSuggestionAction(el.dataset.sugAction,el.dataset.sugId);
     });
   });
 
-  app.querySelectorAll("[data-go]").forEach(el=>{
-    el.addEventListener("click",()=>{
-      trackFeature("nav_" + el.dataset.go);
-      let params={};
-      if(el.dataset.subject)params.subject=el.dataset.subject;
-      if(el.dataset.topic)params.topic=el.dataset.topic;
-      if(el.dataset.noteId)params.noteId=el.dataset.noteId;
-      if(el.dataset.clearTopic)params.clearTopic=true;
-      if(windowedActive()){wmHandleGo(el.dataset.go,params,el);return}
-      if(el.dataset.clearstack)navStack=[];
-      goto(el.dataset.go,params);
+  app.querySelectorAll(".math-hint-btn").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const popover = btn.parentElement.querySelector('.hint-popover');
+      if(popover) popover.classList.toggle("show");
     });
   });
+
+  app.querySelectorAll(".math-toggle-btn").forEach(mathToggle => {
+    mathToggle.addEventListener("click", () => {
+      autoMathEnabled = !autoMathEnabled;
+      try{ localStorage.setItem("d4n_auto_math", autoMathEnabled ? "true" : "false"); }catch(e){}
+      document.querySelectorAll(".math-switch").forEach(sw => sw.classList.toggle("on", autoMathEnabled));
+      document.querySelectorAll(".hint-wrap").forEach(el => {
+        el.style.display = autoMathEnabled ? "" : "none";
+        if(!autoMathEnabled) {
+          const p = el.querySelector(".hint-popover");
+          if(p) p.classList.remove("show");
+        }
+      });
+      window.updateMathPreview('cardQuestion', 'previewQ');
+      window.updateMathPreview('cardAnswer', 'previewA');
+      window.updateMathPreview('editQuestion', 'previewEQ');
+      window.updateMathPreview('editAnswer', 'previewEA');
+      window.updateMathPreview('noteContent', 'previewN');
+    });
+  });
+
   app.querySelectorAll("[data-back]").forEach(el=>{el.addEventListener("click",back)});
   const tbb=app.querySelector("[data-titlebar-back]");
   if(tbb)tbb.addEventListener("click",back);
 
-  /* ---- NEW SUBJECT ---- */
+  // Navigation buttons — data-go (also handles chartId, clearSubject, etc.)
+  app.querySelectorAll("[data-go]").forEach(el=>{
+    el.addEventListener("click",()=>{
+      const page = el.dataset.go;
+      const params = {};
+      if(el.dataset.subject)   params.subject = el.dataset.subject;
+      if(el.dataset.topic)     params.topic   = el.dataset.topic;
+      if(el.dataset.noteId)    params.noteId  = el.dataset.noteId;
+      if(el.dataset.cleartopic) params.clearTopic = true;
+      if(el.dataset.clearSubject) params.clearSubject = true;
+      if(el.dataset.chartId)   params.chartId  = el.dataset.chartId;
+
+      if(windowedActive()){
+        wmHandleGo(page, params, el);
+        return;
+      }
+      if(el.dataset.clearstack){
+        navStack = [];
+        goto(page, params, false);
+      } else {
+        goto(page, params);
+      }
+    });
+  });
+
+  // Chart editor handlers
+  app.querySelectorAll("[data-chart-type]").forEach(el=>{
+    el.addEventListener("click",()=>{
+      if(!window._chartEditorState) return;
+      window._chartEditorState.type = el.dataset.chartType;
+      document.querySelectorAll("[data-chart-type]").forEach(b=>{
+        b.classList.toggle("active", b.dataset.chartType === window._chartEditorState.type);
+      });
+      chartEditorRefreshPreview();
+    });
+  });
+  app.querySelectorAll("[data-chart-remove-row]").forEach(el=>{
+    el.addEventListener("click",()=>{
+      if(!window._chartEditorState) return;
+      const i = parseInt(el.dataset.chartRemoveRow, 10);
+      if(window._chartEditorState.labels.length <= 1){ toast("Need at least one row"); return; }
+      window._chartEditorState.labels.splice(i, 1);
+      window._chartEditorState.values.splice(i, 1);
+      render();
+    });
+  });
+  const chartAddRowBtn = document.getElementById("chartAddRow");
+  if(chartAddRowBtn) chartAddRowBtn.addEventListener("click", ()=>{
+    if(!window._chartEditorState) return;
+    window._chartEditorState.labels.push("");
+    window._chartEditorState.values.push(0);
+    render();
+  });
+  const chartSaveBtn = document.getElementById("chartSaveBtn");
+  if(chartSaveBtn) chartSaveBtn.addEventListener("click", ()=>{
+    const st = window._chartEditorState;
+    if(!st) return;
+    const subj = (st.subject || "").trim();
+    if(!subj){ toast("Pick or enter a subject"); return; }
+    if(st.values.length === 0){ toast("Add at least one data point"); return; }
+    ensureCharts(subj);
+    if(st.chartId){
+      const existing = DATA.charts[subj].find(c => c.id === st.chartId);
+      if(existing){
+        existing.title = st.title; existing.labels = [...st.labels];
+        existing.values = [...st.values]; existing.type = st.type; existing.color = st.color;
+      }
+    } else {
+      DATA.charts[subj].push({
+        id: genId("chart"), title: st.title, labels: [...st.labels],
+        values: [...st.values], type: st.type, color: st.color,
+        created: new Date().toISOString()
+      });
+    }
+    saveData(DATA);
+    window._chartEditorState = null;
+    toast("Chart saved");
+    if(windowedActive()){ wmGoBackTo("charts", {}); }
+    else { navStack = []; goto("charts", {}, false); }
+  });
+  const chartDeleteBtn = document.getElementById("chartDeleteBtn");
+  if(chartDeleteBtn) chartDeleteBtn.addEventListener("click", ()=>{
+    const st = window._chartEditorState;
+    if(!st || !st.chartId) return;
+    if(!confirm("Delete this chart?")) return;
+    const subj = st.subject;
+    if(DATA.charts[subj]){
+      DATA.charts[subj] = DATA.charts[subj].filter(c => c.id !== st.chartId);
+    }
+    saveData(DATA);
+    window._chartEditorState = null;
+    toast("Chart deleted");
+    if(windowedActive()){ wmGoBackTo("charts", {}); }
+    else { navStack = []; goto("charts", {}, false); }
+  });
+
   const newSubjectGo=document.getElementById("newSubjectGo");
   if(newSubjectGo)newSubjectGo.addEventListener("click",()=>{
     const name=document.getElementById("newSubjectName").value.trim();
@@ -3610,7 +4241,6 @@ function attachHandlers(){
     goto("topic_picker",{subject:name,assigned:true},false);
   });
 
-  /* ---- INITIAL TOPIC ASSIGNMENT ---- */
   const assignInitialTopicBtn=document.getElementById("assignInitialTopicBtn");
   if(assignInitialTopicBtn)assignInitialTopicBtn.addEventListener("click",()=>{
     const subject=nav.params.subject;
@@ -3627,7 +4257,6 @@ function attachHandlers(){
     goto("topic_picker",{subject,assigned:true},false);
   });
 
-  /* ---- ADD TOPIC ---- */
   const addTopicGo=document.getElementById("addTopicGo");
   if(addTopicGo)addTopicGo.addEventListener("click",()=>{
     const subject=nav.params.subject;
@@ -3642,7 +4271,6 @@ function attachHandlers(){
     goto("manage_topics",{subject},false);
   });
 
-  /* ---- RENAME TOPIC ---- */
   app.querySelectorAll("[data-rename-topic]").forEach(el=>{
     el.addEventListener("click",()=>{
       const subject=nav.params.subject;
@@ -3679,7 +4307,6 @@ function attachHandlers(){
     goto("manage_topics",{subject},false);
   });
 
-  /* ---- DELETE TOPIC ---- */
   app.querySelectorAll("[data-delete-topic]").forEach(el=>{
     el.addEventListener("click",()=>{
       const subject=nav.params.subject;
@@ -3697,7 +4324,6 @@ function attachHandlers(){
     });
   });
 
-  /* ---- DELETE TOPIC AND CARDS (from delete_choice) ---- */
   const delTopicAndCardsBtn=document.getElementById("delTopicAndCardsBtn");
   if(delTopicAndCardsBtn)delTopicAndCardsBtn.addEventListener("click",()=>{
     const subject=nav.params.subject;
@@ -3716,27 +4342,34 @@ function attachHandlers(){
     goto("topic_picker",{subject},false);
   });
 
-  /* ---- ADD CARD ---- */
   const addCardBtn=document.getElementById("addCardGo");
   if(addCardBtn)addCardBtn.addEventListener("click",()=>{
     const subject=nav.params.subject;
     const topic=nav.params.topic;
-    const q=document.getElementById("cardQuestion").value.trim();
-    const a=document.getElementById("cardAnswer").value.trim();
+    let q=document.getElementById("cardQuestion").value.trim();
+    let a=document.getElementById("cardAnswer").value.trim();
     if(!q){toast("Question can't be empty");return}
     if(!a){toast("Answer can't be empty");return}
+    q = autoFormatMath(q);
+    a = autoFormatMath(a);
+    const cc = cleanCardChart(window._cardChart);
+    if(!cc.ok){toast(cc.error);return}
     ensureSubject(subject);
     if(!DATA.flashcards[subject])DATA.flashcards[subject]=[];
-    DATA.flashcards[subject].push({question:q,answer:a,topic,review_count:0,last_reviewed:null,created:new Date().toISOString()});
+    const newCard = {question:q,answer:a,topic,review_count:0,last_reviewed:null,created:new Date().toISOString()};
+    if(cc.chart) newCard.chart = cc.chart;
+    DATA.flashcards[subject].push(newCard);
     ensureTopic(subject,topic);
     saveData(DATA);
     toast("Flashcard added");
     document.getElementById("cardQuestion").value="";
     document.getElementById("cardAnswer").value="";
+    window.cardChartReset();
+    window.updateMathPreview('cardQuestion', 'previewQ');
+    window.updateMathPreview('cardAnswer', 'previewA');
     document.getElementById("cardQuestion").focus();
   });
 
-  /* ---- DELETE CARD ---- */
   app.querySelectorAll("[data-del-card-idx]").forEach(el=>{
     el.addEventListener("click",()=>{
       const subject=nav.params.subject;
@@ -3753,7 +4386,6 @@ function attachHandlers(){
     });
   });
 
-  /* ---- EDIT CARD ---- */
   app.querySelectorAll("[data-pick-edit-card]").forEach(el=>{
     el.addEventListener("click",()=>{
       const subject=nav.params.subject;
@@ -3766,12 +4398,16 @@ function attachHandlers(){
   const saveEditBtn=document.getElementById("saveEditBtn");
   if(saveEditBtn)saveEditBtn.addEventListener("click",()=>{
     const{subject,topic,cardIdx}=nav.params;
-    const q=document.getElementById("editQuestion").value.trim();
-    const a=document.getElementById("editAnswer").value.trim();
+    let q=document.getElementById("editQuestion").value.trim();
+    let a=document.getElementById("editAnswer").value.trim();
     if(!q){toast("Question can't be empty");return}
     if(!a){toast("Answer can't be empty");return}
+    q = autoFormatMath(q);
+    a = autoFormatMath(a);
+    const cc = cleanCardChart(window._cardChart);
+    if(!cc.ok){toast(cc.error);return}
     const card=DATA.flashcards[subject][cardIdx];
-    if(card){card.question=q;card.answer=a}
+    if(card){card.question=q;card.answer=a;if(cc.chart)card.chart=cc.chart;else delete card.chart}
     saveData(DATA);
     toast("Changes saved");
     if(windowedActive()){wmGoBackTo('manage_card_list',{subject,topic});return}
@@ -3779,7 +4415,6 @@ function attachHandlers(){
     goto("manage_card_list",{subject,topic},false);
   });
 
-  /* ---- BULK EDIT ---- */
   const bulkSelectAllBtn=document.getElementById("bulkSelectAllBtn");
   if(bulkSelectAllBtn)bulkSelectAllBtn.addEventListener("click",()=>{
     const cbs=document.querySelectorAll(".bulk-cb");
@@ -3818,7 +4453,6 @@ function attachHandlers(){
     goto("manage_card_list",{subject,topic},false);
   });
 
-  /* ---- STUDY ---- */
   app.querySelectorAll("[data-study-topic]").forEach(el=>{
     el.addEventListener("click",()=>{
       const subject=nav.params.subject;
@@ -3877,16 +4511,16 @@ function attachHandlers(){
     });
   });
 
-  /* ---- NOTES ---- */
   const saveNoteBtn=document.getElementById("saveNoteBtn");
   if(saveNoteBtn)saveNoteBtn.addEventListener("click",()=>{
     const subject=nav.params.subject;
     const topic=nav.params.topic;
     const noteId=nav.params.noteId;
-    const title=document.getElementById("noteTitle").value.trim();
-    const content=document.getElementById("noteContent").value.trim();
+    let title=document.getElementById("noteTitle").value.trim();
+    let content=document.getElementById("noteContent").value.trim();
     if(!title){toast("Title can't be empty");return}
     if(!content){toast("Content can't be empty");return}
+    content = autoFormatMath(content);
     ensureSubject(subject);
     ensureTopic(subject,topic);
     if(noteId){
@@ -3954,7 +4588,6 @@ function attachHandlers(){
     }
   });
 
-  /* ---- NOTE IMPORT ---- */
   const noteImportBtn=document.getElementById("noteImportBtn");
   const noteImportInput=document.getElementById("noteImportInput");
   if(noteImportBtn&&noteImportInput){
@@ -3983,7 +4616,6 @@ function attachHandlers(){
     });
   }
 
-  /* ---- CARD IMPORT ---- */
   const cardImportBtn=document.getElementById("cardImportBtn");
   const cardImportInput=document.getElementById("cardImportInput");
   if(cardImportBtn&&cardImportInput){
@@ -4001,7 +4633,7 @@ function attachHandlers(){
         let added=0;
         cardsToAdd.forEach(c=>{
           if(!c||!c.question||!c.answer)return;
-          DATA.flashcards[subject].push({question:c.question,answer:c.answer,topic,review_count:0,last_reviewed:null,created:new Date().toISOString()});
+          DATA.flashcards[subject].push({question:c.question,answer:c.answer,topic,review_count:0,last_reviewed:null,created:new Date().toISOString(),...(c.chart&&c.chart.labels?{chart:c.chart}:{})});
           added++;
         });
         saveData(DATA);
@@ -4012,7 +4644,6 @@ function attachHandlers(){
     });
   }
 
-  /* ---- TTS CONTROLS ---- */
   const ttsVoiceSel=document.getElementById("ttsVoiceSel");
   if(ttsVoiceSel)ttsVoiceSel.addEventListener("change",()=>{ttsPrefs.voice=ttsVoiceSel.value;saveTtsPrefs()});
   const ttsRate=document.getElementById("ttsRate");
@@ -4030,7 +4661,6 @@ function attachHandlers(){
     saveTtsPrefs();
   });
 
-  /* ---- QUIZ SETTINGS ---- */
   const quizModeSel=document.getElementById("quizTimerMode");
   if(quizModeSel){
     const optsBox=document.getElementById("quizTimerOpts");
@@ -4102,7 +4732,6 @@ function attachHandlers(){
     });
   });
 
-  /* ---- TIMER ---- */
   app.querySelectorAll("[data-timer-preset]").forEach(el=>{
     el.addEventListener("click",()=>{document.getElementById("timerMinutes").value=el.dataset.timerPreset});
   });
@@ -4124,7 +4753,6 @@ function attachHandlers(){
   const hideTimerBtn=document.getElementById("hideTimerBtn");
   if(hideTimerBtn)hideTimerBtn.addEventListener("click",()=>{hideTimerBar();toast("Timer hidden");render()});
 
-  /* ---- GOAL ---- */
   const saveGoalBtn=document.getElementById("saveGoalBtn");
   if(saveGoalBtn)saveGoalBtn.addEventListener("click",()=>{
     const v=parseInt(document.getElementById("dailyGoalInput").value,10);
@@ -4136,7 +4764,6 @@ function attachHandlers(){
     goto("progress",{},false);
   });
 
-  /* ---- HISTORY ---- */
   app.querySelectorAll("[data-hfilter]").forEach(el=>{
     el.addEventListener("click",()=>{
       historyFilter=el.dataset.hfilter;
@@ -4164,7 +4791,6 @@ function attachHandlers(){
     render();
   });
 
-  /* ---- SEARCH ---- */
   const searchInput=document.getElementById("searchInput");
   if(searchInput){
     searchInput.addEventListener("input",()=>{
@@ -4206,7 +4832,6 @@ function attachHandlers(){
     });
   });
 
-  /* ---- RENAME SUBJECT ---- */
   const renameSubjectGo=document.getElementById("renameSubjectGo");
   if(renameSubjectGo)renameSubjectGo.addEventListener("click",()=>{
     const oldName=nav.params.subject;
@@ -4229,6 +4854,10 @@ function attachHandlers(){
       delete DATA.notes[oldName];
       delete DATA.topics[oldName];
     }
+    if(DATA.charts && DATA.charts[oldName]){
+      DATA.charts[newName]=[...(DATA.charts[newName]||[]),...DATA.charts[oldName]];
+      delete DATA.charts[oldName];
+    }
     DATA.study_sessions.forEach(s=>{if(s.subject===oldName)s.subject=newName});
     saveData(DATA);
     toast(`Renamed to "${newName}"`);
@@ -4242,7 +4871,6 @@ function attachHandlers(){
     goto("topic_picker",{subject:newName},false);
   });
 
-  /* ---- EXPORT / IMPORT ---- */
   const exportFullBtn=document.getElementById("exportFullBtn");
   if(exportFullBtn)exportFullBtn.addEventListener("click",()=>{exportFull();toast("Full backup downloaded")});
   const exportNoDataBtn=document.getElementById("exportNoDataBtn");
@@ -4268,7 +4896,7 @@ function attachHandlers(){
           document.getElementById("importPreview").innerHTML=`<div class="card" style="border-color:color-mix(in srgb, var(--red) 40%, var(--border));"><div class="qa-label" style="color:var(--red);">Couldn't read that file</div></div>`;
           return;
         }
-        if(!parsed.flashcards&&!parsed.study_sessions&&!parsed.notes){
+        if(!parsed.flashcards&&!parsed.study_sessions&&!parsed.notes&&!parsed.charts){
           document.getElementById("importPreview").innerHTML=`<div class="card" style="border-color:color-mix(in srgb, var(--red) 40%, var(--border));"><div class="qa-label" style="color:var(--red);">Not a recognized backup</div></div>`;
           return;
         }
@@ -4279,7 +4907,8 @@ function attachHandlers(){
         if(stats.newCards)parts.push(`${stats.newCards} new card${stats.newCards>1?'s':''}`);
         if(stats.newNotes)parts.push(`${stats.newNotes} new note${stats.newNotes>1?'s':''}`);
         if(stats.newSessions)parts.push(`${stats.newSessions} new session${stats.newSessions>1?'s':''}`);
-        const skipped=stats.skippedCards+stats.skippedSessions+(stats.skippedNotes||0);
+        if(stats.newCharts)parts.push(`${stats.newCharts} new chart${stats.newCharts>1?'s':''}`);
+        const skipped=stats.skippedCards+stats.skippedSessions+(stats.skippedNotes||0)+(stats.skippedCharts||0);
         const summary=parts.length?parts.join(", ")+" added.":"Nothing new — everything was already here.";
         document.getElementById("importPreview").innerHTML=`<div class="card" style="border-color:color-mix(in srgb, var(--green) 40%, var(--border));"><div class="qa-label" style="color:var(--green);">Import complete</div><div class="qa-text" style="font-size:13.5px;">${esc(summary)}</div>${skipped?`<div class="qa-text" style="font-size:12px;color:var(--grey);margin-top:8px;">${skipped} already existed.</div>`:""}</div>`;
         toast("Import complete");
@@ -4288,7 +4917,6 @@ function attachHandlers(){
       reader.readAsText(file);
     });
   }
-  /* ---- IMPORT CARDS INTO TOPIC  ---- */
   const importCardBtn2=document.getElementById("importCardBtn");
   const importCardFile2=document.getElementById("importCardFile");
   if(importCardBtn2&&importCardFile2){
@@ -4312,7 +4940,7 @@ function attachHandlers(){
         let added=0;
         cardsToAdd.forEach(c=>{
           if(!c||!c.question||!c.answer)return;
-          DATA.flashcards[subj].push({question:c.question,answer:c.answer,topic,review_count:0,last_reviewed:null,created:new Date().toISOString()});
+          DATA.flashcards[subj].push({question:c.question,answer:c.answer,topic,review_count:0,last_reviewed:null,created:new Date().toISOString(),...(c.chart&&c.chart.labels?{chart:c.chart}:{})});
           added++;
         });
         saveData(DATA);
@@ -4322,13 +4950,11 @@ function attachHandlers(){
       });
     });
   }
-  /* ---- EXAMPLE FILES ---- */
   const exNotes=document.getElementById("exampleNotesBtn");
   if(exNotes)exNotes.addEventListener("click",()=>{downloadExampleNotes();toast("Example notes downloaded")});
   const exBackup=document.getElementById("exampleBackupBtn");
   if(exBackup)exBackup.addEventListener("click",()=>{downloadExampleBackup();toast("Example backup downloaded")});
 
-  /* ---- SUGGESTIONS ---- */
   const submitSuggestionBtn=document.getElementById("submitSuggestionBtn");
   if(submitSuggestionBtn)submitSuggestionBtn.addEventListener("click",async()=>{
     const text=document.getElementById("suggestionText").value.trim();
@@ -4345,23 +4971,16 @@ function attachHandlers(){
     }
   });
 
-  /* ---- DELETE ACCOUNT ---- */
   { const da=document.getElementById("deleteAccountBtn"); if(da)da.addEventListener("click",showDeleteAccount); }
-
-  /* ---- TERMS ---- */
   { const rt=document.getElementById("replayTourBtn"); if(rt)rt.addEventListener("click",replayKiteTour); }
   { const tb=document.getElementById("viewTermsBtn"); if(tb)tb.addEventListener("click",()=>showLegal("terms")); }
   { const pb=document.getElementById("viewPrivacyBtn"); if(pb)pb.addEventListener("click",()=>showLegal("privacy")); }
-
-  /* ---- INSTALL CHECK ---- */
   { const pwaBox=document.getElementById("pwaStatus"); if(pwaBox)runPwaCheck(pwaBox); }
 
-  /* ---- THEME ---- */
   document.querySelectorAll("#themeGrid .theme-option").forEach(btn=>{
     btn.addEventListener("click",()=>applyTheme(btn.dataset.themeValue));
   });
 
-  /* ---- SYNC ---- */
   const syncNowBtn=document.getElementById("syncNowBtn");
   if(syncNowBtn)syncNowBtn.addEventListener("click",async()=>{
     toast("Syncing…");
@@ -4373,7 +4992,6 @@ function attachHandlers(){
   const syncPendingEl=document.getElementById("syncPending");
   if(syncPendingEl)syncPendingEl.textContent=localDirty?"Changes waiting to upload":"All up to date";
 
-  /* ---- WM TOGGLE ---- */
   const wmToggle=document.getElementById("wmToggleSwitch");
   if(wmToggle)wmToggle.addEventListener("click",()=>{
     if(!WM_ENABLED&&window.innerWidth<700){toast("Windowed mode is PC-only");return}
@@ -4391,18 +5009,15 @@ function attachHandlers(){
     render();
   });
 
-  /* ---- SIGN OUT / WIPE ---- */
   const signOutBtn=document.getElementById("signOutBtn");
   if(signOutBtn)signOutBtn.addEventListener("click",handleSignOut);
   const wipeBtn=document.getElementById("wipeDataBtn");
   if(wipeBtn)wipeBtn.addEventListener("click",async()=>{
-    if(!confirm("Delete ALL your saved data?\n\nThis removes your flashcards, notes, topics and study history from THIS device AND from your cloud account. Any other device signed in to your account will lose it too on its next sync. This cannot be undone."))return;
+    if(!confirm("Delete ALL your saved data?\n\nThis removes your flashcards, notes, topics, charts and study history from THIS device AND from your cloud account. Any other device signed in to your account will lose it too on its next sync. This cannot be undone."))return;
     if(!confirm("Are you absolutely sure? There is no way to recover this."))return;
     try{localStorage.removeItem(STORAGE_KEY);localStorage.removeItem(TIMER_KEY);localStorage.removeItem(WM_STATE_KEY)}catch(e){}
-    DATA={flashcards:{},study_sessions:[],notes:{},topics:{}};
+    DATA={flashcards:{},study_sessions:[],notes:{},topics:{},charts:{}};
     try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DATA))}catch(e){}
-    // Push the empty state immediately, so the wipe actually propagates instead of
-    // racing the debounced saveData schedule.
     if(currentUser){ try{ await pushDataToCloud(); }catch(e){ console.warn("Cloud wipe failed:",e); } }
     TIMER=blankTimer();saveTimer();
     stopChirping();ttsStop();
@@ -4415,7 +5030,6 @@ function attachHandlers(){
     goto("home",{},false);
   });
 
-  /* ---- ADMIN ---- */
   app.querySelectorAll("[data-afilter]").forEach(el=>{
     el.addEventListener("click",()=>{adminFilterMode=el.dataset.afilter;render()});
   });
@@ -4434,17 +5048,16 @@ function attachHandlers(){
   });
   const adminRefresh=document.getElementById("adminRefreshBtn");
   if(adminRefresh)adminRefresh.addEventListener("click",()=>{adminUsersCache=null;render()});
-   const sugRefreshBtn=document.getElementById("sugRefreshBtn");
+  const sugRefreshBtn=document.getElementById("sugRefreshBtn");
   if(sugRefreshBtn)sugRefreshBtn.addEventListener("click",()=>{adminSuggestionsCache=null;render()});
   const anaRefreshBtn=document.getElementById("anaRefreshBtn");
   if(anaRefreshBtn)anaRefreshBtn.addEventListener("click",()=>{adminAnalyticsCache=null;render()});
-   app.querySelectorAll("[data-admin-action]").forEach(el=>{
+  app.querySelectorAll("[data-admin-action]").forEach(el=>{
     el.addEventListener("click",()=>{
       adminAction(el.dataset.adminAction,el.dataset.uid,el.dataset.plan||null);
     });
   });
 
-  /* ---- MAKE / REMOVE ADMIN ---- */
   app.querySelectorAll("[data-make-admin]").forEach(el=>{
     el.addEventListener("click",()=>{
       const uid = el.dataset.makeAdmin;
@@ -4462,14 +5075,11 @@ function attachHandlers(){
     });
   });
 
-  /* ---- IDLE DOT SEQUENCE ---- */
   if(!window._idleDots){
-    const IDLE_MS   = 90*1000;  // no interaction for this long -> light show starts
-    const STEP_MS   = 260;      // time between colour changes
-    const HOLD_MS   = 1100;     // how long all three stay blue (BBB) before turning back
-    const REPEAT_MS = 3000;     // pause after the dots are back to normal, then it plays again
-    // dot 0 = red, 1 = yellow, 2 = green. Each frame = [which dots are blue, ms until the next frame]:
-    // RYG -> BYG -> BBG -> BBB (hold) -> RBB -> RYB -> RYG
+    const IDLE_MS   = 90*1000;
+    const STEP_MS   = 260;
+    const HOLD_MS   = 1100;
+    const REPEAT_MS = 3000;
     const FRAMES = [[[0],STEP_MS],[[0,1],STEP_MS],[[0,1,2],HOLD_MS],[[1,2],STEP_MS],[[2],STEP_MS],[[],0]];
     let idleTimer=null, seqTimers=[], playing=false;
     const paint=(blues)=>document.querySelectorAll(".dot[data-dot]").forEach(d=>{
@@ -4487,7 +5097,6 @@ function attachHandlers(){
       if(repeat) seqTimers.push(setTimeout(()=>{ if(playing){ seqTimers=[]; playOnce(); } }, lastAt + REPEAT_MS));
       return lastAt;
     };
-    // One-time pulse when the app is opened, so people notice the dots. Touching the screen doesn't cancel it.
     const playIntro=()=>{
       if(playing) return;
       intro=true; playing=true;
@@ -4505,27 +5114,29 @@ function attachHandlers(){
     window._idleDots = { stop, onActivity, playIntro };
     onActivity();
   }
-  // Pulse once, the first time the dots are on screen after the app opens
   if(window._idleDots && !window._introPlayed && document.querySelector(".dot[data-dot]")){
     window._introPlayed=true;
     setTimeout(()=>window._idleDots.playIntro(), 700);
   }
 }
-/* ========== DELETE ACCOUNT ========== */
+
+document.addEventListener("click", (e) => {
+  if(!e.target.closest(".hint-wrap")) {
+    document.querySelectorAll(".hint-popover.show").forEach(p => p.classList.remove("show"));
+  }
+});
+
 async function deleteMyAccount(password){
   const user=auth.currentUser;
   if(!user||!user.email) throw {code:"app/no-user"};
   const uid=user.uid;
   const savedUserDoc = currentUserDoc ? {...currentUserDoc} : null;
-  // 1. Firebase requires a fresh sign-in before deleting an account
   await reauthenticateWithCredential(user,EmailAuthProvider.credential(user.email,password));
-  // 2. stop anything that could re-create data while we delete it
   accountDeleting=true;
   stopDataListener();
   clearTimeout(syncDebounceTimer);
   let authDeleted=false;
   try{
-    // 3. cloud data: study content, then usage stats + suggestions tied to this account, then the account record
     await deleteDoc(doc(db,"study_data",uid));
     for(const col of ["analytics","suggestions"]){
       try{
@@ -4534,12 +5145,9 @@ async function deleteMyAccount(password){
       }catch(e){console.warn("Could not clear "+col+":",e)}
     }
     await deleteDoc(doc(db,"users",uid));
-    // 4. the login itself
     await deleteUser(user);
     authDeleted=true;
   }catch(e){
-    // If the login still exists, put the users doc back so the account isn't
-    // silently re-created with a new displayId on the next sign-in.
     if(!authDeleted && savedUserDoc){
       try{ await setDoc(doc(db,"users",uid), savedUserDoc); }catch(_){}
     }
@@ -4547,11 +5155,10 @@ async function deleteMyAccount(password){
     startDataListener();
     throw e;
   }
-  // 5. this device
   try{if(ttsState==="playing"||ttsState==="paused")ttsStop();if(TIMER.active)stopTimer()}catch(e){}
   try{pauseSessionTimer()}catch(e){}
   [STORAGE_KEY,TIMER_KEY,WM_STATE_KEY,USER_CACHE_KEY,ANALYTICS_QUEUE_KEY,ANALYTICS_SESSION_KEY,TERMS_KEY].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});
-  DATA={flashcards:{},study_sessions:[],notes:{},topics:{}};
+  DATA={flashcards:{},study_sessions:[],notes:{},topics:{},charts:{}};
   TIMER=blankTimer();
   navStack=[];nav={page:"home",params:{}};
 }
@@ -4601,7 +5208,6 @@ function showDeleteAccount(){
     }
   });
 }
-/* ========== MAKE / REMOVE ADMIN ========== */
 async function makeAdmin(uid){
   if(!isSuperAdmin()){ toast("Only the owner can promote admins"); return; }
   try{
@@ -4629,7 +5235,6 @@ async function demoteAdmin(uid){
 function isUserAdmin(u){
   return u && (u.role === "admin" || u.uid === ADMIN_UID);
 }
-/* ========== QUIZ SUBMIT / ADVANCE ========== */
 function buildMcqChoices(correctAnswer,wrongPool){
   const choices=[correctAnswer];
   const wrongs=[...new Set(wrongPool.filter(a=>a!==correctAnswer))];
@@ -4716,7 +5321,6 @@ function advanceQuiz(){
   }
 }
 
-/* ========== INIT ========== */
 loadWM();
 if(TIMER.active){
   const rem=timerRemaining();
