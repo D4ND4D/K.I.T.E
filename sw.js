@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'd4n-study-v33';
+const CACHE_VERSION = 'd4n-study-v34';
 
 
 const APP_SHELL = [
