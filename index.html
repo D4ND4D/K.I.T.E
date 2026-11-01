@@ -2406,7 +2406,7 @@ function pageHome(){
 }
 function pageSelectSubject(){
   const subs=subjects();
-  let body=`<div class="menu"><button class="menu-item accent" data-go="new_subject_form"><span class="label">Add New Subject</span></button>`;
+  let body=`<div class="menu"><a class="menu-item" href="https://d4nd4d.github.io/K.I.T.E-Library/" target="_blank" rel="noopener" style="text-decoration:none"><span class="label">Import from K.I.T.E Library</span><span class="meta">opens in a new tab</span></a><button class="menu-item accent" data-go="new_subject_form"><span class="label">Add New Subject</span></button>`;
   if(subs.length===0){
     body+=`</div>`+emptyState("📭","No subjects yet.","Add one above to get started.");
   }else{
@@ -3308,7 +3308,7 @@ function pageSettings(){
       <button class="menu-item" data-go="home" data-clearstack="1"><span class="label">Back to Main Menu</span></button>
     </div>
     <div class="page-sub" style="margin-top:16px;">Property of Lumin</div>
-    <div class="page-sub" style="margin-top:2px;color:var(--grey-dim);font-size:10.5px;">V6.10.2</div>
+    <div class="page-sub" style="margin-top:2px;color:var(--grey-dim);font-size:10.5px;">V6.10.3</div>
   `;
   return shell("SETTINGS","",body,{path:"~/study/settings"});
 }
