@@ -25,7 +25,7 @@ const CDN_URLS = [
   'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js'
 ];
 
-/* KaTeX (math display). Saved so formulas still render and look right offline. */
+
 const KATEX_BASE = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/';
 const KATEX_URLS = [
   KATEX_BASE + 'katex.min.css',
@@ -36,7 +36,6 @@ const KATEX_URLS = [
 const NAV_TIMEOUT_MS = 4000;
 
 /* ---------- helpers ---------- */
-
 
 async function cacheModuleTree(cache, url, seen) {
   if (seen.has(url)) return;
@@ -66,7 +65,6 @@ async function cacheModuleTree(cache, url, seen) {
 async function cacheKatex(cache) {
   for (const url of KATEX_URLS) {
     try {
-      // mode 'cors' so the saved copy is a real (readable) response, not an opaque one
       const res = await fetch(url, { mode: 'cors' });
       if (!res || !res.ok) continue;
       await cache.put(url, res.clone());
