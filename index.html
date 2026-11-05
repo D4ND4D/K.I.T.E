@@ -596,6 +596,7 @@ async function runPwaCheck(box){
 
 const EMPTY_DATA = { flashcards:{}, study_sessions:[], notes:{}, topics:{}, charts:{} };
 const STORAGE_KEY = "d4n_study_data_v1";
+const DIRTY_KEY = "d4n_dirty_v1";   // remembers "this device has changes the cloud hasn't got yet", even after the app is closed
 const TIMER_KEY = "d4n_timer_state_v1";
 const WM_ENABLED_KEY = "d4n_wm_enabled_v1";
 const WM_STATE_KEY = "d4n_wm_state_v1";
@@ -634,9 +635,25 @@ function loadData(){
   saveData(s);
   return s;
 }
+function readDirtyFlag(){
+  try{
+    const f=JSON.parse(localStorage.getItem(DIRTY_KEY)||"null");
+    return (f && currentUser && f.uid===currentUser.uid) ? f : null;
+  }catch(e){return null}
+}
+function markDirty(){
+  if(!currentUser) return;
+  try{
+    const f=JSON.parse(localStorage.getItem(DIRTY_KEY)||"null");
+    if(f && f.uid===currentUser.uid) return;      // already marked; keep the original "based on" time
+    localStorage.setItem(DIRTY_KEY, JSON.stringify({uid:currentUser.uid, base:lastSyncedAt?lastSyncedAt.getTime():0, at:Date.now()}));
+  }catch(e){}
+}
+function clearDirtyFlag(){ try{ localStorage.removeItem(DIRTY_KEY); }catch(e){} }
 function saveData(d){
   try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); }catch(e){}
   localDirty = true;
+  markDirty();
   if(!suppressPush) scheduleSyncPush();
 }
 function blankTimer(){return{active:false,endsAt:0,totalSeconds:0,alarming:false,paused:false,hidden:false,pausedRemaining:0}}
@@ -1107,8 +1124,8 @@ async function bootApp(){
   if(APP_READY || booting) return;
   booting = true;
   try{
-    await pullDataFromCloud();
-    if(isAdmin() && !planConfigLoaded) await loadPlanConfig();
+    if(navigator.onLine !== false) await pullDataFromCloud();   // offline: don't wait on the server, use the data saved on this device
+    if(navigator.onLine !== false && isAdmin() && !planConfigLoaded) await loadPlanConfig();
     hideAuthGate();
     APP_READY=true;
     render();
@@ -1145,6 +1162,7 @@ async function pushDataToCloud(){
     });
     lastSyncedAt = new Date();
     localDirty = false;
+    clearDirtyFlag();
     updateSyncIndicator();
   }catch(e){
     console.warn("Sync push failed:", e);
@@ -1157,6 +1175,22 @@ async function pullDataFromCloud(){
     const snap = await getDoc(ref);
     if(snap.exists()){
       const cloud = snap.data();
+      const cloudTime = cloud.updatedAt && cloud.updatedAt.toDate ? cloud.updatedAt.toDate() : null;
+      const dirty = readDirtyFlag();
+      if(dirty){
+        // This device has changes (made offline) that were never uploaded. Keep them instead of overwriting them.
+        const changedElsewhere = !!cloudTime && cloudTime.getTime() > (dirty.base || 0) + 120000;
+        const keepLocal = changedElsewhere
+          ? confirm("This device has changes you made while offline, and this account was also changed on another device.\n\nOK = keep this device's changes (they replace the other device's changes)\nCancel = use the account's latest version (this device's offline changes are dropped)")
+          : true;
+        if(keepLocal){
+          localDirty = true;
+          if(cloudTime) lastSyncedAt = cloudTime;
+          scheduleSyncPush();
+          return;
+        }
+        clearDirtyFlag();
+      }
       suppressPush = true;
       DATA.flashcards = cloud.flashcards || {};
       DATA.notes = cloud.notes || {};
@@ -1164,7 +1198,7 @@ async function pullDataFromCloud(){
       DATA.study_sessions = cloud.study_sessions || [];
       DATA.charts = cloud.charts || {};
       try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA)); }catch(e){}
-      lastSyncedAt = cloud.updatedAt && cloud.updatedAt.toDate ? cloud.updatedAt.toDate() : new Date();
+      lastSyncedAt = cloudTime || new Date();
       localDirty = false;
       suppressPush = false;
     } else {
@@ -3308,7 +3342,7 @@ function pageSettings(){
       <button class="menu-item" data-go="home" data-clearstack="1"><span class="label">Back to Main Menu</span></button>
     </div>
     <div class="page-sub" style="margin-top:16px;">Property of Lumin</div>
-    <div class="page-sub" style="margin-top:2px;color:var(--grey-dim);font-size:10.5px;">V6.10.3</div>
+    <div class="page-sub" style="margin-top:2px;color:var(--grey-dim);font-size:10.5px;">V6.10.5</div>
   `;
   return shell("SETTINGS","",body,{path:"~/study/settings"});
 }
