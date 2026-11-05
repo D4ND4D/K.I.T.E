@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'd4n-study-v37';
+const CACHE_VERSION = 'd4n-study-v38';
 
 
 const APP_SHELL = [
@@ -23,6 +23,14 @@ const CDN_URLS = [
   'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js',
   'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js',
   'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js'
+];
+
+/* KaTeX (math display). Saved so formulas still render and look right offline. */
+const KATEX_BASE = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/';
+const KATEX_URLS = [
+  KATEX_BASE + 'katex.min.css',
+  KATEX_BASE + 'katex.min.js',
+  KATEX_BASE + 'contrib/auto-render.min.js'
 ];
 
 const NAV_TIMEOUT_MS = 4000;
@@ -53,6 +61,33 @@ async function cacheModuleTree(cache, url, seen) {
     } catch (e) { /* ignore bad specifier */ }
   }
   await Promise.all(deps.map((d) => cacheModuleTree(cache, d, seen)));
+}
+
+async function cacheKatex(cache) {
+  for (const url of KATEX_URLS) {
+    try {
+      // mode 'cors' so the saved copy is a real (readable) response, not an opaque one
+      const res = await fetch(url, { mode: 'cors' });
+      if (!res || !res.ok) continue;
+      await cache.put(url, res.clone());
+      if (url.endsWith('.css')) {
+        const css = await res.text();
+        const fonts = Array.from(new Set(
+          (css.match(/url\(\s*["']?(fonts\/[^"')\s]+?\.woff2)["']?\s*\)/g) || [])
+            .map((m) => m.replace(/^url\(\s*["']?/, '').replace(/["']?\s*\)$/, ''))
+        ));
+        await Promise.all(fonts.map(async (f) => {
+          try {
+            const fu = KATEX_BASE + f;
+            const fr = await fetch(fu, { mode: 'cors' });
+            if (fr && fr.ok) await cache.put(fu, fr);
+          } catch (e) { /* skip this font */ }
+        }));
+      }
+    } catch (err) {
+      console.warn('Cache skipped:', url, err);
+    }
+  }
 }
 
 function putInCache(req, res) {
@@ -88,6 +123,7 @@ self.addEventListener('install', (event) => {
       );
       const seen = new Set();
       await Promise.all(CDN_URLS.map((url) => cacheModuleTree(cache, url, seen)));
+      await cacheKatex(cache);
     }).then(() => self.skipWaiting())
   );
 });
@@ -155,6 +191,21 @@ self.addEventListener('fetch', (event) => {
 
   
   if (url.hostname === 'www.gstatic.com') {
+    event.respondWith(
+      caches.match(req).then((cached) => {
+        const network = fetch(req).then((res) => putInCache(req, res)).catch(() => null);
+        if (cached) {
+          event.waitUntil(network);
+          return cached;
+        }
+        return network.then((res) => res || Response.error());
+      })
+    );
+    return;
+  }
+
+  
+  if (url.hostname === 'cdn.jsdelivr.net') {
     event.respondWith(
       caches.match(req).then((cached) => {
         const network = fetch(req).then((res) => putInCache(req, res)).catch(() => null);
